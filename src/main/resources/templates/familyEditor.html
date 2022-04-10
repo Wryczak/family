@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <title>Family Creator</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+
+<body>
+<h1>Create Your family </h1>
+<img th:src="@{/images/family.png}" alt="family.png"/></head>
+
+<form method="POST" th:action="@{/family}" th:object="${family}" id="family">
+    <h2>Stwórz swoją rodzinę</h2>
+
+
+    <div th:if="${#fields.hasErrors()}">
+        <span class="validationError">
+        Please correct the problems below and resubmit.
+        </span>
+    </div>
+
+    <h3>Podaj Nazwisko Swojej rodziny</h3>
+
+    <label for="familyName">nazwisko: </label>
+    <input type="text" th:field="*{familyName}"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('familyName')}"
+          th:errors="*{familyName}">Podanie nazwiska jest obowiązkowe.</span>
+    <br>
+    <br>
+
+    <label for="nrOfInfants">Liczba niemowląt (poniżej 4 lat): </label>
+    <input type="number" min="0" max="100" th:field="*{nrOfInfants}"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('nrOfInfants')}"
+          th:errors="*{nrOfInfants}">Podanie liczby niemowląt jest obowiązkowe.</span>
+    <br>
+    <br>
+
+    <label for="nrOfChildren">liczba dzieci (4-16 lat): </label>
+    <input type="number" min="0" max="100" th:field="*{nrOfChildren}"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('nrOfChildren')}"
+          th:errors="*{nrOfChildren}">Podanie liczby dzieci jest obowiązkowe.</span>
+    <br>
+    <br>
+
+    <label for="nrOfAdults">liczba dorosłych ( powyżej 16 lat):</label>
+    <input type="number" min="1" max="100" th:field="*{nrOfAdults}"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('nrOfAdults')}"
+          th:errors="*{nrOfAdults}">Podanie liczby dzieci jest obowiązkowe.</span>
+    <br>
+    <br>
+
+    <button>Add family</button>
+</form>
+<br>
+<br>
+<form method="POST" th:action="@{/logout}" id="logoutForm">
+    <input type="submit" value="Logout"/>
+</form>
+
+</body>
+</html>

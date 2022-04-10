@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <title>Family Creator</title>
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
+</head>
+
+<body>
+<h1>Create Your family member</h1>
+<img th:src="@{/images/family.png}" alt="family.png"/></head>
+<br>
+
+<table>
+    <tr>
+        <th>Nazwisko Twojej rodziny</th>
+        <th>Liczba niemowląt</th>
+        <th>Liczba dzieci</th>
+        <th>Liczba Dorosłych</th>
+    </tr>
+    <tr th:each="family : ${families}">
+        <td th:text="${family.getFamilyName()}"></td>
+        <td th:text="${family.getNrOfInfants()}"></td>
+        <td th:text="${family.getNrOfChildren()}"></td>
+        <td th:text="${family.getNrOfAdults()}"></td>
+    </tr>
+</table>
+<br>
+<br>
+<table>
+    <tr>
+        <th>Nazwisko </th>
+        <th>Imię</th>
+        <th>Wiek</th>
+        <th>Dojrzałość</th>
+    </tr>
+    <tr th:each="member: ${member}">
+        <td th:text="${member.getFamilyName()}"></td>
+        <td th:text="${member.getName()}"></td>
+        <td th:text="${member.getAge()}"></td>
+        <td th:text="${member.getMature()}"></td>
+    </tr>
+</table>
+<br>
+<br>
+<a th:href="@{/}" id="home">home</a>
+<br>
+<br>
+<form method="POST" th:action="@{/logout}" id="logoutForm">
+    <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>
