@@ -67,7 +67,7 @@ public class MemberController {
         log.info("    --- Saving Yours data");
 
         member.setMature(checkMaturity(member));
-         memberRepository.save(member);
+         memberRepository.saveAndFlush(member);
         family.addFamilyMember(member);
 
         return "redirect:/family/familyEditor";
@@ -86,7 +86,7 @@ public class MemberController {
         log.info("    --- Saving Member");
         Member saved = member;
         member.setMature(checkMaturity(saved));
-        saved = memberRepository.save(member);
+        saved = memberRepository.saveAndFlush(member);
         family.addFamilyMember(saved);
 
         return "redirect:/family/current";

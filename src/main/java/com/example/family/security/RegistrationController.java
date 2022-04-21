@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
-
 @Controller
 @Slf4j
 @RequestMapping("/register")
@@ -37,9 +36,9 @@ public class RegistrationController {
             log.info("    --- Try again");
             return "registration";
         }
-if (!form.getPassword().equals(form.getCheckpassword())){
-return "registration";
-}
+        if (!form.getPassword().equals(form.getCheckpassword())) {
+            return "registration";
+        }
 
         userRepo.save(form.toUser(passwordEncoder));
         log.info("    --- User Saved");

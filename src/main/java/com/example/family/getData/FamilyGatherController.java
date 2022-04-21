@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Collections;
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public class FamilyGatherController {
     @GetMapping("/myFamily")
     public String showAll(Model model) {
         model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
-        model.addAttribute("member",familyRepository.findById(idToFind).get().getMembers());
+        model.addAttribute("member", familyRepository.findById(idToFind).get().getMembers());
         return "myFamily";
     }
 
@@ -58,7 +59,7 @@ public class FamilyGatherController {
 
         if (familyRepository.existsById(id)) {
             family = familyRepository.findById(id);
-            idToFind=family.get().getId();
+            idToFind = family.get().getId();
             log.info("    --- Family Found");
             return "redirect:/find/myFamily";
         }

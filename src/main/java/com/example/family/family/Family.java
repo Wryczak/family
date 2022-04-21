@@ -28,50 +28,25 @@ public class Family implements Serializable {
     @Size(min = 2, message = "Nazwisko musi mieć co najmniej 2 znaki!.")
     private String familyName;
 
+    @NotNull
     private int nrOfInfants;
 
+    @NotNull
     private int nrOfChildren;
 
+    @NotNull
     private int nrOfAdults;
-
 
     @ManyToMany(targetEntity = Member.class)
     @Size(min = 1, message = "Rodzina musi mieć co najmniej jednego członka.")
     private List<Member> members = new ArrayList<>();
 
-
     public void addFamilyMember(Member member) {
         this.members.add(member);
     }
 
-    public int getInfants() {
-        int infantsNo=0;
-        for (Member member : members) {
-            if (member.getMature() == Member.Mature.INFANT) {
-                infantsNo++;
-            }
-        }
-        return infantsNo;
+    public void deleteFamilyMember(Member member) {
+        this.members.remove(member);
     }
 
-    public int getChildren() {
-        int childrenNo=0;
-        for (Member member : members) {
-            if (member.getMature() == Member.Mature.CHILD) {
-                childrenNo++;
-
-            }
-        }
-        return childrenNo;
-    }
-
-    public int getAdults() {
-        int adultsNo=0;
-        for (Member member : members) {
-            if (member.getMature() == Member.Mature.ADULT) {
-                adultsNo++;
-            }
-        }
-        return adultsNo;
-    }
 }
