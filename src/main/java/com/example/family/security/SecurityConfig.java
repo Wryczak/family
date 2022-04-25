@@ -18,7 +18,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-
     @Bean
     public PasswordEncoder encoder() {
         return new StandardPasswordEncoder("53cr3t");
@@ -35,7 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-//        .defaultSuccessUrl("/design")
 
                 .and()
                 .logout()
