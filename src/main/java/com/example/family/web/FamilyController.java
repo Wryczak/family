@@ -89,7 +89,6 @@ public class FamilyController implements matureChecker {
         family.setUser(user);
 
         String memberValidateRedirect;
-        System.out.println(nrOFFamilyMembersCounter(family));
         memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
@@ -153,10 +152,5 @@ public class FamilyController implements matureChecker {
             return null;
         }
         return tempMember.get(tempMember.size() - 1).getId();
-    }
-
-    private int nrOFFamilyMembersCounter(Family family) {
-
-        return family.getNrOfInfants() + family.getNrOfChildren() + family.getNrOfAdults();
     }
 }
