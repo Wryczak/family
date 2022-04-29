@@ -12,6 +12,11 @@ div.ingredient-group {
     width: 50%;
 }
 
+body {
+    background-color: black;
+    color: white;
+}
+
 .grid:after {
     content: "";
     display: table;
@@ -26,4 +31,20 @@ div.ingredient-group {
 
 span.validationError {
     color: red;
+}
+a:link {
+    color: whitesmoke;
+}
+
+a:visited {
+    color: lightcyan;
+}
+
+a:hover {
+    color: red;
+}
+
+a:active {
+    color: lightseagreen;
+
 }

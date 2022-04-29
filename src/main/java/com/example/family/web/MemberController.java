@@ -92,7 +92,7 @@ public class MemberController {
         return "redirect:/family/current";
     }
 
-    public Mature checkMaturity(Member member) {
+  private Mature checkMaturity(Member member) {
         int age=member.getAge();
         if (age >= 0 && age < 4) {
             return Mature.INFANT;

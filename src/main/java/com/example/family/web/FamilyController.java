@@ -15,6 +15,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -88,17 +89,21 @@ public class FamilyController implements matureChecker {
         family.setUser(user);
 
         String memberValidateRedirect;
-
+        System.out.println(nrOFFamilyMembersCounter(family));
         memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT);
-        if (memberValidateRedirect != null) return memberValidateRedirect;
-
+        if (memberValidateRedirect != null) {
+            return memberValidateRedirect;
+        }
 
         memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfChildren(), Member.Mature.CHILD);
-        if (memberValidateRedirect != null) return memberValidateRedirect;
-
+        if (memberValidateRedirect != null) {
+            return memberValidateRedirect;
+        }
 
         memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfAdults(), Member.Mature.ADULT);
-        if (memberValidateRedirect != null) return memberValidateRedirect;
+        if (memberValidateRedirect != null) {
+            return memberValidateRedirect;
+        }
 
         log.info("    --- Family Completed");
         familyRepository.saveAndFlush(family);
@@ -114,7 +119,7 @@ public class FamilyController implements matureChecker {
         }
         if (checkMature(mature, family) > nrOfMember) {
             System.out.println("I`m removing last " + mature);
-            Long id = listOfMembersSortedByMaturity(family.getMembers(), mature);
+            Long id = getMemberIdFromSublist(mature,family);
             family.deleteFamilyMember(memberRepository.getById(id));
             memberRepository.deleteById(id);
 
@@ -131,18 +136,27 @@ public class FamilyController implements matureChecker {
         for (Member member : members) {
             if (member.getMature() == mature) {
                 nrOfMembers++;
-
             }
         }
         return nrOfMembers;
     }
 
-    private Long listOfMembersSortedByMaturity(List<Member> members, Member.Mature mature) {
-
+    private Long getMemberIdFromSublist(Member.Mature mature, Family family) {
+        List<Member> members = family.getMembers();
+        List<Member> tempMember = new ArrayList<>();
         for (Member member : members) {
             if (member.getMature() == mature) {
+                tempMember.add(member);
             }
         }
-        return members.get(members.size() - 1).getId();
+        if (tempMember.isEmpty()){
+            return null;
+        }
+        return tempMember.get(tempMember.size() - 1).getId();
+    }
+
+    private int nrOFFamilyMembersCounter(Family family) {
+
+        return family.getNrOfInfants() + family.getNrOfChildren() + family.getNrOfAdults();
     }
 }
