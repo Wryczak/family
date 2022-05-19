@@ -1,35 +1,116 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
-<head>
-    <title>Family Creator</title>
-    <link th:href="@{/style.css}" rel="stylesheet" />
-</head>
 
-<body>
-<h1>Create Your family member</h1>
-<img th:src="@{/images/family.png}" alt="family.png"/></head>
-<br>
-<br>
+<div th:insert="head"></div>
 
-<form th:method="POST" th:action="@{/find}" th:object="${family}" id="family">
+<body id="page-top">
 
-    <label for="id">Podaj id rodziny </label>
-    <input type="number" th:field="*{id}"/>
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:insert="sidebar"></div>
+    <!-- End of Sidebar -->
 
-    <br>
-    <br>
-    <button>Find Family</button>
-</form>
-<br>
-<br>
-<a th:href="@{/}" id="home">home</a>
-<br>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
 
-<br>
-<form method="POST" th:action="@{/logout}" id="logoutForm">
-    <input type="submit" value="Logout"/>
-</form>
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <div th:insert="topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Podaj nr rodziny, by ją odnaleźć.</h1>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+
+                </div>
+
+                <!-- Content Row -->
+                <div class="row">
+
+                    <!-- Content Column -->
+                    <div class="col-lg-2 mb-4">
+                        <form method="POST" th:action="@{/find}" th:object="${family}" id="remove">
+                            <div class="form-group">
+                                <label for="id">Wpisz nr swojej rodziny:</label>
+                                <input type="number" class="form-control form-control-user"
+                                       name="id" id="id" aria-describedby="emailHelp"
+                                       placeholder="Enter your family number..."
+                                       min="0" max="999999999999"
+                                       th:field="*{id}"/>
+                            </div>
+                            <div>
+                                <input type="submit" value="Znajdź" class="btn btn-success btn-user btn-block">
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="col-lg-4 mb-4">
+                        <!-- Illustrations -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Znajdowanie rodziny:</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <img class="img-profile rounded-circle"
+                                         th:src="@{/images/family.png}" alt="family.png"/>
+                                </div>
+                                <p>Wystarczy wpisać nr rodziny, by ją odnaleźć.</p>
+                                <p>Jeżeli rodziny o podanym numerze nie ma w bazie nic nie zostanie wyświetlone.</p>
+                                <p>By móc edytować rodzinę należy się zalogować.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Krzysztof Wrycza 2022</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<div th:insert="footer"></div>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
+
+
+<!-- Page level plugins -->
+<script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 
 </body>
 </html>

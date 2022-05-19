@@ -31,6 +31,18 @@ public class User implements UserDetails {
 
     private final String password;
 
+    private boolean doIHaveFamily;
+
+    private Long myFamilyNr=setDefaultFamilyNr();
+
+
+    private Long setDefaultFamilyNr(){
+        if (myFamilyNr==null){
+            myFamilyNr=0L;
+        }
+        return myFamilyNr;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));

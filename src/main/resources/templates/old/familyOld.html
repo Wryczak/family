@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <title>Family Creator</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body>
+
+<img th:src="@{/images/family.png}" alt="family.png"/>
+
+<h3>Członkowie Twojej rodziny:</h3>
+
+<ul>
+    <li th:each="member : ${family.members}"><span th:text="${member}">member name</span></li>
+</ul>
+
+<br>
+<a th:href="@{/create}" id="another">dodaj członka rodziny</a><br/>
+<br>
+<br>
+
+<form method="POST" th:action="@{/family/submit}" th:object="${family}" id="family">
+    <button>Zakończ</button>
+
+</form>
+<br>
+<br>
+<form method="POST" th:action="@{/logout}" id="logoutForm">
+    <input type="submit" value="Logout"/>
+</form>
+
+</body>
+</html>
+

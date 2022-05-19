@@ -1,0 +1,32 @@
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Wiek</th>
+            <th>Dojrzałość</th>
+            <th>Id</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Wiek</th>
+            <th>Dojrzałość</th>
+            <th>Id</th>
+
+        </tfoot>
+        <tbody>
+        <tr th:each="member: ${member1}">
+            <td th:text="${member.getFamilyName()}"></td>
+            <td th:text="${member.getName()}"></td>
+            <td th:text="${member.getAge()}"></td>
+            <td th:text="${member.getMature()}"></td>
+            <td th:text="${member.getId}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>

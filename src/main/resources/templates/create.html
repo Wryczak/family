@@ -1,55 +1,158 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
-<head>
-    <title>Family Creator</title>
-    <link th:href="@{/style.css}" rel="stylesheet" />
-</head>
 
-<body>
-<h1>Create Your family member</h1>
-<img th:src="@{/images/family.png}" alt="family.png"/></head>
+<div th:insert="head"></div>
 
-<br>
+<body id="page-top">
 
-<form th:method="POST" th:action="@{/create}" th:object="${member}" id="create">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:insert="sidebar"></div>
+    <!-- End of Sidebar -->
 
-    <div th:if="${#fields.hasErrors()}">
-        <span class="validationError">
-        Proszę poprawić błędy w formularzu.
-        </span>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <div th:insert="topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Stwórz kolejnego członka rodziny.</h1>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+
+                </div>
+
+                <!-- Content Row -->
+                <div class="row">
+
+                    <!-- Content Column -->
+                    <div class="col-lg-4 mb-4">
+
+                        <!-- service -->
+                        <form class="user" th:method="POST" th:action="@{/create}" th:object="${member}"
+                              id="loginForm">
+
+                            <div th:if="${#fields.hasErrors()}">
+                             <span class="validationError">
+                                 Proszę poprawić błędy w formularzu.
+                             </span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Imię: </label>
+                                <input type="text" class="form-control form-control-user"
+                                       name="name" id="name" aria-describedby="emailHelp"
+                                       placeholder="Enter name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}" th:field="*{name}"/>
+                                <span class="validationError"
+                                      th:if="${#fields.hasErrors('name')}"
+                                      th:errors="*{name}">Name Error</span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="familyName">Nazwisko: </label>
+                                <input type="text" class="form-control form-control-user"
+                                       name="familyName" id="familyName" aria-describedby="emailHelp"
+                                       placeholder="Enter family name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}"
+                                       th:field="*{familyName}"/>
+                                <span class="validationError"
+                                      th:if="${#fields.hasErrors('familyName')}"
+                                      th:errors="*{familyName}">Surname Error</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="age">Wiek: </label>
+                                <input type="number" class="form-control form-control-user"
+                                       name="age" id="age" aria-describedby="emailHelp"
+                                       placeholder="Enter age..." min="0" max="140" th:field="*{age}"/>
+                                <span class="validationError"
+                                      th:if="${#fields.hasErrors('age')}"
+                                      th:errors="*{age}">Age Error</span>
+                            </div>
+
+                            <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
+
+                        </form>
+
+                    </div>
+                    <div class="col-lg-6 mb-4">
+
+                        <!-- Illustrations -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Przydatne informacje</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <img class="img-profile rounded-circle"
+                                         th:src="@{/images/family.png}" alt="family.png"/>
+                                </div>
+                                <p>Aby stworzyć rodzinę musi mieć ona co najmniej jednego członka.
+                                    Zacznij więc od siebie, oto kilka przydatnych zasad:</p>
+                                <p>Imię i nazwisko musi składać się wyłącznie z liter.</p>
+                                <p>Przyjmujemy, że jesteś już w wieku co najmniej 17 lat.</p>
+                                <p>Pozostali członkowie rodziny mogą być w wieku od 0 do 140 lat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Krzysztof Wrycza 2022</span>
+                </div>
+            </div>
+        </footer>
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Krzysztof Wrycza 2022</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
     </div>
+    <!-- End of Content Wrapper -->
 
-    <label for="name">Imię: </label>
-    <input type="text" pattern="[A-Za-z]{1,}" th:field="*{name}"/>
-    <span class="validationError"
-          th:if="${#fields.hasErrors('name')}"
-          th:errors="*{name}">Name Error</span>
-    <br>
-    <br>
-    <label for="familyName">Nazwisko: </label>
-    <input type="text" pattern="[A-Za-z]{1,}" th:field="*{familyName}"/>
-    <span class="validationError"
-          th:if="${#fields.hasErrors('familyName')}"
-          th:errors="*{familyName}">Surname Error</span>
-    <br>
-    <br>
+</div>
+<!-- End of Page Wrapper -->
 
-    <label for="age">Wiek: </label>
-    <input type="number" min="0" max="140" th:field="*{age}"/>
-    <span class="validationError"
-          th:if="${#fields.hasErrors('age')}"
-          th:errors="*{age}">Age Error</span>
-    <br>
-    <br>
-        <button>Dodaj członka rodziny</button>
+<!-- Scroll to Top Button-->
+<div th:insert="footer"></div>
 
-</form>
-<br>
-<br>
-<form method="POST" th:action="@{/logout}" id="logoutForm">
-    <input type="submit" value="Logout"/>
-</form>
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 
 </body>
 </html>

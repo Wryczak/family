@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <title>Family Creator</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+
+<body>
+<h1>Create Your family member</h1>
+<img th:src="@{/images/family.png}" alt="family.png"/></head>
+
+<br>
+
+<form th:method="POST" th:action="@{/create}" th:object="${member}" id="create">
+
+    <div th:if="${#fields.hasErrors()}">
+        <span class="validationError">
+        Proszę poprawić błędy w formularzu.
+        </span>
+    </div>
+
+    <label for="name">Imię: </label>
+    <input type="text" pattern="[A-Za-z]{1,}" th:field="*{name}"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('name')}"
+          th:errors="*{name}">Name Error</span>
+    <br>
+    <br>
+    <label for="familyName">Nazwisko: </label>
+    <input type="text" pattern="[A-Za-z]{1,}" th:field="*{familyName}"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('familyName')}"
+          th:errors="*{familyName}">Surname Error</span>
+    <br>
+    <br>
+
+    <label for="age">Wiek: </label>
+    <input type="number" min="0" max="140" th:field="*{age}"/>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('age')}"
+          th:errors="*{age}">Age Error</span>
+    <br>
+    <br>
+        <button>Dodaj członka rodziny</button>
+
+</form>
+<br>
+<br>
+<form method="POST" th:action="@{/logout}" id="logoutForm">
+    <input type="submit" value="Logout"/>
+</form>
+
+</body>
+</html>

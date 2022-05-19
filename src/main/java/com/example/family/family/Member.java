@@ -20,27 +20,31 @@ public class Member {
     private final Long id;
 
     @NotNull
-    @Size(min = 3, message = "Imię musi mieć co najmniej 3 znaki!.")
+    @Size(min = 3, message = "Imię musi mieć co najmniej 3 znaki!")
     private String name;
 
     @NotNull
-    @Size(min = 2, message = "Nazwisko musi mieć co najmniej 2 znaki!.")
+    @Size(min = 2, message = "Nazwisko musi mieć co najmniej 2 znaki!")
     private String familyName;
 
     @NotNull
-    private Integer age = checkAge(getAge());
+    private Integer age = checkAge();
 
     private Mature mature;
+
+    private Long userid;
+
+    private Long idToRemove;
 
     public enum Mature {
         INFANT, CHILD, ADULT;
     }
 
-    private Integer checkAge(Integer age) {
-        this.age = age;
+    private Integer checkAge() {
         if (age == null) {
-            return -1;
+            return 0;
         }
         return age;
     }
+
 }

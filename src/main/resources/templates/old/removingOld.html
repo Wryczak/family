@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<head>
+    <title>Family Creator</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+
+<body>
+<h1>Dodałeś za dużo członków rodziny, z bazy danych usunięto tego, którego utworzono najpóźniej.</h1>
+<img th:src="@{/images/family.png}" alt="family.png"/></head>
+<br>
+<br>
+<h3>Podałeś następującą liczbę członków rodziny:</h3>
+<table>
+    <tr>
+        <th>Niemowlęta 0-3 lata    </th>
+        <th>Dzieci 4-16 lat   </th>
+        <th>Dorośli powyżej 16 lat</th>
+    </tr>
+    <tr th:each="family: ${family}">
+        <td th:text="${family.getNrOfInfants()}"></td>
+        <td th:text="${family.getNrOfChildren()}"></td>
+        <td th:text="${family.getNrOfAdults()}"></td>
+    </tr>
+</table>
+
+<br>
+<br>
+<a th:href="@{/static}" id="home">home</a>
+<br>
+<br>
+
+<form th:method="POST" th:action="@{/family}" id="remove">
+<br>
+<button>kontynuuj tworzenie rodziny.</button>
+
+</form>
+
+<br>
+<br>
+<form method="POST" th:action="@{/logout}" id="logoutForm">
+    <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>

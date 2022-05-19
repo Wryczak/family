@@ -2,13 +2,14 @@ package com.example.family.web;
 
 import com.example.family.data.FamilyRepository;
 import com.example.family.data.MemberRepository;
-import com.example.family.family.Family;
-import com.example.family.family.Member;
-import com.example.family.family.matureChecker;
+import com.example.family.data.UserRepository;
+import com.example.family.family.*;
 import com.example.family.security.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -22,14 +23,17 @@ import java.util.List;
 @RequestMapping("/family")
 @SessionAttributes("family")
 @Slf4j
-public class FamilyController implements matureChecker {
+public class FamilyController implements matureChecker, DetailsSet {
+    private final UserRepository userRepository;
+    private final FamilyRepository familyRepository;
+    private final MemberRepository memberRepository;
 
-    private FamilyRepository familyRepository;
-    private MemberRepository memberRepository;
+    private int numberOfViewCalls;
 
-    public FamilyController(FamilyRepository familyRepository, MemberRepository memberRepository) {
+    public FamilyController(FamilyRepository familyRepository, MemberRepository memberRepository, UserRepository userRepository) {
         this.familyRepository = familyRepository;
         this.memberRepository = memberRepository;
+        this.userRepository = userRepository;
     }
 
     @ModelAttribute(name = "family")
@@ -43,25 +47,36 @@ public class FamilyController implements matureChecker {
     }
 
     @GetMapping("/current")
-    public String createFamily(@ModelAttribute Family family) {
+    public String createFamily(@ModelAttribute Family family, Model model,
+                               @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
-        return "family";
+        String currentFamilyView = "family";
+        return getMenuDependsOnAuthentication(currentFamilyView, model, username);
     }
 
     @GetMapping("familyEditor")
-    public String getCreateForm(@ModelAttribute Family family) {
+    public String getCreateForm(@ModelAttribute Family family, Model model,
+                                @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
-        return "familyEditor";
+        if (numberOfViewCalls != 0) {
+            return "redirect:/family/current";
+        }
+
+        String familyEditorView = "familyEditor";
+        return getMenuDependsOnAuthentication(familyEditorView, model, username);
     }
 
     @GetMapping("removing")
-    public String removeLastMember(@ModelAttribute Family family) {
+    public String removeLastMember(@ModelAttribute Family family, Model model,
+                                   @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
-        return "removing";
+        String removeFamilyMemberView = "removing";
+        return getMenuDependsOnAuthentication(removeFamilyMemberView, model, username);
     }
 
     @PostMapping
-    public String processFamily(@Valid Family family, Errors errors) {
+    public String processFamily(@Valid Family family, Errors errors,
+                                Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
         if (errors.hasErrors()) {
             return "familyEditor";
@@ -69,16 +84,24 @@ public class FamilyController implements matureChecker {
 
         log.info("    --- Family Saved");
         familyRepository.save(family);
-        return "family";
+        numberOfViewCalls = 1;
+
+        String familyView = "family";
+        return getMenuDependsOnAuthentication(familyView, model, username);
     }
 
-    @GetMapping("/well")
-    public String viewFamily(@ModelAttribute Family family) {
-        return "/well";
+    @GetMapping("/success")
+    public String viewFamily(@ModelAttribute Family family, Model model,
+                             @CurrentSecurityContext(expression = "authentication?.name") String username) {
+
+        String success = "success";
+        return getMenuDependsOnAuthentication(success, model, username);
     }
 
     @PostMapping("submit")
-    public String submitFamily(@Valid Family family, Errors errors, SessionStatus sessionStatus) {
+    public String submitFamily(@Valid Family family, Errors errors, SessionStatus sessionStatus,
+                               Model model, @CurrentSecurityContext(expression = "authentication?.name")
+                               String username) {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -104,11 +127,17 @@ public class FamilyController implements matureChecker {
             return memberValidateRedirect;
         }
 
+        System.out.println(username);
+        userRepository.findByUsername(username).setDoIHaveFamily(true);
+        userRepository.findByUsername(username).setMyFamilyNr(family.getId());
+        numberOfViewCalls = 0;
+        setIdToRemoveForAllFamilyMembers(family);
         log.info("    --- Family Completed");
         familyRepository.saveAndFlush(family);
 
         sessionStatus.setComplete();
-        return "/well";
+        String success = "success";
+        return getMenuDependsOnAuthentication(success, model, username);
     }
 
     private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature) {
@@ -118,7 +147,7 @@ public class FamilyController implements matureChecker {
         }
         if (checkMature(mature, family) > nrOfMember) {
             System.out.println("I`m removing last " + mature);
-            Long id = getMemberIdFromSublist(mature,family);
+            Long id = getMemberIdFromSublist(mature, family);
             family.deleteFamilyMember(memberRepository.getById(id));
             memberRepository.deleteById(id);
 
@@ -148,9 +177,19 @@ public class FamilyController implements matureChecker {
                 tempMember.add(member);
             }
         }
-        if (tempMember.isEmpty()){
+        if (tempMember.isEmpty()) {
             return null;
         }
         return tempMember.get(tempMember.size() - 1).getId();
+    }
+
+    private void setIdToRemoveForAllFamilyMembers(Family family) {
+
+        List<Member> members = family.getMembers();
+        for (Member member : members
+        ) {member.setIdToRemove(member.getId());
+            memberRepository.save(member);
+
+        }
     }
 }

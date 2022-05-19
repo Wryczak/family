@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+
+<div th:insert="head"></div>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:insert="sidebar"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <div th:insert="topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
+
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+
+                </div>
+
+                <!-- Content Row -->
+                <div class="row">
+
+                    <!-- Content Column -->
+                    <div class="col-lg-6 mb-4">
+
+                        <!-- DataTales Example -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
+                            </div>
+                            <div class="card-body">
+                                <div th:insert="familyDetails"></div>
+<!--                                <div class="table-responsive">-->
+<!--                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">-->
+<!--                                        <thead>-->
+<!--                                        <tr>-->
+<!--                                            <th>Imię</th>-->
+<!--                                            <th>Nazwisko</th>-->
+<!--                                            <th>Wiek</th>-->
+<!--                                            <th>Dojrzałość</th>-->
+<!--                                            <th>Id</th>-->
+<!--                                        </tr>-->
+<!--                                        </thead>-->
+<!--                                        <tfoot>-->
+<!--                                        <tr>-->
+<!--                                            <th>Imię</th>-->
+<!--                                            <th>Nazwisko</th>-->
+<!--                                            <th>Wiek</th>-->
+<!--                                            <th>Dojrzałość</th>-->
+<!--                                            <th>Id</th>-->
+<!--                                        </tfoot>-->
+<!--                                        <tbody>-->
+<!--                                        <tr th:each="member: ${member1}">-->
+<!--                                            <td th:text="${member.getFamilyName()}"></td>-->
+<!--                                            <td th:text="${member.getName()}"></td>-->
+<!--                                            <td th:text="${member.getAge()}"></td>-->
+<!--                                            <td th:text="${member.getMature()}"></td>-->
+<!--                                            <td th:text="${member.getId}"></td>-->
+<!--&lt;!&ndash;                                            <td th:insert="deleteDiv"></td>&ndash;&gt;-->
+<!--                                        </tr>-->
+<!--                                        </tbody>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+                                <div>
+<!--                                                                        <form class="user" th:method="POST" th:action="@{/modify/removeMember}" th:object="${member}" id="memberForm">-->
+<!--                                                                            <input type="text" class="form-control form-control-user"-->
+<!--                                                                                   name="memberId" id="memberId" placeholder="Wpisz id..."-->
+<!--                                                                                   th:field="*{member.idToRemove}">-->
+<!--                                                                            <input type="submit" value="Usuń" class="btn btn-danger btn-user btn-block">-->
+<!--                                                                        </form>-->
+
+
+
+
+                                    <form class="user" th:method="POST" th:action="@{/modify/removeMember}" th:object="${member}"
+                                          id="loginForm">
+
+
+                                        <div class="form-group">
+                                            <input type="number" class="form-control form-control-user"
+                                                   name="age" id="age" aria-describedby="emailHelp"
+                                                   placeholder="Podaj Id członka rodziny do usunięcia..." min="0" max="999999999999" th:field="*{idToRemove}"/>
+
+                                        </div>
+
+                                        <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Podstawowe dane o rodzinie:</h6>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+
+                        <!-- Illustrations -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <img class="img-profile rounded-circle"
+                                         th:src="@{/images/family.png}" alt="family.png"/>
+                                </div>
+                                <p>Na tej stronie znajduje się lista członków rodziny, którą odnaleziono.</p>
+                                <p>Jeżeli to przez Ciebie została stworzona, możesz edytować wszystkie dane, po
+                                    logowaniu.</p>
+                                <p>Cieszymy się, że korzystasz z naszego serwisu.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Krzysztof Wrycza 2022</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<div th:insert="footer"></div>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
+
+
+<!-- Page level plugins -->
+<script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script th:src="@{/bootstrap/js/demo/datatables-demo.js}"></script>
+
+</body>
+</html>
