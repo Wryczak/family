@@ -1,6 +1,7 @@
 package com.example.family.web;
 
 import com.example.family.data.UserRepository;
+import com.example.family.family.Details;
 import com.example.family.family.DetailsSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -21,11 +22,9 @@ public class HomeController implements DetailsSet {
     }
 
     @GetMapping
-    public String getHomeView(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+    public String getHomeView(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username,Details details) {
+      detailsSet(userRepository,username,details,model);
 
-        String indexView = "index";
-        System.out.println(username);
-        return getMenuDependsOnAuthentication(userRepository,indexView, model, username);
+        return "index";
     }
-
 }

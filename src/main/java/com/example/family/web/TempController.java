@@ -26,29 +26,31 @@ public class TempController implements DetailsSet {
     }
 
     @GetMapping
-    public String viewFamilyByUser(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+    public String viewFamilyByUser(Model model, @CurrentSecurityContext(expression = "authentication?.name")
+    String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+
         Details userDetails = new Details();
 
         if (Objects.equals(username, "anonymousUser")) {
             userDetails.setSecondText("nie masz jeszcze rodziny");
             model.addAttribute("userDetails", userDetails);
-            String test = "wellLog";
-            return getMenuDependsOnAuthentication(userRepository,test, model, username);
+            return "wellLog";
+
         }
         Long myFamilyNumber = userRepository.findByUsername(username).getMyFamilyNr();
 
         if (myFamilyNumber == 0L) {
             userDetails.setSecondText("nie masz jeszcze rodziny");
             model.addAttribute("userDetails", userDetails);
-            String test = "wellLog";
-            return getMenuDependsOnAuthentication(userRepository,test, model, username);
+            return "wellLog";
+
         }
         userDetails.setSecondText(String.valueOf(myFamilyNumber));
         model.addAttribute("userDetails", userDetails);
         model.addAttribute("text", myFamilyNumber);
 
-        String test = "wellLog";
-        return getMenuDependsOnAuthentication(userRepository,test, model, username);
+        return "wellLog";
     }
 }
 

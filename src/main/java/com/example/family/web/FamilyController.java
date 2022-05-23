@@ -30,8 +30,10 @@ public class FamilyController implements matureChecker, DetailsSet {
     private final MemberRepository memberRepository;
 
     private int numberOfViewCalls;
+
     @Autowired
-    public FamilyController(FamilyRepository familyRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public FamilyController(FamilyRepository familyRepository,
+                            MemberRepository memberRepository, UserRepository userRepository) {
         this.familyRepository = familyRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
@@ -49,35 +51,39 @@ public class FamilyController implements matureChecker, DetailsSet {
 
     @GetMapping("/current")
     public String createFamily(@ModelAttribute Family family, Model model,
-                               @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                               @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
-        String currentFamilyView = "family";
-        return getMenuDependsOnAuthentication(userRepository,currentFamilyView, model, username);
+        return "family";
     }
 
     @GetMapping("familyEditor")
     public String getCreateForm(@ModelAttribute Family family, Model model,
-                                @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                                @CurrentSecurityContext(expression = "authentication?.name")
+                                String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
         if (numberOfViewCalls != 0) {
             return "redirect:/family/current";
         }
 
-        String familyEditorView = "familyEditor";
-        return getMenuDependsOnAuthentication(userRepository,familyEditorView, model, username);
+        return "familyEditor";
     }
 
     @GetMapping("removing")
     public String removeLastMember(@ModelAttribute Family family, Model model,
-                                   @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                                   @CurrentSecurityContext(expression = "authentication?.name")
+                                   String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
-        String removeFamilyMemberView = "removing";
-        return getMenuDependsOnAuthentication(userRepository,removeFamilyMemberView, model, username);
+        return "removing";
     }
 
     @PostMapping
     public String processFamily(@Valid Family family, Errors errors,
-                                Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                                Model model, @CurrentSecurityContext(expression = "authentication?.name")
+                                String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
         if (errors.hasErrors()) {
             return "familyEditor";
@@ -87,22 +93,23 @@ public class FamilyController implements matureChecker, DetailsSet {
         familyRepository.save(family);
         numberOfViewCalls = 1;
 
-        String familyView = "family";
-        return getMenuDependsOnAuthentication(userRepository,familyView, model, username);
+        return "family";
     }
 
     @GetMapping("/success")
     public String viewFamily(@ModelAttribute Family family, Model model,
-                             @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                             @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
-        String success = "success";
-        return getMenuDependsOnAuthentication(userRepository,success, model, username);
+        return "success";
     }
 
     @PostMapping("submit")
     public String submitFamily(@Valid Family family, Errors errors, SessionStatus sessionStatus,
                                Model model, @CurrentSecurityContext(expression = "authentication?.name")
-                               String username) {
+                               String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -113,22 +120,21 @@ public class FamilyController implements matureChecker, DetailsSet {
         family.setUser(user);
 
         String memberValidateRedirect;
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT,username,model);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfChildren(), Member.Mature.CHILD,username,model);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfChildren(), Member.Mature.CHILD);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfAdults(), Member.Mature.ADULT,username,model);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfAdults(), Member.Mature.ADULT);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        System.out.println(username);
         userRepository.findByUsername(username).setDoIHaveFamily(true);
         userRepository.findByUsername(username).setMyFamilyNr(family.getId());
         numberOfViewCalls = 0;
@@ -136,15 +142,14 @@ public class FamilyController implements matureChecker, DetailsSet {
         familyRepository.saveAndFlush(family);
 
         sessionStatus.setComplete();
-        String success = "success";
-        return getMenuDependsOnAuthentication(userRepository,success, model, username);
+        return "success";
     }
 
-    private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature,String username,Model model) {
+    private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature) {
         if (nrOfMember > checkMature(mature, family)) {
             log.info("    --- addAnother " + mature);
-            String addAnother = "family";
-            return getMenuDependsOnAuthentication(userRepository,addAnother, model, username);
+            return "family";
+
         }
         if (checkMature(mature, family) > nrOfMember) {
             System.out.println("I`m removing last " + mature);
