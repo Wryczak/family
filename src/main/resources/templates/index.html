@@ -136,7 +136,8 @@
                                     wystarczy nr ID, wyświetlany po jej utworzeniu. Jeżeli jesteś zalogowany,
                                     informacje o Twojej rodzinie pojawią się automatycznie.
                                     Logowanie ma na celu uniknięcie ingerencji osób trzecich.</p>
-                                <a th:href="@{/login}">Zaloguj się, by stworzyć swoją rodzinę.</a>
+                                <div th:if="${!details.status}">
+                                    <a th:href="@{/login}">Zaloguj się, by stworzyć swoją rodzinę.</a></div>
                             </div>
                         </div>
 

@@ -6,6 +6,7 @@ import com.example.family.data.UserRepository;
 import com.example.family.family.*;
 import com.example.family.security.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +30,7 @@ public class FamilyController implements matureChecker, DetailsSet {
     private final MemberRepository memberRepository;
 
     private int numberOfViewCalls;
-
+    @Autowired
     public FamilyController(FamilyRepository familyRepository, MemberRepository memberRepository, UserRepository userRepository) {
         this.familyRepository = familyRepository;
         this.memberRepository = memberRepository;
@@ -51,7 +52,7 @@ public class FamilyController implements matureChecker, DetailsSet {
                                @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
         String currentFamilyView = "family";
-        return getMenuDependsOnAuthentication(currentFamilyView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,currentFamilyView, model, username);
     }
 
     @GetMapping("familyEditor")
@@ -63,7 +64,7 @@ public class FamilyController implements matureChecker, DetailsSet {
         }
 
         String familyEditorView = "familyEditor";
-        return getMenuDependsOnAuthentication(familyEditorView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,familyEditorView, model, username);
     }
 
     @GetMapping("removing")
@@ -71,7 +72,7 @@ public class FamilyController implements matureChecker, DetailsSet {
                                    @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
         String removeFamilyMemberView = "removing";
-        return getMenuDependsOnAuthentication(removeFamilyMemberView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,removeFamilyMemberView, model, username);
     }
 
     @PostMapping
@@ -87,7 +88,7 @@ public class FamilyController implements matureChecker, DetailsSet {
         numberOfViewCalls = 1;
 
         String familyView = "family";
-        return getMenuDependsOnAuthentication(familyView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,familyView, model, username);
     }
 
     @GetMapping("/success")
@@ -95,7 +96,7 @@ public class FamilyController implements matureChecker, DetailsSet {
                              @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
         String success = "success";
-        return getMenuDependsOnAuthentication(success, model, username);
+        return getMenuDependsOnAuthentication(userRepository,success, model, username);
     }
 
     @PostMapping("submit")
@@ -112,17 +113,17 @@ public class FamilyController implements matureChecker, DetailsSet {
         family.setUser(user);
 
         String memberValidateRedirect;
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT,username,model);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfChildren(), Member.Mature.CHILD);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfChildren(), Member.Mature.CHILD,username,model);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfAdults(), Member.Mature.ADULT);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfAdults(), Member.Mature.ADULT,username,model);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
@@ -131,19 +132,19 @@ public class FamilyController implements matureChecker, DetailsSet {
         userRepository.findByUsername(username).setDoIHaveFamily(true);
         userRepository.findByUsername(username).setMyFamilyNr(family.getId());
         numberOfViewCalls = 0;
-        setIdToRemoveForAllFamilyMembers(family);
         log.info("    --- Family Completed");
         familyRepository.saveAndFlush(family);
 
         sessionStatus.setComplete();
         String success = "success";
-        return getMenuDependsOnAuthentication(success, model, username);
+        return getMenuDependsOnAuthentication(userRepository,success, model, username);
     }
 
-    private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature) {
+    private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature,String username,Model model) {
         if (nrOfMember > checkMature(mature, family)) {
             log.info("    --- addAnother " + mature);
-            return "family";
+            String addAnother = "family";
+            return getMenuDependsOnAuthentication(userRepository,addAnother, model, username);
         }
         if (checkMature(mature, family) > nrOfMember) {
             System.out.println("I`m removing last " + mature);
@@ -152,7 +153,7 @@ public class FamilyController implements matureChecker, DetailsSet {
             memberRepository.deleteById(id);
 
             log.info("    --- ToMany " + mature + " --deleting the last one");
-            return "removing";
+            return "redirect:removing";
         }
         return null;
     }
@@ -183,13 +184,4 @@ public class FamilyController implements matureChecker, DetailsSet {
         return tempMember.get(tempMember.size() - 1).getId();
     }
 
-    private void setIdToRemoveForAllFamilyMembers(Family family) {
-
-        List<Member> members = family.getMembers();
-        for (Member member : members
-        ) {member.setIdToRemove(member.getId());
-            memberRepository.save(member);
-
-        }
-    }
 }

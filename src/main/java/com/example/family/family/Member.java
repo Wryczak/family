@@ -34,8 +34,6 @@ public class Member {
 
     private Long userid;
 
-    private Long idToRemove;
-
     public enum Mature {
         INFANT, CHILD, ADULT;
     }
@@ -46,5 +44,4 @@ public class Member {
         }
         return age;
     }
-
 }

@@ -1,10 +1,13 @@
 package com.example.family.getData;
 
 import com.example.family.data.FamilyRepository;
+import com.example.family.data.UserRepository;
+import com.example.family.family.Details;
 import com.example.family.family.DetailsSet;
 import com.example.family.family.Family;
 import com.example.family.family.Member;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +24,11 @@ import java.util.Optional;
 public class FamilyGatherController implements DetailsSet {
     private Long idToFind;
     private final FamilyRepository familyRepository;
-
-    public FamilyGatherController(FamilyRepository familyRepository) {
+    private final UserRepository userRepository;
+    @Autowired
+    public FamilyGatherController(FamilyRepository familyRepository, UserRepository userRepository) {
         this.familyRepository = familyRepository;
+        this.userRepository = userRepository;
     }
 
     @ModelAttribute(name = "family")
@@ -37,12 +42,12 @@ public class FamilyGatherController implements DetailsSet {
     }
 
     @GetMapping
-    public String findFamily(@ModelAttribute Family family,Model model,
+    public String findFamily(@ModelAttribute Family family, Model model, Details details,
                              @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
         log.info("   --- Finding Family");
         String findView = "find";
-        return getMenuDependsOnAuthentication(findView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,findView, model, username);
     }
 
     @GetMapping("/myFamily")
@@ -50,19 +55,19 @@ public class FamilyGatherController implements DetailsSet {
         model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
         model.addAttribute("member", familyRepository.findById(idToFind).get().getMembers());
         String myFamilyView = "myFamily";
-        return getMenuDependsOnAuthentication(myFamilyView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,myFamilyView, model, username);
     }
 
     @PostMapping
-    public String processFamily(Optional<Family> family, Errors errors, Long id, Model model,
+    public String processFamily(Optional<Family> family, Errors errors, Long id, Model model,Details details,
                                 @CurrentSecurityContext(expression = "authentication?.name") String username) {
         if (errors.hasErrors()) {
             String findView = "find";
-            return getMenuDependsOnAuthentication(findView, model, username);
+            return getMenuDependsOnAuthentication(userRepository,findView, model, username);
         }
         if (id == null) {
             String findView = "find";
-            return getMenuDependsOnAuthentication(findView, model, username);
+            return getMenuDependsOnAuthentication(userRepository,findView, model, username);
         }
 
         if (familyRepository.existsById(id)) {
@@ -72,6 +77,6 @@ public class FamilyGatherController implements DetailsSet {
             return "redirect:/find/myFamily";
         }
         String findView = "find";
-        return getMenuDependsOnAuthentication(findView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,findView, model, username);
     }
 }

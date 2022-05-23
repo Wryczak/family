@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 public class Details {
-    private String name;
     private Long id;
     private String text;
     private String secondText;
