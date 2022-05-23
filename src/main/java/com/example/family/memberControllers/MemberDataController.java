@@ -166,6 +166,7 @@ Long idx=userDetails.getId();
                 userRepository.findByUsername(username).setDoIHaveFamily(false);
                 userRepository.findByUsername(username).setMyFamilyNr(0L);
                 familyRepository.deleteById(myFamilyId);
+                System.out.println(familyRepository.findById(myFamilyId).get().getMembers());
 
             }
                 log.info("    --- Member deleted");
