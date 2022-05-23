@@ -41,7 +41,6 @@ public class RegistrationController {
     @PostMapping
     public String processRegistration(@Valid RegistrationForm form, Errors errors, Model model) {
         Details details = new Details();
-        details.setName("errorMessage");
         String message;
 
         if (errors.hasErrors()) {
@@ -81,5 +80,4 @@ public class RegistrationController {
         log.info("    --- User Saved");
         return "redirect:/login";
     }
-
 }

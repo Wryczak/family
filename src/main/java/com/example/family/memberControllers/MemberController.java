@@ -2,7 +2,6 @@ package com.example.family.memberControllers;
 
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
-import com.example.family.family.Details;
 import com.example.family.family.DetailsSet;
 import com.example.family.family.Family;
 
@@ -50,7 +49,7 @@ public class MemberController implements DetailsSet {
     public String showCreateForm(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
         log.info("   --- Creating Member");
         String create = "create";
-        return getMenuDependsOnAuthentication(create, model, username);
+        return getMenuDependsOnAuthentication(userRepository,create, model, username);
     }
 
     @GetMapping("error")
@@ -58,7 +57,7 @@ public class MemberController implements DetailsSet {
         log.info("   --- You already have family");
         String error = "404";
 
-        return getMenuDependsOnAuthentication(error, model, username);
+        return getMenuDependsOnAuthentication(userRepository,error, model, username);
     }
 
     @GetMapping("addYourself")
@@ -67,24 +66,24 @@ public class MemberController implements DetailsSet {
 
         if (userRepository.findByUsername(username).isDoIHaveFamily()) {
             String redirect ="redirect:/wellLog";
-            return getMenuDependsOnAuthentication(redirect, model, username);
+            return getMenuDependsOnAuthentication(userRepository,redirect, model, username);
         }
         if (memberRepository.findByUserid(userRepository.findByUsername(username).getId())==null){
             shouldBeViewRedirected=false;
             log.info("   --- Creating You");
             String addYourself = "addYourself";
-            return getMenuDependsOnAuthentication(addYourself, model, username);
+            return getMenuDependsOnAuthentication(userRepository,addYourself, model, username);
 
         }
 
         if (shouldBeViewRedirected) {
             String redirect ="redirect:/family/familyEditor";
-            return getMenuDependsOnAuthentication(redirect, model, username);
+            return getMenuDependsOnAuthentication(userRepository,redirect, model, username);
         }
 
             log.info("   --- Creating You");
         String addYourself = "addYourself";
-        return getMenuDependsOnAuthentication(addYourself, model, username);
+        return getMenuDependsOnAuthentication(userRepository,addYourself, model, username);
     }
 
     @PostMapping("addYourself")
