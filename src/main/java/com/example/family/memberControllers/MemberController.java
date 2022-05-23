@@ -2,6 +2,7 @@ package com.example.family.memberControllers;
 
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
+import com.example.family.family.Details;
 import com.example.family.family.DetailsSet;
 import com.example.family.family.Family;
 
@@ -46,44 +47,45 @@ public class MemberController implements DetailsSet {
     }
 
     @GetMapping
-    public String showCreateForm(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+    public String showCreateForm(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
+        detailsSet(userRepository, username, details, model);
         log.info("   --- Creating Member");
-        String create = "create";
-        return getMenuDependsOnAuthentication(userRepository,create, model, username);
+        return "create";
     }
 
     @GetMapping("error")
-    public String redirectIfUserHaveFamily(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+    public String redirectIfUserHaveFamily(Model model, @CurrentSecurityContext(expression = "authentication?.name")
+    String username, Details details) {
+        detailsSet(userRepository, username, details, model);
         log.info("   --- You already have family");
-        String error = "404";
-
-        return getMenuDependsOnAuthentication(userRepository,error, model, username);
+        return "404";
     }
 
     @GetMapping("addYourself")
     public String showCreateFormForYourself(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username) {
+    String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
         if (userRepository.findByUsername(username).isDoIHaveFamily()) {
-            String redirect ="redirect:/wellLog";
-            return getMenuDependsOnAuthentication(userRepository,redirect, model, username);
+            return "redirect:/wellLog";
+
         }
-        if (memberRepository.findByUserid(userRepository.findByUsername(username).getId())==null){
-            shouldBeViewRedirected=false;
+        if (memberRepository.findByUserid(userRepository.findByUsername(username).getId()) == null) {
+            shouldBeViewRedirected = false;
             log.info("   --- Creating You");
-            String addYourself = "addYourself";
-            return getMenuDependsOnAuthentication(userRepository,addYourself, model, username);
+            return "addYourself";
+
 
         }
 
         if (shouldBeViewRedirected) {
-            String redirect ="redirect:/family/familyEditor";
-            return getMenuDependsOnAuthentication(userRepository,redirect, model, username);
+            return "redirect:/family/familyEditor";
+
         }
 
-            log.info("   --- Creating You");
-        String addYourself = "addYourself";
-        return getMenuDependsOnAuthentication(userRepository,addYourself, model, username);
+        log.info("   --- Creating You");
+        return "addYourself";
+
     }
 
     @PostMapping("addYourself")
@@ -91,7 +93,9 @@ public class MemberController implements DetailsSet {
             @Valid Member member,
             Errors errors,
             @ModelAttribute Family family, @CurrentSecurityContext(expression = "authentication?.name")
-            String username) {
+            String username,Details details,Model model) {
+        detailsSet(userRepository,username,details,model);
+
 
         if (errors.hasErrors()) {
             log.info("    --- Try again");
@@ -104,7 +108,7 @@ public class MemberController implements DetailsSet {
         member.setUserid(userRepository.findByUsername(username).getId());
         memberRepository.saveAndFlush(member);
         family.addFamilyMember(member);
-        shouldBeViewRedirected=true;
+        shouldBeViewRedirected = true;
         return "redirect:/family/familyEditor";
     }
 
@@ -136,6 +140,5 @@ public class MemberController implements DetailsSet {
         } else
             return Mature.ADULT;
     }
-
 }
 
