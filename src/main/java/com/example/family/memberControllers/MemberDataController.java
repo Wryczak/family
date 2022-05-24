@@ -16,10 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Transactional
 @Controller
@@ -81,8 +78,8 @@ public class MemberDataController implements DetailsSet {
 
     @GetMapping("removeFamily")
     public String getHomeView(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username,Details details) {
-        detailsSet(userRepository,username,details,model);
+    String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
 
         Details userDetails = new Details();
@@ -140,6 +137,17 @@ public class MemberDataController implements DetailsSet {
         model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
         model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
 
+        Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
+
+        if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()){
+            userRepository.findByUsername(username).setDoIHaveFamily(false);
+            userRepository.findByUsername(username).setMyFamilyNr(0L);
+            familyRepository.deleteById(myFamilyId);
+
+        log.info("    --- Member deleted");
+        return "redirect:/index";
+    }
+
         return "modify/removeMember";
     }
 
@@ -167,16 +175,18 @@ public class MemberDataController implements DetailsSet {
 
         if (allFamilyMembersId.contains(idToRemove)) {
             memberRepository.deleteById(idToRemove);
-            if (isFamilyEmpty(username)) {
+
+
+            if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()){
                 userRepository.findByUsername(username).setDoIHaveFamily(false);
                 userRepository.findByUsername(username).setMyFamilyNr(0L);
                 familyRepository.deleteById(myFamilyId);
-                System.out.println(familyRepository.findById(myFamilyId).get().getMembers());
-
             }
+
             log.info("    --- Member deleted");
-            return "redirect:/index";
+            return "redirect:/modify/redirectControlPass";
         }
+
 
         log.info("    --- No member");
         return "redirect:/modify/removeMember";
@@ -191,6 +201,26 @@ public class MemberDataController implements DetailsSet {
         return "modify/addMember";
     }
 
+    @GetMapping("redirectControlPass")
+    public String RedirectDataChecker(Model model,
+                                   @CurrentSecurityContext(expression = "authentication?.name")
+                                   String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+        Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
+
+        if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()){
+            userRepository.findByUsername(username).setDoIHaveFamily(false);
+            userRepository.findByUsername(username).setMyFamilyNr(0L);
+            familyRepository.deleteById(myFamilyId);
+
+            log.info("    --- Verify yours data");
+            return "redirect:/index";
+        }
+        log.info("    --- Verify yours data");
+        return "redirect:/index";
+    }
+
+
     @GetMapping("success")
     public String getSuccessView(Model model,
                                  @CurrentSecurityContext(expression = "authentication?.name")
@@ -201,13 +231,29 @@ public class MemberDataController implements DetailsSet {
 
     }
 
-    private boolean isFamilyEmpty(String username) {
-        Long familyId = userRepository.findByUsername(username).getMyFamilyNr();
-        Optional<Family> family = familyRepository.findById(familyId);
-        if (family.get().getMembers().isEmpty()) {
-            return true;
+    @GetMapping("getMyFamilyAfterLog")
+    public String viewFamilyByUser(Model model, @ModelAttribute Member member1, @CurrentSecurityContext(expression = "authentication?.name")
+    String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+
+        if (!userRepository.findByUsername(username).isDoIHaveFamily()) {
+            return "modify/wellLog";
         }
-        return false;
+        Details userDetails = new Details();
+        model.addAttribute("userDetails", userDetails);
+        Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
+        model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
+        model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
+        return "modify/getMyFamilyAfterLog";
+
+    }
+
+    @GetMapping("wellLog")
+    public String viewFamilyByUser(Model model, @CurrentSecurityContext(expression = "authentication?.name")
+    String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+        return "modify/wellLog";
+
     }
 
 }
