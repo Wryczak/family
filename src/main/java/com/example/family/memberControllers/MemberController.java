@@ -67,7 +67,7 @@ public class MemberController implements DetailsSet {
         detailsSet(userRepository, username, details, model);
 
         if (userRepository.findByUsername(username).isDoIHaveFamily()) {
-            return "redirect:/wellLog";
+            return "redirect:/modify/getMyFamilyAfterLog";
 
         }
         if (memberRepository.findByUserid(userRepository.findByUsername(username).getId()) == null) {

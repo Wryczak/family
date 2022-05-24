@@ -100,12 +100,21 @@
     <!-- Nav Item - Charts -->
 
     <!-- Nav Item - Tables -->
+<div th:if="${!details.status}">
     <li class="nav-item">
-        <a class="nav-link" th:href="@{/wellLog}">
+        <a class="nav-link" th:href="@{/modify/wellLog}">
             <i class="fas fa-fw fa-table"></i>
             <span>Podgląd</span></a>
     </li>
+</div>
 
+    <div th:if="${details.status}">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/modify/getMyFamilyAfterLog}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Podgląd</span></a>
+        </li>
+    </div>
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
