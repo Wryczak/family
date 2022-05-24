@@ -100,6 +100,11 @@ public class FamilyController implements matureChecker, DetailsSet {
     public String viewFamily(@ModelAttribute Family family, Model model,
                              @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
         detailsSet(userRepository, username, details, model);
+        Long myFamilyNr = userRepository.findByUsername(username).getMyFamilyNr();
+
+        Details userDetails = new Details();
+        userDetails.setId(myFamilyNr);
+        model.addAttribute("userDetails", userDetails);
 
         return "success";
     }
@@ -142,7 +147,7 @@ public class FamilyController implements matureChecker, DetailsSet {
         familyRepository.saveAndFlush(family);
 
         sessionStatus.setComplete();
-        return "success";
+        return "redirect:/family/success";
     }
 
     private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature) {
