@@ -122,7 +122,7 @@ public class MemberDataController implements DetailsSet {
         log.info("    --- Family Deleted");
 
 
-        return "index";
+        return "redirect:/index";
     }
 
     @GetMapping("removeMember")
@@ -176,12 +176,6 @@ public class MemberDataController implements DetailsSet {
         if (allFamilyMembersId.contains(idToRemove)) {
             memberRepository.deleteById(idToRemove);
 
-
-            if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()){
-                userRepository.findByUsername(username).setDoIHaveFamily(false);
-                userRepository.findByUsername(username).setMyFamilyNr(0L);
-                familyRepository.deleteById(myFamilyId);
-            }
 
             log.info("    --- Member deleted");
             return "redirect:/modify/redirectControlPass";
