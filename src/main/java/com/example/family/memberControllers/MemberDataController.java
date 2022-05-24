@@ -216,8 +216,8 @@ public class MemberDataController implements DetailsSet {
             log.info("    --- Verify yours data");
             return "redirect:/index";
         }
-
-        return "modify/redirectControlPass";
+        log.info("    --- Verify yours data");
+        return "redirect:/index";
     }
 
 
