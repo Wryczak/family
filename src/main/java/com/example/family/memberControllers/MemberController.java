@@ -2,12 +2,8 @@ package com.example.family.memberControllers;
 
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
-import com.example.family.family.Details;
-import com.example.family.family.DetailsSet;
-import com.example.family.family.Family;
+import com.example.family.family.*;
 
-import com.example.family.family.Member;
-import com.example.family.family.Member.Mature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -23,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/create")
 @SessionAttributes("family")
 @Slf4j
-public class MemberController implements DetailsSet {
+public class MemberController implements DetailsSet, MaturityChecker {
 
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
@@ -129,16 +125,6 @@ public class MemberController implements DetailsSet {
         family.addFamilyMember(saved);
 
         return "redirect:/family/current";
-    }
-
-    private Mature checkMaturity(Member member) {
-        int age = member.getAge();
-        if (age >= 0 && age < 4) {
-            return Mature.INFANT;
-        } else if (age >= 4 && age <= 16) {
-            return Mature.CHILD;
-        } else
-            return Mature.ADULT;
     }
 }
 

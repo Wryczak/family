@@ -3,10 +3,7 @@ package com.example.family.memberControllers;
 import com.example.family.data.FamilyRepository;
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
-import com.example.family.family.Details;
-import com.example.family.family.DetailsSet;
-import com.example.family.family.Family;
-import com.example.family.family.Member;
+import com.example.family.family.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -25,7 +22,7 @@ import java.util.*;
 @RequestMapping("/modify")
 @SessionAttributes("family")
 @Slf4j
-public class MemberDataController implements DetailsSet {
+public class MemberDataController implements DetailsSet, MaturityChecker {
 
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
@@ -107,14 +104,36 @@ public class MemberDataController implements DetailsSet {
         return "modify/removeFamily";
     }
 
-    @GetMapping("done")
-    public String redirectIfFamilyIsDeleted(Model model,
+    @GetMapping("addMember")
+    public String getAddMemberView (Model model,
                                             @CurrentSecurityContext(expression = "authentication?.name")
                                             String username, Details details) {
         detailsSet(userRepository, username, details, model);
 
+        return "modify/addMember";
+    }
 
-        return "modify/done";
+    @PostMapping ("addMember")
+    public String addNewMemberToFamily(Model model,@Valid Member member, Errors errors,Family family,
+                                            @CurrentSecurityContext(expression = "authentication?.name")
+                                            String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+
+        if (errors.hasErrors()) {
+            log.info("    --- Try again");
+            return "modify/addMember";
+        }
+        family=familyRepository.getById(userRepository.findByUsername(username).getMyFamilyNr());
+
+        log.info("    --- Creating new family member");
+        Member saved = member;
+        member.setMature(checkMaturity(saved));
+        member.setUserid(userRepository.findByUsername(username).getId());
+        saved = memberRepository.save(member);
+        family.addFamilyMember(saved);
+
+
+        return "redirect:/modify/getMyFamilyAfterLog";
     }
 
     @GetMapping("removeFamily")
@@ -215,15 +234,6 @@ public class MemberDataController implements DetailsSet {
 
         log.info("    --- No member");
         return "redirect:/modify/removeMember";
-    }
-
-    @GetMapping("addMember")
-    public String getAddMemberView(Model model,
-                                   @CurrentSecurityContext(expression = "authentication?.name")
-                                   String username, Details details) {
-        detailsSet(userRepository, username, details, model);
-
-        return "modify/addMember";
     }
 
     @GetMapping("redirectControlPass")
