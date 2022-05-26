@@ -1,5 +1,8 @@
 package com.example.family.memberControllers;
 
+import com.example.family.Interfaces.Details;
+import com.example.family.Interfaces.DetailsSet;
+import com.example.family.Interfaces.MaturityChecker;
 import com.example.family.data.FamilyRepository;
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
@@ -29,7 +32,6 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
     private final MemberRepository memberRepository;
     private Long idToModify;
 
-
     @Autowired
     public MemberDataController(UserRepository userRepository, FamilyRepository familyRepository,
                                 MemberRepository memberRepository) {
@@ -53,18 +55,13 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
                                       @CurrentSecurityContext(expression = "authentication?.name")
                                       String username, Details details) {
         detailsSet(userRepository, username, details, model);
-
-        Details userDetails = new Details();
-        userDetails.setSecondStatus(true);
-        model.addAttribute("userDetails", userDetails);
-        Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
-        model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
-        model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
-
+        if (familyRepository.findById(userRepository.findByUsername(username).getMyFamilyNr()).isEmpty()) {
+            return "redirect:/index";
+        }
+        detailsSetter(model, username);
 
         return "modify/memberUpdate";
     }
-
 
     @PostMapping("memberUpdate")
     public String MemberUpdate(Model model, Details userDetails,
@@ -80,7 +77,7 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         Long memberIdToUpdate = userDetails.getId();
         idToModify = memberIdToUpdate;
 
-        List<Long> allFamilyMembersId = getLongs(username);
+        List<Long> allFamilyMembersId = getMembersIdList(username);
 
         if (allFamilyMembersId.contains(memberIdToUpdate)) {
 
@@ -88,42 +85,30 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
             return "redirect:/modify/updateData";
         }
 
-
         log.info("    --- No member");
         return "redirect:/modify/memberUpdate";
     }
 
-
-    @GetMapping
-    public String getDeleteFamilyView(Model model,
-                                      @CurrentSecurityContext(expression = "authentication?.name")
-                                      String username, Details details) {
-        detailsSet(userRepository, username, details, model);
-
-
-        return "modify/removeFamily";
-    }
-
     @GetMapping("addMember")
-    public String getAddMemberView (Model model,
-                                            @CurrentSecurityContext(expression = "authentication?.name")
-                                            String username, Details details) {
+    public String getAddMemberView(Model model,
+                                   @CurrentSecurityContext(expression = "authentication?.name")
+                                   String username, Details details) {
         detailsSet(userRepository, username, details, model);
 
         return "modify/addMember";
     }
 
-    @PostMapping ("addMember")
-    public String addNewMemberToFamily(Model model,@Valid Member member, Errors errors,Family family,
-                                            @CurrentSecurityContext(expression = "authentication?.name")
-                                            String username, Details details) {
+    @PostMapping("addMember")
+    public String addNewMemberToFamily(Model model, @Valid Member member, Errors errors, Family family,
+                                       @CurrentSecurityContext(expression = "authentication?.name")
+                                       String username, Details details) {
         detailsSet(userRepository, username, details, model);
 
         if (errors.hasErrors()) {
             log.info("    --- Try again");
             return "modify/addMember";
         }
-        family=familyRepository.getById(userRepository.findByUsername(username).getMyFamilyNr());
+        family = familyRepository.getById(userRepository.findByUsername(username).getMyFamilyNr());
 
         log.info("    --- Creating new family member");
         Member saved = member;
@@ -131,7 +116,6 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         member.setUserid(userRepository.findByUsername(username).getId());
         saved = memberRepository.save(member);
         family.addFamilyMember(saved);
-
 
         return "redirect:/modify/getMyFamilyAfterLog";
     }
@@ -141,23 +125,13 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
     String username, Details details) {
         detailsSet(userRepository, username, details, model);
 
-
-        Details userDetails = new Details();
-        userDetails.setStatus(false);
-        model.addAttribute("userDetails", userDetails);
-
-
-        if (userRepository.findByUsername(username).isDoIHaveFamily()) {
-            userDetails.setStatus(true);
-            model.addAttribute("userDetails", userDetails);
-            return "modify/removeFamily";
-
+        if (!userRepository.findByUsername(username).isDoIHaveFamily()){
+            return "redirect:/index";
         }
 
         if (username.equals("anonymousUser")) {
             log.info("    --- No Family found");
             return "redirect:/404";
-
         }
 
         return "modify/removeFamily";
@@ -171,17 +145,12 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         detailsSet(userRepository, username, details, model);
 
         Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
-        System.out.println(myFamilyId);
-        System.out.println(username);
-        userRepository.findByUsername(username).setDoIHaveFamily(false);
-        userRepository.findByUsername(username).setMyFamilyNr(0L);
         List<Member> members = familyRepository.findById(myFamilyId).get().getMembers();
         memberRepository.deleteAll(members);
-        familyRepository.deleteById(myFamilyId);
+
+        repositoryDeleteSetter(username,myFamilyId);
 
         log.info("    --- Family Deleted");
-
-
         return "redirect:/index";
     }
 
@@ -191,25 +160,18 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
                                       String username, Details details) {
         detailsSet(userRepository, username, details, model);
 
-        Details userDetails = new Details();
-        model.addAttribute("userDetails", userDetails);
-        Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
-        model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
-        model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
+        detailsSetter(model, username);
 
         Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
 
         if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()) {
-            userRepository.findByUsername(username).setDoIHaveFamily(false);
-            userRepository.findByUsername(username).setMyFamilyNr(0L);
-            familyRepository.deleteById(myFamilyId);
+         repositoryDeleteSetter(username,myFamilyId);
 
             return "redirect:/index";
         }
 
         return "modify/removeMember";
     }
-
 
     @PostMapping("removeMember")
     public String createYourself(Model model, Details userDetails,
@@ -223,7 +185,7 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         }
 
         Long idToRemove = userDetails.getId();
-        List<Long> allFamilyMembersId = getLongs(username);
+        List<Long> allFamilyMembersId = getMembersIdList(username);
 
         if (allFamilyMembersId.contains(idToRemove)) {
             memberRepository.deleteById(idToRemove);
@@ -244,25 +206,13 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
 
         if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()) {
-            userRepository.findByUsername(username).setDoIHaveFamily(false);
-            userRepository.findByUsername(username).setMyFamilyNr(0L);
-            familyRepository.deleteById(myFamilyId);
+            repositoryDeleteSetter(username, myFamilyId);
 
             log.info("    --- Verify yours data");
             return "redirect:/index";
         }
         log.info("    --- Verify yours data");
         return "redirect:/index";
-    }
-
-
-    @GetMapping("success")
-    public String getSuccessView(Model model,
-                                 @CurrentSecurityContext(expression = "authentication?.name")
-                                 String username, Details details) {
-        detailsSet(userRepository, username, details, model);
-
-        return "index";
 
     }
 
@@ -274,11 +224,7 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         if (!userRepository.findByUsername(username).isDoIHaveFamily()) {
             return "modify/wellLog";
         }
-        Details userDetails = new Details();
-        model.addAttribute("userDetails", userDetails);
-        Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
-        model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
-        model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
+        detailsSetter(model, username);
         return "modify/getMyFamilyAfterLog";
     }
 
@@ -290,18 +236,16 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         if (idToModify == null || idToModify == 0L) {
             return "redirect:/index";
         }
-        Details userDetails= new Details();
+        Details userDetails = new Details();
         Member memberToUpdate = memberRepository.getById(idToModify);
         String memberData = memberToUpdate.getName() + "   " + memberToUpdate.getFamilyName() + " ID: " + idToModify;
         userDetails.setText(memberData);
         model.addAttribute("userDetails", userDetails);
         model.addAttribute("memberToUpdate", memberToUpdate);
 
-
         log.info("   --- Updating Member");
         return "modify/updateData";
     }
-
 
     @PostMapping("updateData")
     public String postUpdateForm(Model model, @Valid Member memberToUpdate, Errors errors, Details userDetails,
@@ -309,31 +253,19 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         detailsSet(userRepository, username, details, model);
         if (errors.hasErrors()) {
             userDetails.setText("");
-            model.addAttribute("userDetails",userDetails);
+            model.addAttribute("userDetails", userDetails);
             log.info("    --- Try again");
             return "/modify/updateData";
         }
 
-        String name = memberToUpdate.getName();
-        String familyName = memberToUpdate.getFamilyName();
-
-        if (name.length() < 3 || familyName.length() < 3) {
-            userDetails.setSecondText("Imię jest za krótkie!");
-            userDetails.setThirdText("Nazwisko jest za krótkie!");
-            model.addAttribute("userDetails", userDetails);
-            return "/modify/updateData";
-        }
-
-
         Member member = memberRepository.getById(idToModify);
-        member.setName(name);
-        member.setFamilyName(familyName);
+        member.setName(memberToUpdate.getName());
+        member.setFamilyName(memberToUpdate.getFamilyName());
         memberRepository.save(member);
         idToModify = 0L;
 
         log.info("   --- Member updated!");
         return "redirect:/modify/getMyFamilyAfterLog";
-
 
     }
 
@@ -345,8 +277,7 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
 
     }
 
-
-    private List<Long> getLongs(String username) {
+    private List<Long> getMembersIdList(String username) {
         Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
 
         List<Member> members = familyRepository.findById(myFamilyId).get().getMembers();
@@ -357,5 +288,18 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
             allFamilyMembersId.add(id);
         }
         return allFamilyMembersId;
+    }
+
+    private void detailsSetter(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+        Details userDetails = new Details();
+        model.addAttribute("userDetails", userDetails);
+        Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
+        model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
+        model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
+    }
+    private void repositoryDeleteSetter(String username, Long myFamilyId) {
+        userRepository.findByUsername(username).setDoIHaveFamily(false);
+        userRepository.findByUsername(username).setMyFamilyNr(0L);
+        familyRepository.deleteById(myFamilyId);
     }
 }

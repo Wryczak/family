@@ -2,8 +2,8 @@ package com.example.family.getData;
 
 import com.example.family.data.FamilyRepository;
 import com.example.family.data.UserRepository;
-import com.example.family.family.Details;
-import com.example.family.family.DetailsSet;
+import com.example.family.Interfaces.Details;
+import com.example.family.Interfaces.DetailsSet;
 import com.example.family.family.Family;
 import com.example.family.family.Member;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -61,20 +60,17 @@ public class FamilyGatherController implements DetailsSet {
     }
 
     @PostMapping
-    public String processFamily(Optional<Family> family, Errors errors, Long id, Model model,
+    public String processFamily(Optional<Family> family, Model model,
                                 @CurrentSecurityContext(expression = "authentication?.name")
                                 String username, Details details) {
         detailsSet(userRepository, username, details, model);
-        if (errors.hasErrors()) {
-            return  "find";
-        }
+        Long id=family.get().getId();
         if (id == null) {
             return  "find";
         }
 
-        if (familyRepository.existsById(id)) {
-            family = familyRepository.findById(id);
-            idToFind = family.get().getId();
+        if (familyRepository.existsById(id)){
+            idToFind =id;
             log.info("    --- Family Found");
             return "redirect:/find/myFamily";
         }

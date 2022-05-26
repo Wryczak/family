@@ -1,5 +1,8 @@
 package com.example.family.web;
 
+import com.example.family.Interfaces.Details;
+import com.example.family.Interfaces.DetailsSet;
+import com.example.family.Interfaces.matureChecker;
 import com.example.family.data.FamilyRepository;
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
@@ -28,8 +31,7 @@ public class FamilyController implements matureChecker, DetailsSet {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
     private final MemberRepository memberRepository;
-
-    private int numberOfViewCalls;
+    private boolean shouldBeViewRedirected;
 
     @Autowired
     public FamilyController(FamilyRepository familyRepository,
@@ -63,7 +65,7 @@ public class FamilyController implements matureChecker, DetailsSet {
                                 String username, Details details) {
         detailsSet(userRepository, username, details, model);
 
-        if (numberOfViewCalls != 0) {
+        if (shouldBeViewRedirected) {
             return "redirect:/family/current";
         }
 
@@ -91,7 +93,7 @@ public class FamilyController implements matureChecker, DetailsSet {
 
         log.info("    --- Family Saved");
         familyRepository.save(family);
-        numberOfViewCalls = 1;
+        shouldBeViewRedirected=true;
 
         return "family";
     }
@@ -142,7 +144,7 @@ public class FamilyController implements matureChecker, DetailsSet {
 
         userRepository.findByUsername(username).setDoIHaveFamily(true);
         userRepository.findByUsername(username).setMyFamilyNr(family.getId());
-        numberOfViewCalls = 0;
+        shouldBeViewRedirected=false;
         log.info("    --- Family Completed");
         familyRepository.saveAndFlush(family);
 
@@ -193,5 +195,4 @@ public class FamilyController implements matureChecker, DetailsSet {
         }
         return tempMember.get(tempMember.size() - 1).getId();
     }
-
 }

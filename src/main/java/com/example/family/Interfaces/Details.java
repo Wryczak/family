@@ -1,4 +1,4 @@
-package com.example.family.family;
+package com.example.family.Interfaces;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;

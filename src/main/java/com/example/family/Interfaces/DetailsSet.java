@@ -1,4 +1,4 @@
-package com.example.family.family;
+package com.example.family.Interfaces;
 
 import com.example.family.data.UserRepository;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 
 @Component
 public interface DetailsSet {
-    default Details detailsSet(UserRepository userRepository,String username,Details details,Model model) {
+    default Details detailsSet(UserRepository userRepository, String username, Details details, Model model) {
         if (username == "anonymousUser") {
             details.setText("Zaloguj się:");
             details.setStatus(false);
