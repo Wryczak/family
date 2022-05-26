@@ -40,7 +40,7 @@
                     <div class="col-lg-4 mb-4">
 
                         <!-- service -->
-                        <div th:if="${userDetails.status}">
+                        <div th:if="${details.secondStatus}">
                         <form class="user" th:method="POST" th:action="@{/modify/removeFamily}" id="DeleteForm">
 
                             <input value="Usuń" class="btn btn-danger btn-user btn-block" href="#" data-toggle="modal" data-target="#deleteModal">

@@ -1,4 +1,6 @@
-package com.example.family.family;
+package com.example.family.Interfaces;
+
+import com.example.family.family.Member;
 
 public interface MaturityChecker {
   default Member.Mature checkMaturity(Member member) {

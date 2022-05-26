@@ -1,5 +1,8 @@
 package com.example.family.memberControllers;
 
+import com.example.family.Interfaces.Details;
+import com.example.family.Interfaces.DetailsSet;
+import com.example.family.Interfaces.MaturityChecker;
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
 import com.example.family.family.*;
@@ -49,14 +52,6 @@ public class MemberController implements DetailsSet, MaturityChecker {
         return "create";
     }
 
-    @GetMapping("error")
-    public String redirectIfUserHaveFamily(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username, Details details) {
-        detailsSet(userRepository, username, details, model);
-        log.info("   --- You already have family");
-        return "404";
-    }
-
     @GetMapping("addYourself")
     public String showCreateFormForYourself(Model model, @CurrentSecurityContext(expression = "authentication?.name")
     String username, Details details) {
@@ -71,7 +66,6 @@ public class MemberController implements DetailsSet, MaturityChecker {
             log.info("   --- Creating You");
             return "addYourself";
 
-
         }
 
         if (shouldBeViewRedirected) {
@@ -81,17 +75,14 @@ public class MemberController implements DetailsSet, MaturityChecker {
 
         log.info("   --- Creating You");
         return "addYourself";
-
     }
 
     @PostMapping("addYourself")
     public String createYourself(
-            @Valid Member member,
-            Errors errors,
+            @Valid Member member,Errors errors,
             @ModelAttribute Family family, @CurrentSecurityContext(expression = "authentication?.name")
             String username,Details details,Model model) {
         detailsSet(userRepository,username,details,model);
-
 
         if (errors.hasErrors()) {
             log.info("    --- Try again");
@@ -100,10 +91,7 @@ public class MemberController implements DetailsSet, MaturityChecker {
 
         log.info("    --- Saving Yours data");
 
-        member.setMature(checkMaturity(member));
-        member.setUserid(userRepository.findByUsername(username).getId());
-        memberRepository.saveAndFlush(member);
-        family.addFamilyMember(member);
+        newMemberSaver(member,family,username);
         shouldBeViewRedirected = true;
         return "redirect:/family/familyEditor";
     }
@@ -111,20 +99,23 @@ public class MemberController implements DetailsSet, MaturityChecker {
     @PostMapping()
     public String processCreate(
             @Valid Member member, Errors errors, @ModelAttribute Family family,
-            @CurrentSecurityContext(expression = "authentication?.name")
-            String username) {
+            @CurrentSecurityContext(expression = "authentication?.name")String username) {
         if (errors.hasErrors()) {
             log.info("    --- Try again");
             return "create";
         }
         log.info("    --- Saving Member");
-        Member saved = member;
-        member.setMature(checkMaturity(saved));
-        member.setUserid(userRepository.findByUsername(username).getId());
-        saved = memberRepository.saveAndFlush(member);
-        family.addFamilyMember(saved);
+
+        newMemberSaver(member, family, username);
 
         return "redirect:/family/current";
+    }
+
+    private void newMemberSaver(Member member, Family family, String username) {
+        member.setMature(checkMaturity(member));
+        member.setUserid(userRepository.findByUsername(username).getId());
+        member = memberRepository.saveAndFlush(member);
+        family.addFamilyMember(member);
     }
 }
 
