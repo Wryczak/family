@@ -1,5 +1,8 @@
 package com.example.family.web;
 
+import com.example.family.Interfaces.Details;
+import com.example.family.Interfaces.DetailsSet;
+import com.example.family.Interfaces.matureChecker;
 import com.example.family.data.FamilyRepository;
 import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
@@ -28,10 +31,11 @@ public class FamilyController implements matureChecker, DetailsSet {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
     private final MemberRepository memberRepository;
+    private boolean shouldBeViewRedirected;
 
-    private int numberOfViewCalls;
     @Autowired
-    public FamilyController(FamilyRepository familyRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public FamilyController(FamilyRepository familyRepository,
+                            MemberRepository memberRepository, UserRepository userRepository) {
         this.familyRepository = familyRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
@@ -49,35 +53,39 @@ public class FamilyController implements matureChecker, DetailsSet {
 
     @GetMapping("/current")
     public String createFamily(@ModelAttribute Family family, Model model,
-                               @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                               @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
-        String currentFamilyView = "family";
-        return getMenuDependsOnAuthentication(userRepository,currentFamilyView, model, username);
+        return "family";
     }
 
     @GetMapping("familyEditor")
     public String getCreateForm(@ModelAttribute Family family, Model model,
-                                @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                                @CurrentSecurityContext(expression = "authentication?.name")
+                                String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
-        if (numberOfViewCalls != 0) {
+        if (shouldBeViewRedirected) {
             return "redirect:/family/current";
         }
 
-        String familyEditorView = "familyEditor";
-        return getMenuDependsOnAuthentication(userRepository,familyEditorView, model, username);
+        return "familyEditor";
     }
 
     @GetMapping("removing")
     public String removeLastMember(@ModelAttribute Family family, Model model,
-                                   @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                                   @CurrentSecurityContext(expression = "authentication?.name")
+                                   String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
-        String removeFamilyMemberView = "removing";
-        return getMenuDependsOnAuthentication(userRepository,removeFamilyMemberView, model, username);
+        return "removing";
     }
 
     @PostMapping
     public String processFamily(@Valid Family family, Errors errors,
-                                Model model, @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                                Model model, @CurrentSecurityContext(expression = "authentication?.name")
+                                String username, Details details) {
+        detailsSet(userRepository, username, details, model);
 
         if (errors.hasErrors()) {
             return "familyEditor";
@@ -85,24 +93,30 @@ public class FamilyController implements matureChecker, DetailsSet {
 
         log.info("    --- Family Saved");
         familyRepository.save(family);
-        numberOfViewCalls = 1;
+        shouldBeViewRedirected=true;
 
-        String familyView = "family";
-        return getMenuDependsOnAuthentication(userRepository,familyView, model, username);
+        return "family";
     }
 
     @GetMapping("/success")
     public String viewFamily(@ModelAttribute Family family, Model model,
-                             @CurrentSecurityContext(expression = "authentication?.name") String username) {
+                             @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+        Long myFamilyNr = userRepository.findByUsername(username).getMyFamilyNr();
 
-        String success = "success";
-        return getMenuDependsOnAuthentication(userRepository,success, model, username);
+        Details userDetails = new Details();
+        userDetails.setId(myFamilyNr);
+        model.addAttribute("userDetails", userDetails);
+
+        return "success";
     }
 
     @PostMapping("submit")
     public String submitFamily(@Valid Family family, Errors errors, SessionStatus sessionStatus,
                                Model model, @CurrentSecurityContext(expression = "authentication?.name")
-                               String username) {
+                               String username, Details details) {
+        detailsSet(userRepository, username, details, model);
+
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -113,38 +127,36 @@ public class FamilyController implements matureChecker, DetailsSet {
         family.setUser(user);
 
         String memberValidateRedirect;
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT,username,model);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfInfants(), Member.Mature.INFANT);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfChildren(), Member.Mature.CHILD,username,model);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfChildren(), Member.Mature.CHILD);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfAdults(), Member.Mature.ADULT,username,model);
+        memberValidateRedirect = checkFamilyMembersByMaturity(family, family.getNrOfAdults(), Member.Mature.ADULT);
         if (memberValidateRedirect != null) {
             return memberValidateRedirect;
         }
 
-        System.out.println(username);
         userRepository.findByUsername(username).setDoIHaveFamily(true);
         userRepository.findByUsername(username).setMyFamilyNr(family.getId());
-        numberOfViewCalls = 0;
+        shouldBeViewRedirected=false;
         log.info("    --- Family Completed");
         familyRepository.saveAndFlush(family);
 
         sessionStatus.setComplete();
-        String success = "success";
-        return getMenuDependsOnAuthentication(userRepository,success, model, username);
+        return "redirect:/family/success";
     }
 
-    private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature,String username,Model model) {
+    private String checkFamilyMembersByMaturity(Family family, int nrOfMember, Member.Mature mature) {
         if (nrOfMember > checkMature(mature, family)) {
             log.info("    --- addAnother " + mature);
-            String addAnother = "family";
-            return getMenuDependsOnAuthentication(userRepository,addAnother, model, username);
+            return "family";
+
         }
         if (checkMature(mature, family) > nrOfMember) {
             System.out.println("I`m removing last " + mature);
@@ -183,5 +195,4 @@ public class FamilyController implements matureChecker, DetailsSet {
         }
         return tempMember.get(tempMember.size() - 1).getId();
     }
-
 }

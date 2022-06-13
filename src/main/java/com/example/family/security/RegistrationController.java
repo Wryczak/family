@@ -1,7 +1,7 @@
 package com.example.family.security;
 
 import com.example.family.data.UserRepository;
-import com.example.family.family.Details;
+import com.example.family.Interfaces.Details;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -44,10 +44,8 @@ public class RegistrationController {
         String message;
 
         if (errors.hasErrors()) {
-            message = "Proszę podać poprawne dane";
-            details.setText(message);
-            details.setStatus(false);
-            model.addAttribute("details", details);
+            message = "Podaj poprawne dane!";
+            errorMessageSetter(model, details, message);
 
             log.info("    --- Try again");
             return "/register";
@@ -58,9 +56,7 @@ public class RegistrationController {
 
         if (user != null || form.getUsername().equals(forbiddenName)) {
             message = "Użytkownik o tym nicku już istnieje!";
-            details.setText(message);
-            details.setStatus(false);
-            model.addAttribute("details", details);
+            errorMessageSetter(model, details, message);
 
             log.info("    --- User already exist");
             return "/register";
@@ -68,10 +64,8 @@ public class RegistrationController {
 
         if (!form.getPassword().equals(form.getCheckpassword())) {
             message = "Hasła muszą być takie same!";
+           errorMessageSetter(model,details,message);
             details.setStatus(true);
-            details.setText(message);
-            model.addAttribute("details", details);
-
             log.info("    --- Try again");
             return "/register";
         }
@@ -79,5 +73,11 @@ public class RegistrationController {
         userRepo.save(form.toUser(passwordEncoder));
         log.info("    --- User Saved");
         return "redirect:/login";
+    }
+
+    private void errorMessageSetter(Model model, Details details, String message) {
+        details.setText(message);
+        details.setStatus(false);
+        model.addAttribute("details", details);
     }
 }

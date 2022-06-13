@@ -1,4 +1,4 @@
-package com.example.family.family;
+package com.example.family.Interfaces;
 
 import com.example.family.data.UserRepository;
 import org.springframework.stereotype.Component;
@@ -6,13 +6,12 @@ import org.springframework.ui.Model;
 
 @Component
 public interface DetailsSet {
-    default String getMenuDependsOnAuthentication(UserRepository userRepository,String viewName, Model model, String username) {
-        Details details = new Details();
+    default Details detailsSet(UserRepository userRepository, String username, Details details, Model model) {
         if (username == "anonymousUser") {
             details.setText("Zaloguj się:");
             details.setStatus(false);
             model.addAttribute("details", details);
-            return viewName;
+            return details;
         }
         details.setText(username);
         details.setStatus(true);
@@ -21,6 +20,6 @@ public interface DetailsSet {
             details.setSecondStatus(true);
             model.addAttribute("status", details);
         }
-        return viewName;
+        return details;
     }
 }

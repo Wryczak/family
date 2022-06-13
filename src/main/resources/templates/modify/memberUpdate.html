@@ -26,150 +26,95 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Welcome in Family Creator</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
+
                 </div>
                 <!-- Content Row -->
                 <div class="row">
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Znajdowawnie rodziny
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Logowanie nie potrzebne
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Serwis jest darmowy
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Co tu dodawać?</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tworzenie
-                                            rodziny
-                                        </div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">Musisz się
-                                                    zalogować
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pending Requests Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Udostępnij znajomym
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Niech też spróbują!</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Content Row -->
                 <div class="row">
 
                     <!-- Content Column -->
-                    <div class="col-lg-12 mb-4">
+                    <div class="col-lg-6 mb-4">
 
-                        <!-- service -->
-                        <div class="card shadow mb-1">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Korzystanie z serwisu</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                </div>
-
-                                <p>Serwis jest darmowy. Każdy, kto chce poświęcić trochę czasu,
-                                    aby stworzyć swoją rodzinę i mieć dostęp do informacji
-                                    o jej członkach, może z niego korzystać. Do odnajdywania rodzin
-                                    wystarczy nr ID, wyświetlany po jej utworzeniu. Jeżeli jesteś zalogowany,
-                                    informacje o Twojej rodzinie pojawią się automatycznie.
-                                    Logowanie ma na celu uniknięcie ingerencji osób trzecich.</p>
-                                <div th:if="${!details.status}">
-                                    <a th:href="@{/login}">Zaloguj się, by stworzyć swoją rodzinę.</a></div>
-                            </div>
-                        </div>
-
-                        <!-- Approach -->
+                        <!-- DataTales Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Przed stworzeniem rodziny:</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
                             </div>
                             <div class="card-body">
-                                <p>Przy tworzeniu rodziny pamiętaj o kilku zasadach:</p>
-                                <p>Liczba członków rodziny z każdej grupy wiekowej zostanie zweryfikowana, jeśli
-                                    utworzysz ich więcej, niż podałeś, zostaną oni usunięci z listy członków Twojej
-                                    rodziny.
-                                    Za każdym razem zostanie usunięty ostatnio utworzony członek rodziny z danej
-                                    kategorii wiekowej.</p>
-                                <p>Są trzy kategorie wiekowe:</p>
-                                <p>Niemowlaki - wiek 0-3 lat</p>
-                                <p>Dzieci - wiek 4-16 lat</p>
-                                <p>Dorośli - wiek >16 lat</p>
-                                <p>Przy tworzeniu rodziny liczba jej członków musi się zgadzać, po jej stworzeniu
-                                    będziesz mógł aktualizować dane jej członków, oraz ich usuwać.</p>
-                                <p>Po stworzeniu rodziny zostanie ona przypisana do Twojego konta, po zalogowaniu nie
-                                    będziesz musiał jej szukać.</p>
-                                <p>Jeżeli uznasz, że nie chcesz przechowywać informacji o swojej rodzinie, będziesz mógł
-                                    usunąć informacje o niej z naszej bazy danych.</p>
-                                <p>Po utworzeniu rodziny, nie będziesz mógł stworzyć kolejnej, do momentu usunięcia już
-                                    istniejącej rodziny. </p>
-                                <p> Życzymy przyjemnego korzystania z naszego serwisu.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Imię</th>
+                                            <th>Nazwisko</th>
+                                            <th>Wiek</th>
+                                            <th>Id</th>
+                                        </tr>
+                                        </thead>
+                                        <tfoot>
+                                        <tr>
+                                            <th>Imię</th>
+                                            <th>Nazwisko</th>
+                                            <th>Wiek</th>
+                                            <th>Id</th>
+                                        </tfoot>
+                                        <tbody>
+                                        <tr th:each="member: ${member1}">
+                                            <td th:text="${member.getName()}"></td>
+                                            <td th:text="${member.getFamilyName()}"></td>
+                                            <td th:text="${member.getAge()}"></td>
+                                            <td th:text="${member.getId}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div>
+
+                                    <form class="user" th:method="POST" th:action="@{/modify/memberUpdate}"
+                                          th:object="${userDetails}"
+                                          id="loginForm">
+
+
+                                        <div class="form-group">
+                                            <input type="number" class="form-control form-control-user"
+                                                   name="age" id="age" aria-describedby="emailHelp"
+                                                   placeholder="Podaj Id członka rodziny, którego dane chcesz zmienić" min="0"
+                                                   max="999999999999" th:field="*{id}"/>
+                                        </div>
+                                        <input type="submit" value="Aktualizuj" class="btn btn-info">
+
+
+                                    </form>
+                                </div>
                             </div>
                         </div>
 
                     </div>
+                    <div class="col-lg-6 mb-4">
+
+                        <!-- Illustrations -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <img class="img-profile rounded-circle"
+                                         th:src="@{/images/family.png}" alt="family.png"/>
+                                </div>
+                                <p>Na tej stronie znajduje się lista członków rodziny, którą odnaleziono.</p>
+                                <p>Jeżeli to przez Ciebie została stworzona, możesz edytować wszystkie dane, po
+                                    logowaniu.</p>
+                                <p>Cieszymy się, że korzystasz z naszego serwisu.</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -194,6 +139,7 @@
 </div>
 <!-- End of Page Wrapper -->
 
+<!-- Scroll to Top Button-->
 <div th:insert="footer"></div>
 
 <!-- Bootstrap core JavaScript-->
@@ -206,8 +152,14 @@
 <!-- Custom scripts for all pages-->
 <script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
 
+
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+<!-- Page level custom scripts -->
+<script th:src="@{/bootstrap/js/demo/datatables-demo.js}"></script>
 
 </body>
 </html>

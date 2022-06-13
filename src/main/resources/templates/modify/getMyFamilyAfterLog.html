@@ -27,6 +27,7 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
+
                 </div>
                 <!-- Content Row -->
                 <div class="row">
@@ -45,41 +46,8 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                        <tr>
-                                            <th>Imię</th>
-                                            <th>Nazwisko</th>
-                                            <th>Wiek</th>
-                                            <th>Dojrzałość</th>
-                                        </tr>
-                                        </thead>
-                                        <tfoot>
-                                        <tr>
-                                            <th>Imię</th>
-                                            <th>Nazwisko</th>
-                                            <th>Wiek</th>
-                                            <th>Dojrzałość</th>
-                                        </tfoot>
-                                        <tbody>
-                                        <tr th:each="member: ${family.members}">
-                                            <td th:text="${member.getName()}" />
-                                            <td th:text="${member.getFamilyName()}" />
-                                            <td th:text="${member.getAge()}" />
-                                            <td th:text="${member.getMature()}" />
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <div th:insert="familyDetails"></div>
                             </div>
-                        </div>
-                        <div class="col-lg-6 mb-4">
-                        <a class="btn btn-primary btn-user btn-block"  th:href="@{/create}" id="another">dodaj członka rodziny</a>
-                        <br>
-                        <form method="POST" th:action="@{/family/submit}" th:object="${family}" id="family">
-                            <input type="submit" value="Zakończ" class="btn btn-success btn-user btn-block">
-                        </form>
                         </div>
                     </div>
                     <div class="col-lg-6 mb-4">
@@ -87,19 +55,17 @@
                         <!-- Illustrations -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Przydatne informacje</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
                             </div>
                             <div class="card-body">
                                 <div class="text-center">
                                     <img class="img-profile rounded-circle"
                                          th:src="@{/images/family.png}" alt="family.png"/>
                                 </div>
-                                <p>Znajdujesz się w miejscu edycji swojej rodziny.</p>
-                                <p>W tym miejscu następuje weryfikacja liczby członków rodziny.</p>
-                                <p>Jeżeli jest ich więcej, niż zadeklarowano na początku, zostaną usunięci z listy.</p>
-                                <p>Możesz też dodać następnego członka rodziny. Jeżeli nie utworzysz ich,
-                                    tylu ilu zadeklarowano, Twoja rodzina nie zostanie zapisana.</p>
-                                <p>Życzymy powodzenia.</p>
+                                <p>Na tej stronie znajduje się lista członków rodziny, którą odnaleziono.</p>
+                                <p>Jeżeli to przez Ciebie została stworzona, możesz edytować wszystkie dane, po
+                                    logowaniu.</p>
+                                <p>Cieszymy się, że korzystasz z naszego serwisu.</p>
                             </div>
                         </div>
                     </div>

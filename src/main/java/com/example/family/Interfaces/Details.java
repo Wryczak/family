@@ -1,4 +1,4 @@
-package com.example.family.family;
+package com.example.family.Interfaces;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -9,6 +9,7 @@ public class Details {
     private Long id;
     private String text;
     private String secondText;
+    private String thirdText;
     private boolean status;
     private boolean secondStatus;
 }

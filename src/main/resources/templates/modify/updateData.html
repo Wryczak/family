@@ -26,7 +26,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Stwórz kolejnego członka rodziny.</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Tu możesz zaktualizować dane członka rodziny:</h1>
                 </div>
                 <!-- Content Row -->
                 <div class="row">
@@ -40,9 +40,11 @@
                     <div class="col-lg-4 mb-4">
 
                         <!-- service -->
-                        <form class="user" th:method="POST" th:action="@{/modify/addMember}" th:object="${member}"
+                        <span class="text-xl-center font-weight-bold text-info text-uppercase mb-1"
+                              th:text="${userDetails.text}"></span>
+                        <form class="user" th:method="POST" th:action="@{/modify/updateData}"
+                              th:object="${member}"
                               id="loginForm">
-
                             <div th:if="${#fields.hasErrors()}">
                              <span class="validationError">
                                  Proszę poprawić błędy w formularzu.
@@ -53,7 +55,8 @@
                                 <label for="name">Imię: </label>
                                 <input type="text" class="form-control form-control-user"
                                        name="name" id="name" aria-describedby="emailHelp"
-                                       placeholder="Enter name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}" th:field="*{name}"/>
+                                       placeholder="Enter name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{3,}"
+                                       th:field="*{name}"/>
                                 <span class="validationError"
                                       th:if="${#fields.hasErrors('name')}"
                                       th:errors="*{name}">Name Error</span>
@@ -64,24 +67,15 @@
                                 <label for="familyName">Nazwisko: </label>
                                 <input type="text" class="form-control form-control-user"
                                        name="familyName" id="familyName" aria-describedby="emailHelp"
-                                       placeholder="Enter family name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}"
+                                       placeholder="Enter family name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{3,}"
                                        th:field="*{familyName}"/>
                                 <span class="validationError"
                                       th:if="${#fields.hasErrors('familyName')}"
                                       th:errors="*{familyName}">Surname Error</span>
                             </div>
 
-                            <div class="form-group">
-                                <label for="age">Wiek: </label>
-                                <input type="number" class="form-control form-control-user"
-                                       name="age" id="age" aria-describedby="emailHelp"
-                                       placeholder="Enter age..." min="0" max="140" th:field="*{age}"/>
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('age')}"
-                                      th:errors="*{age}">Age Error</span>
-                            </div>
 
-                            <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
+                            <input type="submit" value="Aktualizuj dane" class="btn btn-primary btn-user btn-block">
                             <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">
                         </form>
 
@@ -98,11 +92,13 @@
                                     <img class="img-profile rounded-circle"
                                          th:src="@{/images/family.png}" alt="family.png"/>
                                 </div>
-                                <p>Aby stworzyć rodzinę musi mieć ona co najmniej jednego członka.
-                                    Zacznij więc od siebie, oto kilka przydatnych zasad:</p>
+                                <p>W tym oknie możesz aktualizować dane swojej rodziny.
+                                    Dane, które możesz zaktualizować to:</p>
+                                <p>Imię danej osoby w rodzinie.</p>
+                                <p>Nazwisko danej osoby.</p>
                                 <p>Imię i nazwisko musi składać się wyłącznie z liter.</p>
-                                <p>Przyjmujemy, że jesteś już w wieku co najmniej 17 lat.</p>
-                                <p>Pozostali członkowie rodziny mogą być w wieku od 0 do 140 lat.</p>
+                                <p>Dane zostaną zaktualizowane po zatwierdzeniu, a Ty zostaniesz przekierowany na
+                                    stronę z informacjami o swojej rodzinie.</p>
                             </div>
                         </div>
                     </div>

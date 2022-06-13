@@ -42,7 +42,7 @@
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-success">Nr Twojej rodziny znajduje się w tabeli
+                                <h6 class="m-0 font-weight-bold text-primary">Nr Twojej rodziny znajduje się w tabeli
                                     poniżej:</h6>
                             </div>
                             <div class="card-body">
@@ -55,7 +55,7 @@
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td th:text="${userDetails.secondText}"></td>
+                                            <td>nie masz jeszcze rodziny</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -63,7 +63,7 @@
                             </div>
                         </div>
                         <div class="col-lg-2 mb-4">
-                            <a class="btn btn-success btn-sm" target="_blank"
+                            <a class="btn btn-primary btn-sm" target="_blank"
                                th:href="@{/index}">Powrót</a>
                         </div>
                     </div>
@@ -72,18 +72,16 @@
                         <!-- Illustrations -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h3 class="m-0 font-weight-bold text-success">Gratulujemy!</h3>
+                                <h3 class="m-0 font-weight-bold text-primary">Nie masz jeszcze rodziny.</h3>
                             </div>
                             <div class="card-body">
                                 <div class="text-center">
                                     <img class="img-profile rounded-circle"
                                          th:src="@{/images/family.png}" alt="family.png"/>
                                 </div>
-                                <p>Właśnie utworzono Twoją rodzinę. Znajduje się ona teraz w naszej bazie danych.</p>
-                                <p>W tabeli obok znajduje się nr Twojej rodziny. </p>
-                                <p>Zapisz go lub zapamiętaj, by odnaleźć swoją rodzinę bez logowania.</p>
-                                <p>Po zalogowaniu będziesz mieć możliwość edycji swojej rodziny, czyli: dodawania,
-                                    usuwania, oraz aktualizacji danych. </p>
+                                <p>Ta strona wyświetli wszystkich członków Twojej rodziny, ale najpierw musisz ją utworzyć.</p>
+                                <p>W tym celu należy się zarejestrować, po dokonaniu rejestracji, udostępniona zostanie opcja tworzenia i edycji rodziny.</p>
+                                <p>Życzymy miłej zabawy.</p>
                                 <p>Dziękujemy za skorzystanie z naszego serwisu.</p>
                             </div>
                         </div>
