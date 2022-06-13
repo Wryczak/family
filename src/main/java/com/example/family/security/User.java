@@ -12,8 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -35,7 +35,6 @@ public class User implements UserDetails {
 
     private Long myFamilyNr=setDefaultFamilyNr();
 
-
     private Long setDefaultFamilyNr(){
         if (myFamilyNr==null){
             myFamilyNr=0L;
@@ -45,7 +44,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override

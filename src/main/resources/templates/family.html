@@ -51,23 +51,23 @@
                                         <tr>
                                             <th>Imię</th>
                                             <th>Nazwisko</th>
-                                            <th>Wiek</th>
                                             <th>Dojrzałość</th>
+                                            <th>Data urodzenia</th>
                                         </tr>
                                         </thead>
                                         <tfoot>
                                         <tr>
                                             <th>Imię</th>
                                             <th>Nazwisko</th>
-                                            <th>Wiek</th>
                                             <th>Dojrzałość</th>
+                                            <th>Data urodzenia</th>
                                         </tfoot>
                                         <tbody>
                                         <tr th:each="member: ${family.members}">
                                             <td th:text="${member.getName()}" />
                                             <td th:text="${member.getFamilyName()}" />
-                                            <td th:text="${member.getAge()}" />
                                             <td th:text="${member.getMature()}" />
+                                            <td th:text="${member.getBirthday()}" />
                                         </tr>
                                         </tbody>
                                     </table>

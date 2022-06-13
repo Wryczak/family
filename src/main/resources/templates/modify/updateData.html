@@ -26,7 +26,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Tu możesz zaktualizować dane członka rodziny:</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Tu tu ru tu</h1>
                 </div>
                 <!-- Content Row -->
                 <div class="row">
@@ -43,7 +43,7 @@
                         <span class="text-xl-center font-weight-bold text-info text-uppercase mb-1"
                               th:text="${userDetails.text}"></span>
                         <form class="user" th:method="POST" th:action="@{/modify/updateData}"
-                              th:object="${member}"
+                              th:object="${memberDto}"
                               id="loginForm">
                             <div th:if="${#fields.hasErrors()}">
                              <span class="validationError">
@@ -72,6 +72,16 @@
                                 <span class="validationError"
                                       th:if="${#fields.hasErrors('familyName')}"
                                       th:errors="*{familyName}">Surname Error</span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <input type="date" class="form-control form-control-user"
+                                       name="birthday" id="birthday" aria-describedby="emailHelp"
+                                       th:field="*{birthday}"/>
+                                <span class="validationError"
+                                      th:if="${#fields.hasErrors('birthday')}"
+                                      th:errors="*{birthday}">Birthday Error</span>
                             </div>
 
 

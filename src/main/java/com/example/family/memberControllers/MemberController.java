@@ -7,7 +7,9 @@ import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
 import com.example.family.family.*;
 
+import com.example.family.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
@@ -24,15 +26,22 @@ import javax.validation.Valid;
 @Slf4j
 public class MemberController implements DetailsSet, MaturityChecker {
 
+    private static final Long EMPTY_ID = null;
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
+    private final MemberService memberService;
     private boolean shouldBeViewRedirected;
+
+    private final ModelMapper modelMapper;
+
 
     @Autowired
     public MemberController(
-            MemberRepository memberRepository, UserRepository userRepository) {
+            MemberRepository memberRepository, UserRepository userRepository, MemberService memberService, ModelMapper modelMapper) {
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
+        this.memberService = memberService;
+        this.modelMapper = modelMapper;
     }
 
     @ModelAttribute(name = "family")
@@ -44,6 +53,7 @@ public class MemberController implements DetailsSet, MaturityChecker {
     public Member createMember() {
         return new Member();
     }
+
 
     @GetMapping
     public String showCreateForm(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
@@ -84,14 +94,16 @@ public class MemberController implements DetailsSet, MaturityChecker {
             String username,Details details,Model model) {
         detailsSet(userRepository,username,details,model);
 
+
         if (errors.hasErrors()) {
             log.info("    --- Try again");
             return "addYourself";
         }
 
+
         log.info("    --- Saving Yours data");
 
-        newMemberSaver(member,family,username);
+        memberService.newMemberSaver(member,family,username);
         shouldBeViewRedirected = true;
         return "redirect:/family/familyEditor";
     }
@@ -106,16 +118,28 @@ public class MemberController implements DetailsSet, MaturityChecker {
         }
         log.info("    --- Saving Member");
 
-        newMemberSaver(member, family, username);
+        memberService.newMemberSaver(member, family, username);
 
         return "redirect:/family/current";
     }
 
-    private void newMemberSaver(Member member, Family family, String username) {
-        member.setMature(checkMaturity(member));
-        member.setUserid(userRepository.findByUsername(username).getId());
-        member = memberRepository.saveAndFlush(member);
-        family.addFamilyMember(member);
-    }
+//    private void newMemberSaver(Member member, Family family, String username) {
+//        member.setMature(checkMaturity(member));
+//        member.setUserid(userRepository.findByUsername(username).getId());
+//        member = memberRepository.saveAndFlush(member);
+//        family.addFamilyMember(member);
+//    }
+
+
+//    private Member memberToMemberDtoMapper(MemberDto memberDto) {
+//        return new Member(
+//                EMPTY_ID,
+//               memberDto.getFamilyName(),
+//                memberDto.getName(),
+//                memberDto.getMature(),
+//                memberDto.getBirthday()
+//        );
+//    }
+
 }
 

@@ -8,13 +8,12 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
 @Data
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 
-public class Member {
+public class Member{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private final Long id;
@@ -27,10 +26,11 @@ public class Member {
     @Size(min = 2, message = "Nazwisko musi mieć co najmniej 2 znaki!")
     private String familyName;
 
-    @NotNull
-    private Integer age = checkAge();
-
     private Mature mature;
+
+    @NotNull
+    @Size(min = 2, message = "Podaj datę urodzin!")
+    private String birthday;
 
     private Long userid;
 
@@ -38,10 +38,4 @@ public class Member {
         INFANT, CHILD, ADULT;
     }
 
-    private Integer checkAge() {
-        if (age == null) {
-            return 0;
-        }
-        return age;
-    }
 }

@@ -1,9 +1,7 @@
 package com.example.family.Interfaces;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
-@Component
 @Data
 public class Details {
     private Long id;
