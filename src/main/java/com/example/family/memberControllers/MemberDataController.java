@@ -33,8 +33,6 @@ public class MemberDataController implements DetailsSet {
     private final FamilyRepository familyRepository;
     private final MemberRepository memberRepository;
 
-    private Long idToRemove;
-
     @Autowired
     public MemberDataController(UserRepository userRepository, FamilyRepository familyRepository,
                                 MemberRepository memberRepository) {
@@ -59,8 +57,8 @@ public class MemberDataController implements DetailsSet {
                                     @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
 
-        String memberUpdateView = "memberUpdate";
-        return getMenuDependsOnAuthentication(memberUpdateView, model, username);
+        String memberUpdateView = "modify/memberUpdate";
+        return getMenuDependsOnAuthentication(userRepository,memberUpdateView, model, username);
     }
 
     @GetMapping
@@ -68,7 +66,7 @@ public class MemberDataController implements DetailsSet {
                                       @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
         String deleteFamilyView = "modify/removeFamily";
-        return getMenuDependsOnAuthentication(deleteFamilyView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,deleteFamilyView, model, username);
     }
 
     @GetMapping("done")
@@ -76,7 +74,7 @@ public class MemberDataController implements DetailsSet {
                                             @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
         String done = "modify/done";
-        return getMenuDependsOnAuthentication(done, model, username);
+        return getMenuDependsOnAuthentication(userRepository,done, model, username);
     }
 
     @GetMapping("removeFamily")
@@ -91,18 +89,18 @@ public class MemberDataController implements DetailsSet {
             userDetails.setStatus(true);
             model.addAttribute("userDetails", userDetails);
             String deleteFamilyView = "modify/removeFamily";
-            return getMenuDependsOnAuthentication(deleteFamilyView, model, username);
+            return getMenuDependsOnAuthentication(userRepository,deleteFamilyView, model, username);
 
         }
 
         if (username.equals("anonymousUser")) {
             log.info("    --- No Family found");
             String noFamilyView = "redirect:/404";
-            return getMenuDependsOnAuthentication(noFamilyView, model, username);
+            return getMenuDependsOnAuthentication(userRepository,noFamilyView, model, username);
         }
 
         String indexView = "modify/removeFamily";
-        return getMenuDependsOnAuthentication(indexView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,indexView, model, username);
     }
 
     @PostMapping("removeFamily")
@@ -121,32 +119,37 @@ public class MemberDataController implements DetailsSet {
         log.info("    --- Family Deleted");
 
         String done = "redirect:/index";
-        return getMenuDependsOnAuthentication(done, model, username);
+        return getMenuDependsOnAuthentication(userRepository,done, model, username);
     }
 
     @GetMapping("removeMember")
     public String getDeleteMemberView(Model model, @ModelAttribute Member member1,
                                       @CurrentSecurityContext(expression = "authentication?.name") String username) {
-//        getMemberIdToRemove(model);
+
+        Details userDetails = new Details();
+        model.addAttribute("userDetails", userDetails);
         Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
         model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
         model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
 
         String deleteFamilyView = "modify/removeMember";
-        return getMenuDependsOnAuthentication(deleteFamilyView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,deleteFamilyView, model, username);
     }
 
 
     @PostMapping("removeMember")
-    public String createYourself(@Valid Member member, Model model,
+    public String createYourself(@Valid Member member, Model model,Details userDetails,
                                  @CurrentSecurityContext(expression = "authentication?.name") String username) {
-
-        if (member.getIdToRemove() == null) {
-            String deleteFamilyView = "modify/removeMember";
-            return getMenuDependsOnAuthentication(deleteFamilyView, model, username);
+Long idx=userDetails.getId();
+        if (userDetails.getId() == null) {
+            String deleteFamilyView = "redirect:/modify/removeMember";
+            log.info("    ---Id is null");
+            System.out.println(idx);
+            return getMenuDependsOnAuthentication(userRepository,deleteFamilyView, model, username);
         }
-        Long idToRemove = member.getIdToRemove();
 
+        Long idToRemove = userDetails.getId();
+        System.out.println(idx);
         Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
 
 
@@ -171,26 +174,26 @@ public class MemberDataController implements DetailsSet {
         }
 
         log.info("    --- No member");
+        System.out.println(idx);
         String deleteFamilyView = "redirect:/modify/removeMember";
-        return getMenuDependsOnAuthentication(deleteFamilyView, model, username);
+        return getMenuDependsOnAuthentication(userRepository,deleteFamilyView, model, username);
     }
 
     @GetMapping("addMember")
     public String getAddMemberView(Model model,
                                    @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
-        String deleteFamilyView = "modify/removeFamily";
-        return getMenuDependsOnAuthentication(deleteFamilyView, model, username);
+        String deleteFamilyView = "modify/addMember";
+        return getMenuDependsOnAuthentication(userRepository,deleteFamilyView, model, username);
     }
 
     @GetMapping("success")
     public String getSuccessView(Model model,
                                  @CurrentSecurityContext(expression = "authentication?.name") String username) {
 
-        String deleteFamilyView = "modify/removeFamily";
-        return getMenuDependsOnAuthentication(deleteFamilyView, model, username);
+        String deleteFamilyView = "index";
+        return getMenuDependsOnAuthentication(userRepository,deleteFamilyView, model, username);
     }
-
 
     private boolean isFamilyEmpty(String username) {
         Long familyId = userRepository.findByUsername(username).getMyFamilyNr();
@@ -201,9 +204,4 @@ public class MemberDataController implements DetailsSet {
         return false;
     }
 
-//    private Details getMemberIdToRemove(Model model) {
-//        Details memberId = new Details();
-//        model.addAttribute("memberId", memberId);
-//        return memberId;
-//    }
 }

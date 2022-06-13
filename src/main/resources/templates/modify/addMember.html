@@ -1,10 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Family Creator/ Add Member</title>
-</head>
-<body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+
+<div th:insert="head"></div>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:insert="sidebar"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <div th:insert="topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Welcome in Family Creator</h1>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+
+                    <!-- Earnings (Monthly) Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Znajdowawnie rodziny
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Logowanie nie potrzebne
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Earnings (Monthly) Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Serwis jest darmowy
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Co tu dodawać?</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Earnings (Monthly) Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tworzenie
+                                            rodziny
+                                        </div>
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col-auto">
+                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">Musisz się
+                                                    zalogować
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Requests Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Udostępnij znajomym
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Niech też spróbują!</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Row -->
+                <div class="row">
+
+                    <!-- Content Column -->
+                    <div class="col-lg-12 mb-4">
+
+                        <!-- service -->
+                        <div class="card shadow mb-1">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Korzystanie z serwisu</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                </div>
+
+                                <p>Serwis jest darmowy. Każdy, kto chce poświęcić trochę czasu,
+                                    aby stworzyć swoją rodzinę i mieć dostęp do informacji
+                                    o jej członkach, może z niego korzystać. Do odnajdywania rodzin
+                                    wystarczy nr ID, wyświetlany po jej utworzeniu. Jeżeli jesteś zalogowany,
+                                    informacje o Twojej rodzinie pojawią się automatycznie.
+                                    Logowanie ma na celu uniknięcie ingerencji osób trzecich.</p>
+                                <div th:if="${!details.status}">
+                                    <a th:href="@{/login}">Zaloguj się, by stworzyć swoją rodzinę.</a></div>
+                            </div>
+                        </div>
+
+                        <!-- Approach -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Przed stworzeniem rodziny:</h6>
+                            </div>
+                            <div class="card-body">
+                                <p>Przy tworzeniu rodziny pamiętaj o kilku zasadach:</p>
+                                <p>Liczba członków rodziny z każdej grupy wiekowej zostanie zweryfikowana, jeśli
+                                    utworzysz ich więcej, niż podałeś, zostaną oni usunięci z listy członków Twojej
+                                    rodziny.
+                                    Za każdym razem zostanie usunięty ostatnio utworzony członek rodziny z danej
+                                    kategorii wiekowej.</p>
+                                <p>Są trzy kategorie wiekowe:</p>
+                                <p>Niemowlaki - wiek 0-3 lat</p>
+                                <p>Dzieci - wiek 4-16 lat</p>
+                                <p>Dorośli - wiek >16 lat</p>
+                                <p>Przy tworzeniu rodziny liczba jej członków musi się zgadzać, po jej stworzeniu
+                                    będziesz mógł aktualizować dane jej członków, oraz ich usuwać.</p>
+                                <p>Po stworzeniu rodziny zostanie ona przypisana do Twojego konta, po zalogowaniu nie
+                                    będziesz musiał jej szukać.</p>
+                                <p>Jeżeli uznasz, że nie chcesz przechowywać informacji o swojej rodzinie, będziesz mógł
+                                    usunąć informacje o niej z naszej bazy danych.</p>
+                                <p>Po utworzeniu rodziny, nie będziesz mógł stworzyć kolejnej, do momentu usunięcia już
+                                    istniejącej rodziny. </p>
+                                <p> Życzymy przyjemnego korzystania z naszego serwisu.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Krzysztof Wrycza 2022</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<div th:insert="footer"></div>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
+
+<!-- Page level plugins -->
+<script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 
 </body>
 </html>
