@@ -1,4 +1,4 @@
-package com.example.family.service;
+package com.example.family.services;
 
 
 import com.example.family.Interfaces.*;
@@ -11,18 +11,20 @@ import com.example.family.family.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MemberService implements DtoConverter, AgeCalculator , Modify , MaturityChecker {
+public class MemberService implements DtoConverter, AgeCalculator, MaturityChecker,UsernameGetter {
 
     private final MemberRepository memberRepository;
 
@@ -45,18 +47,7 @@ public class MemberService implements DtoConverter, AgeCalculator , Modify , Mat
 
     }
 
-    public String updateMember(Details userDetails, Long idToModify, Errors errors, Model model, MemberDto memberToUpdate) {
-
-        if (idToModify==0L){
-            return "/modify/memberUpdate";
-        }
-        if (errors.hasErrors()) {
-            userDetails.setText("");
-            model.addAttribute("userDetails", userDetails);
-            log.info("    --- Try again");
-            return "/modify/updateData";
-        }
-
+    public void updateMember(Long idToModify, MemberDto memberToUpdate) {
 
         Member member = memberRepository.getById(idToModify);
         member.setName(memberToUpdate.getName());
@@ -66,12 +57,16 @@ public class MemberService implements DtoConverter, AgeCalculator , Modify , Mat
         idToModify = 0L;
 
         log.info("   --- Member updated!");
-        return "redirect:/modify/getMyFamilyAfterLog";
-    }
 
+    }
 
     public void deleteMember(Long id) {
         memberRepository.deleteById(id);
+
+    }
+
+    public void deleteAllMembersFromFamily(List<Member> members) {
+        memberRepository.deleteAll(members);
 
     }
 
@@ -80,10 +75,11 @@ public class MemberService implements DtoConverter, AgeCalculator , Modify , Mat
     }
 
     public List<Member> getMembers() {
-        return null;
+        Long myFamilyId = (userRepository.findByUsername(getUsername()).getMyFamilyNr());
+        return familyRepository.findById(myFamilyId).get().getMembers();
     }
 
-    private List<Long> getMembersIdList(String username) {
+    public List<Long> getMembersIdList(String username) {
         Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
 
         List<Member> members = familyRepository.findById(myFamilyId).get().getMembers();
@@ -106,26 +102,57 @@ public class MemberService implements DtoConverter, AgeCalculator , Modify , Mat
         model.addAttribute("memberDto", getMemberDTOList(username));
     }
 
-    private List<MemberDto> getMemberDTOList( String username) {
+    public void getFamilyMemberDtoListAndAddToModel(Model model,String username){
+        Details userDetails = new Details();
+        model.addAttribute("userDetails", userDetails);
+        model.addAttribute("memberDto", getMemberDTOList(username));
+    }
+
+    private List<MemberDto> getMemberDTOList(String username) {
         Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
         List<MemberDto> memberDtoList = Arrays.asList(modelMapper.
                 map(familyRepository.findById(idToFind).get().getMembers(), MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
         }
-            return memberDtoList;
+        return memberDtoList;
     }
 
-    public void newMemberSaver(Member member, Family family, String username) {
+    public void newMemberSaver(Member member, Family family) {
         member.setMature(checkMaturity(member));
-        member.setUserid(userRepository.findByUsername(username).getId());
+        member.setUserid(userRepository.findByUsername(getUsername()).getId());
         member = memberRepository.saveAndFlush(member);
         family.addFamilyMember(member);
     }
 
+    public void detailsSet(Details details, Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        if (Objects.equals(username, "anonymousUser")) {
+            details.setText("Zaloguj się:");
+            details.setStatus(false);
+            model.addAttribute("details", details);
+            return;
+        }
+        details.setText(username);
+        details.setStatus(true);
+        model.addAttribute("details", details);
+        if (userRepository.findByUsername(username).isDoIHaveFamily()) {
+            details.setSecondStatus(true);
+            model.addAttribute("status", details);
+        }
+    }
 
-    @Override
-    public int modifier(String birthday) {
-        return 0;
+    public boolean isDoIHaveFamily() {
+        return userRepository.findByUsername(getUsername()).isDoIHaveFamily();
+    }
+
+    public boolean isAnyMemberCreatedByUser() {
+        return memberRepository.findByUserid(userRepository.findByUsername(getUsername()).getId()) == null;
     }
 }

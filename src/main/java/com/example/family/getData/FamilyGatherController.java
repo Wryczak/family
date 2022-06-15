@@ -1,14 +1,12 @@
 package com.example.family.getData;
 
 import com.example.family.data.FamilyRepository;
-import com.example.family.data.UserRepository;
 import com.example.family.Interfaces.Details;
-import com.example.family.Interfaces.DetailsSet;
 import com.example.family.family.Family;
 import com.example.family.family.Member;
+import com.example.family.services.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +17,15 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/find")
 @Slf4j
-public class FamilyGatherController implements DetailsSet {
+public class FamilyGatherController {
     private Long idToFind;
     private final FamilyRepository familyRepository;
-    private final UserRepository userRepository;
+    private final MemberService memberService;
 
     @Autowired
-    public FamilyGatherController(FamilyRepository familyRepository, UserRepository userRepository) {
+    public FamilyGatherController(FamilyRepository familyRepository, MemberService memberService) {
         this.familyRepository = familyRepository;
-        this.userRepository = userRepository;
+        this.memberService = memberService;
     }
 
     @ModelAttribute(name = "family")
@@ -41,9 +39,8 @@ public class FamilyGatherController implements DetailsSet {
     }
 
     @GetMapping
-    public String findFamily(@ModelAttribute Family family, Model model,
-                             @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String findFamily(@ModelAttribute Family family, Model model,Details details) {
+        memberService.detailsSet(details,model);
 
         log.info("   --- Finding Family");
 
@@ -51,19 +48,16 @@ public class FamilyGatherController implements DetailsSet {
     }
 
     @GetMapping("/myFamily")
-    public String showAll(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String showAll(Model model, Details details) {
+        memberService.detailsSet(details,model);
         model.addAttribute("families", familyRepository.findAllById(Collections.singleton(idToFind)));
         model.addAttribute("member", familyRepository.findById(idToFind).get().getMembers());
         return "myFamily";
     }
 
     @PostMapping
-    public String processFamily(Optional<Family> family, Model model,
-                                @CurrentSecurityContext(expression = "authentication?.name")
-                                String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String processFamily(Optional<Family> family, Model model, Details details) {
+        memberService.detailsSet(details,model);
         Long id=family.get().getId();
         if (id == null) {
             return  "find";

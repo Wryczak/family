@@ -37,5 +37,4 @@ public class Member{
     public enum Mature {
         INFANT, CHILD, ADULT;
     }
-
 }

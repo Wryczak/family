@@ -1,13 +1,11 @@
 package com.example.family.memberControllers;
 
 import com.example.family.Interfaces.Details;
-import com.example.family.Interfaces.DetailsSet;
 import com.example.family.Interfaces.MaturityChecker;
-import com.example.family.data.FamilyRepository;
-import com.example.family.data.MemberRepository;
-import com.example.family.data.UserRepository;
+import com.example.family.Interfaces.UsernameGetter;
 import com.example.family.family.*;
-import com.example.family.service.MemberService;
+import com.example.family.services.FamilyService;
+import com.example.family.services.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -24,23 +22,18 @@ import java.util.*;
 @Transactional
 @Controller
 @RequestMapping("/modify")
-@SessionAttributes("family")
 @Slf4j
-public class MemberDataController implements DetailsSet, MaturityChecker {
-
-    private final UserRepository userRepository;
-    private final FamilyRepository familyRepository;
-    private final MemberRepository memberRepository;
+public class MemberDataController implements MaturityChecker, UsernameGetter {
     private final MemberService memberService;
+    private final FamilyService familyService;
     private Long idToModify;
 
+
     @Autowired
-    public MemberDataController(UserRepository userRepository, FamilyRepository familyRepository,
-                                MemberRepository memberRepository, MemberService memberService) {
-        this.memberRepository = memberRepository;
-        this.userRepository = userRepository;
-        this.familyRepository = familyRepository;
+    public MemberDataController(MemberService memberService, FamilyService familyService) {
+
         this.memberService = memberService;
+        this.familyService = familyService;
     }
 
     @ModelAttribute(name = "family")
@@ -59,22 +52,20 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
     }
 
     @GetMapping("memberUpdate")
-    public String getMemberUpdateView(Model model,
-                                      @CurrentSecurityContext(expression = "authentication?.name")
-                                      String username, Details details) {
-        detailsSet(userRepository, username, details, model);
-        if (familyRepository.findById(userRepository.findByUsername(username).getMyFamilyNr()).isEmpty()) {
+    public String getMemberUpdateView(Model model, Details details) {
+        memberService.detailsSet(details, model);
+        if (familyService.isFamilyEmpty()) {
             return "redirect:/index";
         }
-        detailsSetter(model, username);
+
+        memberService.getFamilyMemberDtoListAndAddToModel(model,getUsername());
 
         return "modify/memberUpdate";
     }
 
     @PostMapping("memberUpdate")
-    public String MemberUpdate(Details userDetails,
-                               @CurrentSecurityContext(expression = "authentication?.name")
-                               String username){
+    public String MemberUpdate(Details userDetails,Model model, Details details) {
+        memberService.detailsSet(details, model);
         if (userDetails.getId() == null) {
             log.info("    ---Id is null");
             return "redirect:/modify/memberUpdate";
@@ -83,7 +74,7 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         Long memberIdToUpdate = userDetails.getId();
         idToModify = memberIdToUpdate;
 
-        List<Long> allFamilyMembersId = getMembersIdList(username);
+        List<Long> allFamilyMembersId = memberService.getMembersIdList(getUsername());
 
         if (allFamilyMembersId.contains(memberIdToUpdate)) {
 
@@ -96,46 +87,38 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
     }
 
     @GetMapping("addMember")
-    public String getAddMemberView(Model model,
-                                   @CurrentSecurityContext(expression = "authentication?.name")
-                                   String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String getAddMemberView(Model model, Details details) {
+        memberService.detailsSet(details, model);
 
         return "modify/addMember";
     }
 
     @PostMapping("addMember")
-    public String addNewMemberToFamily(Model model, @Valid Member member, Errors errors, Family family,
-                                       @CurrentSecurityContext(expression = "authentication?.name")
-                                       String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String addNewMemberToFamily(Model model, @Valid Member member, Errors errors, Details details) {
+        memberService.detailsSet(details, model);
 
         if (errors.hasErrors()) {
             log.info("    --- Try again");
             return "modify/addMember";
         }
-        family = familyRepository.getById(userRepository.findByUsername(username).getMyFamilyNr());
 
         log.info("    --- Creating new family member");
-        Member saved = member;
-        member.setMature(checkMaturity(saved));
-        member.setUserid(userRepository.findByUsername(username).getId());
-        saved = memberRepository.save(member);
-        family.addFamilyMember(saved);
+
+        memberService.newMemberSaver(member, familyService.getFamily());
+
 
         return "redirect:/modify/getMyFamilyAfterLog";
     }
 
     @GetMapping("removeFamily")
-    public String getHomeView(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String getHomeView(Model model, Details details) {
+        memberService.detailsSet(details, model);
 
-        if (!userRepository.findByUsername(username).isDoIHaveFamily()){
+        if (!familyService.isDoIHaveFamily()) {
             return "redirect:/index";
         }
 
-        if (username.equals("anonymousUser")) {
+        if (getUsername().equals("anonymousUser")) {
             log.info("    --- No Family found");
             return "redirect:/404";
         }
@@ -145,45 +128,35 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
     }
 
     @PostMapping("removeFamily")
-    public String DeleteFamilyFromDatabase(Model model,
-                                           @CurrentSecurityContext(expression = "authentication?.name")
-                                           String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String DeleteFamilyFromDatabase(Model model, Details details) {
+        memberService.detailsSet(details, model);
 
-        Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
-        List<Member> members = familyRepository.findById(myFamilyId).get().getMembers();
-        memberRepository.deleteAll(members);
-
-        repositoryDeleteSetter(username,myFamilyId);
+        memberService.deleteAllMembersFromFamily(memberService.getMembers());
+        familyService.repositoryDeleteSetter(getUsername(), familyService.getUserFamilyNumber());
 
         log.info("    --- Family Deleted");
         return "redirect:/index";
     }
 
+
     @GetMapping("removeMember")
-    public String getDeleteMemberView(Model model, @ModelAttribute Member member1,
-                                      @CurrentSecurityContext(expression = "authentication?.name")
-                                      String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String getDeleteMemberView(Model model, @ModelAttribute Member member1, Details details) {
+        memberService.detailsSet(details, model);
 
-        detailsSetter(model, username);
+        memberService.getFamilyMemberDtoListAndAddToModel(model,getUsername());
+        Long myFamilyId = familyService.getUserFamilyNumber();
+        if (memberService.getMembers().isEmpty()) {
+            familyService.repositoryDeleteSetter(getUsername(), myFamilyId);
 
-        Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
-
-        if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()) {
-         repositoryDeleteSetter(username,myFamilyId);
-
-            return "redirect:/index";
+            return "redirect:/modify/removeMember";
         }
 
         return "modify/removeMember";
     }
 
     @PostMapping("removeMember")
-    public String createYourself(Model model, Details userDetails,
-                                 @CurrentSecurityContext(expression = "authentication?.name")
-                                 String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String createYourself(Model model, Details userDetails, Details details) {
+        memberService.detailsSet(details, model);
 
         if (userDetails.getId() == null) {
             log.info("    ---Id is null");
@@ -191,10 +164,10 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
         }
 
         Long idToRemove = userDetails.getId();
-        List<Long> allFamilyMembersId = getMembersIdList(username);
+        List<Long> allFamilyMembersId = memberService.getMembersIdList(getUsername());
 
         if (allFamilyMembersId.contains(idToRemove)) {
-            memberRepository.deleteById(idToRemove);
+            memberService.deleteMember(idToRemove);
 
             log.info("    --- Member deleted");
             return "redirect:/modify/redirectControlPass";
@@ -205,14 +178,13 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
     }
 
     @GetMapping("redirectControlPass")
-    public String RedirectDataChecker(Model model,
-                                      @CurrentSecurityContext(expression = "authentication?.name")
-                                      String username, Details details) {
-        detailsSet(userRepository, username, details, model);
-        Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
+    public String RedirectDataChecker(Model model, Details details) {
+        memberService.detailsSet(details, model);
 
-        if (familyRepository.findById(myFamilyId).get().getMembers().isEmpty()) {
-            repositoryDeleteSetter(username, myFamilyId);
+
+        if (memberService.getMembers().isEmpty()) {
+            familyService.repositoryDeleteSetter(getUsername(),
+                    familyService.getUserFamilyNumber());
 
             log.info("    --- Verify yours data");
             return "redirect:/index";
@@ -223,15 +195,14 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
     }
 
     @GetMapping("updateData")
-    public String showUpdateForm(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String showUpdateForm(Model model, Details details) {
+        memberService.detailsSet(details, model);
 
         if (idToModify == null || idToModify == 0L) {
             return "redirect:/index";
         }
         Details userDetails = new Details();
-        Member memberToUpdate = memberRepository.getById(idToModify);
+        Member memberToUpdate = memberService.getMember(idToModify);
         String memberData = memberToUpdate.getName() + "   " + memberToUpdate.getFamilyName() + " ID: " + idToModify;
         userDetails.setText(memberData);
         model.addAttribute("userDetails", userDetails);
@@ -243,52 +214,38 @@ public class MemberDataController implements DetailsSet, MaturityChecker {
 
     @PostMapping("updateData")
     public String postUpdateForm(Model model, @Valid MemberDto memberToUpdate, Errors errors, Details userDetails,
-                                 @CurrentSecurityContext(expression = "authentication?.name") String username, Details details) {
-        detailsSet(userRepository, username, details, model);
-       return memberService.updateMember(userDetails,idToModify,errors,model,memberToUpdate);
+                                 Details details) {
+        memberService.detailsSet(details, model);
+
+        if (idToModify == 0L) {
+            return "/modify/memberUpdate";
+        }
+        if (errors.hasErrors()) {
+            userDetails.setText("");
+            model.addAttribute("userDetails", userDetails);
+            log.info("    --- Try again");
+            return "/modify/updateData";
+        }
+
+        memberService.updateMember(idToModify, memberToUpdate);
+        return "redirect:/modify/getMyFamilyAfterLog";
     }
 
     @GetMapping("wellLog")
-    public String viewFamilyByUser(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String viewFamilyByUser(Model model, Details details) {
+        memberService.detailsSet(details, model);
         return "modify/wellLog";
 
     }
 
     @GetMapping("getMyFamilyAfterLog")
-    public String viewFamilyByUser2(Model model, @CurrentSecurityContext(expression = "authentication?.name")
-    String username, Details details) {
-        detailsSet(userRepository, username, details, model);
+    public String viewFamilyByUser2(Model model, Details details) {
+        memberService.detailsSet(details, model);
 
-        if (!userRepository.findByUsername(username).isDoIHaveFamily()) {
+        if (!familyService.isDoIHaveFamily()) {
             return "modify/wellLog";
         }
-        detailsSetter(model, username);
+       memberService.getFamilyMemberDtoListAndAddToModel(model,getUsername());
         return "modify/getMyFamilyAfterLog";
-    }
-
-    private List<Long> getMembersIdList(String username) {
-        Long myFamilyId = (userRepository.findByUsername(username).getMyFamilyNr());
-
-        List<Member> members = familyRepository.findById(myFamilyId).get().getMembers();
-        List<Long> allFamilyMembersId = new ArrayList<>();
-        for (
-                Member familyMember : members) {
-            Long id = familyMember.getId();
-            allFamilyMembersId.add(id);
-        }
-        return allFamilyMembersId;
-    }
-    private void detailsSetter(Model model, String username) {
-        Details userDetails = new Details();
-        model.addAttribute("userDetails", userDetails);
-        Long idToFind = userRepository.findByUsername(username).getMyFamilyNr();
-        model.addAttribute("member1", familyRepository.findById(idToFind).get().getMembers());
-    }
-    private void repositoryDeleteSetter(String username, Long myFamilyId) {
-        userRepository.findByUsername(username).setDoIHaveFamily(false);
-        userRepository.findByUsername(username).setMyFamilyNr(0L);
-        familyRepository.deleteById(myFamilyId);
     }
 }

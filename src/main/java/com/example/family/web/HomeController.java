@@ -1,10 +1,8 @@
 package com.example.family.web;
 
-import com.example.family.data.UserRepository;
 import com.example.family.Interfaces.Details;
-import com.example.family.Interfaces.DetailsSet;
+import com.example.family.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,19 +10,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/index")
-public class HomeController implements DetailsSet {
+public class HomeController  {
 
-    private final UserRepository userRepository;
+    private final MemberService memberService;
 
     @Autowired
-    public HomeController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public HomeController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @GetMapping
-    public String getHomeView(Model model, @CurrentSecurityContext(expression = "authentication?.name") String username,Details details) {
-      detailsSet(userRepository,username,details,model);
-
+    public String getHomeView(Model model,Details details) {
+        memberService.detailsSet(details,model);
         return "index";
     }
 }

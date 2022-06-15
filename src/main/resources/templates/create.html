@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 
-<div th:insert="head"></div>
+<div th:insert="menuAndFormsFragments/head"></div>
 
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- Sidebar -->
-    <div th:insert="sidebar"></div>
+    <div th:insert="menuAndFormsFragments/sidebar"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -18,7 +18,7 @@
         <!-- Main Content -->
         <div id="content">
             <!-- Topbar -->
-            <div th:insert="topbar"></div>
+            <div th:insert="menuAndFormsFragments/topbar"></div>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -43,7 +43,7 @@
                         <form class="user" th:method="POST" th:action="@{/create}" th:object="${member}"
                               id="loginForm">
 
-                            <div th:insert="form"></div>
+                            <div th:insert="menuAndFormsFragments/form"></div>
 
                             <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
                             <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">
@@ -95,7 +95,7 @@
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
-<div th:insert="footer"></div>
+<div th:insert="menuAndFormsFragments/footer"></div>
 
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>

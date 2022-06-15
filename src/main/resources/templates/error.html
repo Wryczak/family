@@ -2,15 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 
-<div th:insert="head"></div>
-
+<div th:insert="menuAndFormsFragments/head"></div>
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="sidebar"></div>
+    <div th:insert="menuAndFormsFragments/sidebar"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -20,8 +19,7 @@
         <div id="content">
 
             <!-- Topbar -->
-            <div th:insert="topbar"></div>
-            <!-- Topbar Navbar -->
+            <div th:insert="menuAndFormsFragments/topbar"></div>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -29,10 +27,13 @@
 
                 <!-- 404 Error Text -->
                 <div class="text-center">
-                    <div class="error mx-auto" data-text="404">404</div>
-                    <p class="lead text-gray-800 mb-5">Page Not Found</p>
-                    <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
-                    <a href="test.html">&larr; Back to Dashboard</a>
+                    <div class="error mx-auto" data-text="Error">Error 404</div>
+                    <p class="lead text-gray-800 mb-5">Nie znaleziono strony</p>
+                    <p class="text-gray-500 mb-0">Coś poszło nie tak... Nastąpił problem techniczny.</p>
+                    <p class="text-gray-500 mb-0">Jeżeli widzisz tę stronę to:</p>
+                    <p class="text-gray-500 mb-0">szukana strona nie istnieje lub nastąpił problem komunikacji z serwerem</p>
+                    <p class="text-gray-500 mb-0">Postaramy się naprawić błąd</p>
+                    <a th:href="@{/index}" id="home">&larr; Powrót do strony głównej</a>
                 </div>
 
             </div>
@@ -57,7 +58,9 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<div th:insert="footer"></div>
+<!-- Scroll to Top Button-->
+<div th:insert="menuAndFormsFragments/footer"></div>
+
 
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
@@ -73,4 +76,5 @@
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 
 </body>
-</html></html>
+
+</html>
