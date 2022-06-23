@@ -34,6 +34,10 @@ public class Member{
 
     private Long userid;
 
+    private Long matherId;
+
+    private Long fatherId;
+
     public enum Mature {
         INFANT, CHILD, ADULT;
     }

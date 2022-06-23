@@ -6,9 +6,7 @@
             <th>Nazwisko</th>
             <th>Wiek</th>
             <th>Data Urodzin</th>
-            <th>id</th>
-            <th>ojciec</th>
-            <th>matka</th>
+            <th>Dodaj</th>
 
         </tr>
         </thead>
@@ -18,9 +16,7 @@
             <th>Nazwisko</th>
             <th>Wiek</th>
             <th>Data urodzin</th>
-            <th>id</th>
-            <th>ojciec</th>
-            <th>matka</th>
+            <th>Dodaj</th>
 
         </tfoot>
         <tbody>
@@ -29,9 +25,7 @@
             <td th:text="${memberDto.getFamilyName()}"></td>
             <td th:text="${memberDto.getAge()}"></td>
             <td th:text="${memberDto.getBirthday()}"></td>
-            <td th:text="${memberDto.getIdtest}"></td>
-            <td th:text="${memberDto.getFatherID}"></td>
-            <td th:text="${memberDto.getMatherID}"></td>
+            <td> <div th:insert="menuAndFormsFragments/form2"></div></td>
 
         </tr>
         </tbody>

@@ -21,6 +21,8 @@ public class MemberDto{
     private Member.Mature mature;
 
     private Long idtest;
+    private Long fatherID;
+    private Long matherID;
     @NotNull
     @Size(min = 3, message = "Podaj datę urodzin!")
     private String birthday;

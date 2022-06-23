@@ -4,11 +4,14 @@ import com.example.family.Interfaces.Details;
 import com.example.family.Interfaces.MaturityChecker;
 import com.example.family.Interfaces.UsernameGetter;
 import com.example.family.family.*;
+import com.example.family.security.User;
 import com.example.family.services.FamilyService;
 import com.example.family.services.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -49,6 +52,40 @@ public class MemberDataController implements MaturityChecker, UsernameGetter {
     @ModelAttribute(name = "memberDto")
     public MemberDto createMemberDto() {
         return new MemberDto();
+    }
+
+    @GetMapping("addFamily")
+    public String addFamily(Model model, Details details) {
+        memberService.detailsSet(details, model);
+        if (memberService.isDoIHaveFamily()){
+            return "redirect:/modify/getMyFamilyAfterLog";
+        }
+
+        return "modify/addFamily";
+    }
+
+    @PostMapping("addFamily")
+    public String addFamily(Model model, @Valid Family family, Errors errors, Details details) {
+        memberService.detailsSet(details, model);
+
+
+        if (errors.hasErrors()) {
+            log.info("    --- Try again");
+            return "modify/addFamily";
+        }
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        family.setUser(user);
+
+        log.info("    --- Creating new family");
+
+        familyService.createFamily(family);
+        familyService.setFamilyDetails(family);
+
+        return "redirect:/modify/addMember";
     }
 
     @GetMapping("memberUpdate")
@@ -164,6 +201,7 @@ public class MemberDataController implements MaturityChecker, UsernameGetter {
         }
 
         Long idToRemove = userDetails.getId();
+        System.out.println(idToRemove);
         List<Long> allFamilyMembersId = memberService.getMembersIdList(getUsername());
 
         if (allFamilyMembersId.contains(idToRemove)) {

@@ -3,13 +3,19 @@ package com.example.family.services;
 import com.example.family.Interfaces.Details;
 import com.example.family.Interfaces.UsernameGetter;
 import com.example.family.data.FamilyRepository;
+import com.example.family.data.MemberRepository;
 import com.example.family.data.UserRepository;
 import com.example.family.family.Family;
+import com.example.family.family.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.function.Function.*;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +23,8 @@ public class FamilyService implements UsernameGetter {
 
     private final FamilyRepository familyRepository;
     private final UserRepository userRepository;
+
+    private final MemberRepository memberRepository;
 
     public List<Family> getFamilies() {
         return familyRepository.findAll();
@@ -88,4 +96,64 @@ public class FamilyService implements UsernameGetter {
         family = familyRepository.getById(userRepository.findByUsername(getUsername()).getMyFamilyNr());
         return family;
     }
+
+    public Member getParentTree(Long id) {
+        if (id != 0) {
+            Member member = getMemberByIdFromFamily(id);
+            System.out.println(member);
+            System.out.println();
+            if (member.getFatherId() == null) {
+                return null;
+            }
+            getParentTree(member.getFatherId());
+            return member;
+        }
+        return null;
+    }
+
+    public Long childrenListGetter(Long id) {
+        if (id!=0) {
+
+            if (convertListToMapByFatherId().containsKey(id)) {
+                Member member = convertListToMapByFatherId().get(id);
+                System.out.println(member);
+                System.out.println();
+                id = member.getId();
+                return childrenListGetter(id);
+            }
+        }
+            return 0L;
+        }
+
+
+
+
+    public Map<Long, Member> convertListToMap() {
+        List<Member> list = getFamily().getMembers();
+        return list.stream()
+                .collect(Collectors.toMap(Member::getId, identity()));
+    }
+
+    public Map<Long, Member> convertListToMapByFatherId() {
+        List<Member> list = getFamily().getMembers();
+        List<Member> tempList = new ArrayList<>();
+        for (Member member : list) {
+            if (member.getFatherId() != null) {
+                tempList.add(member);
+            }
+        }
+        return tempList.stream()
+                .collect(Collectors.toMap(Member::getFatherId, identity()));
+    }
+
+    public Member getMemberByIdFromFamily(Long id) {
+        List<Member> list = getFamily().getMembers();
+        Map<Long, Member> collect = list.stream()
+                .collect(Collectors.toMap(Member::getId, identity()));
+        return collect.get(id);
+
+    }
 }
+
+
+

@@ -38,7 +38,7 @@ public class Family implements Serializable {
     private int nrOfAdults;
 
     @ManyToMany(targetEntity = Member.class)
-    @Size(min = 1, message = "Rodzina musi mieć co najmniej jednego członka.")
+    @Size(min = 0, message = "Rodzina musi mieć co najmniej jednego członka.")
     private List<Member> members = new ArrayList<>();
 
     public void addFamilyMember(Member member) {

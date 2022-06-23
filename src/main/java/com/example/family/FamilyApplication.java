@@ -30,6 +30,8 @@ public class FamilyApplication {
                 map().setBirthday(source.getBirthday());
                 map().setMature(source.getMature());
                 map().setIdtest(source.getId());
+                map().setFatherID(source.getFatherId());
+                map().setMatherID(source.getMatherId());
 
             }
         });
