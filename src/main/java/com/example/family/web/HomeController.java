@@ -1,6 +1,7 @@
 package com.example.family.web;
 
 import com.example.family.Interfaces.Details;
+//import com.example.family.familyTree.NAryTree;
 import com.example.family.services.FamilyService;
 import com.example.family.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class HomeController {
     public String getHomeView(Model model, Details details) {
         memberService.detailsSet(details, model);
 
-        familyService.childrenListGetter(45L);
-        familyService.getParentTree(42L);
-
+        familyService.listwithall(3L);
+//        NAryTree nAryTree = new NAryTree(familyService);
+//        nAryTree.MyTreeImplement(5L);
         return "index";
     }
 }

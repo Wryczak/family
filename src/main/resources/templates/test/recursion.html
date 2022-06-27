@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+    <tr>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Wiek</th>
+        <th>Data Urodzin</th>
+        <th>id</th>
+        <th>ojciec</th>
+        <th>matka</th>
+
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Wiek</th>
+        <th>Data urodzin</th>
+        <th>id</th>
+        <th>ojciec</th>
+        <th>matka</th>
+
+    </tfoot>
+    <tbody>
+    <tr th:each="memberDto: ${memberDto}">
+        <td th:text="${memberDto.getName()}"></td>
+        <td th:text="${memberDto.getFamilyName()}"></td>
+        <td th:text="${memberDto.getAge()}"></td>
+        <td th:text="${memberDto.getBirthday()}"></td>
+        <td th:text="${memberDto.getIdtest}"></td>
+        <td th:text="${memberDto.getFatherID}"></td>
+        <td th:text="${memberDto.getMatherID}"></td>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

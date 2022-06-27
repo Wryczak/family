@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.function.Function.*;
@@ -26,6 +26,7 @@ public class FamilyService implements UsernameGetter {
 
     private final MemberRepository memberRepository;
 
+    private final List<Long>membersIdList=new ArrayList<>();
     public List<Family> getFamilies() {
         return familyRepository.findAll();
     }
@@ -97,53 +98,21 @@ public class FamilyService implements UsernameGetter {
         return family;
     }
 
-    public Member getParentTree(Long id) {
+
+    public List<Long> listOfParents(){
+        return membersIdList;
+    }
+
+    public List<Long> getParentTree2(Long id) {
         if (id != 0) {
             Member member = getMemberByIdFromFamily(id);
-            System.out.println(member);
-            System.out.println();
+           membersIdList.add(member.getId());
             if (member.getFatherId() == null) {
-                return null;
+                return membersIdList;
             }
-            getParentTree(member.getFatherId());
-            return member;
+          return getParentTree2(member.getFatherId());
         }
         return null;
-    }
-
-    public Long childrenListGetter(Long id) {
-        if (id!=0) {
-
-            if (convertListToMapByFatherId().containsKey(id)) {
-                Member member = convertListToMapByFatherId().get(id);
-                System.out.println(member);
-                System.out.println();
-                id = member.getId();
-                return childrenListGetter(id);
-            }
-        }
-            return 0L;
-        }
-
-
-
-
-    public Map<Long, Member> convertListToMap() {
-        List<Member> list = getFamily().getMembers();
-        return list.stream()
-                .collect(Collectors.toMap(Member::getId, identity()));
-    }
-
-    public Map<Long, Member> convertListToMapByFatherId() {
-        List<Member> list = getFamily().getMembers();
-        List<Member> tempList = new ArrayList<>();
-        for (Member member : list) {
-            if (member.getFatherId() != null) {
-                tempList.add(member);
-            }
-        }
-        return tempList.stream()
-                .collect(Collectors.toMap(Member::getFatherId, identity()));
     }
 
     public Member getMemberByIdFromFamily(Long id) {
@@ -151,9 +120,36 @@ public class FamilyService implements UsernameGetter {
         Map<Long, Member> collect = list.stream()
                 .collect(Collectors.toMap(Member::getId, identity()));
         return collect.get(id);
+    }
+    public List<Long> childrenForEach(Long id){
+        List<Member> list = getFamily().getMembers();
+        List<Long> tempList = new ArrayList<>();
+        System.out.println(getMemberByIdFromFamily(id));
+        for (Member member : list) {
+            if (member.getFatherId() != null && member.getFatherId().equals(id)) {
+                tempList.add(member.getId());
+            }
+        }
+        if (tempList.isEmpty()){
+            System.out.println("Nie ma dzieci");
+            System.out.println();
+            System.out.println();
+            System.out.println("-----------------");
+            return null;
+        }
+        System.out.println(tempList);
+        System.out.println();
+        System.out.println();
+        System.out.println("-----------------");
+        return tempList;
+    }
 
+    public void listwithall(Long id){
+       List<Long> list= getParentTree2(id);
+        for (Long memberId: list){
+            childrenForEach(memberId);
+        }
     }
 }
-
 
 

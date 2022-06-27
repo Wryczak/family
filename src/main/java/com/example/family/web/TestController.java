@@ -1,5 +1,6 @@
 package com.example.family.web;
 
+import com.example.family.Interfaces.AgeCalculator;
 import com.example.family.Interfaces.UsernameGetter;
 import com.example.family.Interfaces.Details;
 import com.example.family.family.Family;
@@ -8,6 +9,7 @@ import com.example.family.family.MemberDto;
 import com.example.family.services.FamilyService;
 import com.example.family.services.MemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -23,16 +25,19 @@ import javax.validation.Valid;
 @Controller
 @Slf4j
 @RequestMapping("test")
-public class TestController implements UsernameGetter {
+public class TestController implements UsernameGetter, AgeCalculator {
     private final MemberService memberService;
 
     private final FamilyService familyService;
 
     private Long idToModify;
 
-    public TestController(MemberService memberService, FamilyService familyService) {
+    private final ModelMapper modelMapper;
+
+    public TestController(MemberService memberService, FamilyService familyService, ModelMapper modelMapper) {
         this.memberService = memberService;
         this.familyService = familyService;
+        this.modelMapper = modelMapper;
     }
 
     @ModelAttribute(name = "family")
@@ -107,7 +112,7 @@ public class TestController implements UsernameGetter {
         }
 
         log.info("    --- Creating new family member");
-       Member child= memberService.getMember(idToModify);
+        Member child = memberService.getMember(idToModify);
         memberService.newMemberSaver(member, familyService.getFamily());
         child.setFatherId(member.getId());
         System.out.println(member.getId());
@@ -121,8 +126,8 @@ public class TestController implements UsernameGetter {
         if (!familyService.isDoIHaveFamily()) {
             return "modify/wellLog";
         }
-        familyService.getParentTree(idToModify);
-        memberService.getFamilyMemberDtoListAndAddToModel(model,getUsername());
+//        familyService.getParentTree(idToModify);
+        memberService.getFamilyMemberDtoListAndAddToModel(model, getUsername());
         return "test/familyTree";
     }
 
@@ -133,5 +138,28 @@ public class TestController implements UsernameGetter {
 
         return "test/kurs";
     }
-
 }
+//    @GetMapping("recursion")
+//    public String recursion(Model model, Details details){
+//        Details userDetails = new Details();
+//        model.addAttribute("userDetails", userDetails);
+//        model.addAttribute("memberDto", getMemberDTOList());
+//
+//        return "test/recursion";
+//    }
+
+
+
+
+
+//    private List<MemberDto> getMemberDTOList() {
+//        List<Member> members= familyService.getParentTree(42L);
+//        List<MemberDto> memberDtoList = Arrays.asList(modelMapper.
+//                map(members, MemberDto[].class));
+//        for (MemberDto member : memberDtoList) {
+//            member.setAge(calculateAge(member.getBirthday()));
+//        }
+//        return memberDtoList;
+//    }
+//
+//}
