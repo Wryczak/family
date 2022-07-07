@@ -26,7 +26,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Stwórz kolejnego członka rodziny.</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Stwórz członka rodziny.</h1>
                 </div>
                 <!-- Content Row -->
                 <div class="row">
@@ -43,7 +43,7 @@
                         <form class="user" th:method="POST" th:action="@{/modify/addMember}" th:object="${member}"
                               id="loginForm">
 
-                            <div th:insert="menuAndFormsFragments/form"></div>
+                            <div th:insert="menuAndFormsFragments/addMemberForm"></div>
 
                             <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
                             <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">

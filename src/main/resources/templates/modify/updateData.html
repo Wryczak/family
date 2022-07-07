@@ -45,7 +45,7 @@
                         <form class="user" th:method="POST" th:action="@{/modify/updateData}"
                               th:object="${memberDto}" id="loginForm">
 
-                            <div th:insert="menuAndFormsFragments/form"></div>
+                            <div th:insert="menuAndFormsFragments/addMemberForm"></div>
 
                             <input type="submit" value="Aktualizuj dane" class="btn btn-primary btn-user btn-block">
                             <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">

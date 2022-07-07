@@ -37,9 +37,10 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Moja rodzina</h6>
-                <a class="collapse-item" th:href="@{/find}" id="find">Znajdź</a>
-                <a class="collapse-item" th:href="@{/modify/addFamily}" id="fam">Utwórz</a>
-                <a class="collapse-item" th:href="@{/test}" id="fm">Dodaj rodziców</a>
+                <a class="collapse-item" th:href="@{/modify/find}" id="find">Znajdź</a>
+                <div th:if="${details.status}">
+                    <a class="collapse-item" th:href="@{/modify/addFamily}" id="fam">Utwórz</a>
+                </div>
             </div>
         </div>
     </li>
@@ -57,16 +58,35 @@
                 <h6 class="collapse-header">Co chciałbyś zmienić?</h6>
                 <div th:if="${details.status}">
                     <div th:if="${details.secondStatus}">
-                    <a class="collapse-item" th:href="@{/modify/addMember}">Dodaj członka rodziny</a>
-                    <a class="collapse-item" th:href="@{/modify/memberUpdate}">Aktualizuj dane</a>
-                    <a class="collapse-item" th:href="@{/modify/removeMember}">Usuń członka rodziny</a>
-                    <a class="collapse-item" th:href="@{/modify/removeFamily}">Usuń rodzinę</a>
+                        <a class="collapse-item" th:href="@{/modify/addMember}">Dodaj członka rodziny</a>
+                        <a class="collapse-item" th:href="@{/modify/memberUpdate}">Aktualizuj dane</a>
+                        <a class="collapse-item" th:href="@{/modify/removeMember}">Usuń członka rodziny</a>
+                        <a class="collapse-item" th:href="@{/modify/removeFamily}">Usuń rodzinę</a>
                     </div>
                 </div>
             </div>
         </div>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link collapsed" th:href="@{/index}" data-toggle="collapse" data-target="#collapseT"
+           aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Krewni</span>
+        </a>
+        <div id="collapseT" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Krewni</h6>
+                <div th:if="${details.status}">
+                    <a class="collapse-item" th:href="@{/recursion/findRelatives}" id="rel">Znajdź krewnych</a>
+                    <div th:if="${details.secondStatus}">
+                        <a class="collapse-item" th:href="@{/test}" id="fm">Dodaj krewnych</a>
+                        <a class="collapse-item" th:href="@{/test/findMember}" id="fsm">Czy jesteś członkiem rodziny?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -100,13 +120,13 @@
     <!-- Nav Item - Charts -->
 
     <!-- Nav Item - Tables -->
-<div th:if="${!details.status}">
-    <li class="nav-item">
-        <a class="nav-link" th:href="@{/modify/wellLog}">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Podgląd</span></a>
-    </li>
-</div>
+    <div th:if="${!details.status}">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/modify/wellLog}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Podgląd</span></a>
+        </li>
+    </div>
 
     <div th:if="${details.status}">
         <li class="nav-item">

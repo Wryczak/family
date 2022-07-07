@@ -26,11 +26,10 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Podaj najważniejsze informacje o swojej rodzinie.</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Stwórz kolejnego członka rodziny.</h1>
                 </div>
                 <!-- Content Row -->
                 <div class="row">
-
 
                 </div>
 
@@ -41,20 +40,10 @@
                     <div class="col-lg-4 mb-4">
 
                         <!-- service -->
-                        <form class="user" method="POST" th:action="@{/modify/addFamily}" th:object="${family}" id="loginForm">
+                        <form class="user" th:method="POST" th:action="@{/test/addRelatives}" th:object="${member}"
+                              id="loginForm">
 
-                            <div th:if="${#fields.hasErrors()}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="familyName">Nazwisko rodowe: </label>
-                                <input type="text" class="form-control form-control-user"
-                                       name="familyName" id="familyName" aria-describedby="emailHelp"
-                                       placeholder="Enter family name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}" th:field="*{familyName}"/>
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('familyName')}"
-                                      th:errors="*{familyName}">Name Error</span>
-                            </div>
+                            <div th:insert="menuAndFormsFragments/addRelativesForm"></div>
 
                             <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
                             <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">
@@ -73,8 +62,10 @@
                                     <img class="img-profile rounded-circle"
                                          th:src="@{/images/family.png}" alt="family.png"/>
                                 </div>
-                                <p>W tej części musisz podać kilka informacji o swojej rodzinie:</p>
-                                <p>Podaj nazwisko rodowe swojej rodziny.</p>
+                                <p>Aby stworzyć rodzinę musi mieć ona co najmniej jednego członka.
+                                    Zacznij więc od siebie, oto kilka przydatnych zasad:</p>
+                                <p>Imię i nazwisko musi składać się wyłącznie z liter.</p>
+                                <p>Pozostali członkowie rodziny mogą być w wieku od 0 do 140 lat.</p>
                             </div>
                         </div>
                     </div>
@@ -115,10 +106,8 @@
 <!-- Custom scripts for all pages-->
 <script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
 
-
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 
 </body>
-
 </html>

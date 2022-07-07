@@ -1,15 +1,12 @@
 package com.example.family;
 
-import com.example.family.family.Member;
-import com.example.family.family.MemberDto;
+import com.example.family.MainObjectsFamilyMemberDto.Member;
+import com.example.family.MainObjectsFamilyMemberDto.MemberDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class FamilyApplication {
@@ -28,8 +25,7 @@ public class FamilyApplication {
                 map().setFamilyName(source.getFamilyName());
                 map().setName(source.getName());
                 map().setBirthday(source.getBirthday());
-                map().setMature(source.getMature());
-                map().setIdtest(source.getId());
+                map().setId(source.getId());
                 map().setFatherID(source.getFatherId());
                 map().setMatherID(source.getMatherId());
 
@@ -37,5 +33,4 @@ public class FamilyApplication {
         });
         return modelMapper;
     }
-
 }

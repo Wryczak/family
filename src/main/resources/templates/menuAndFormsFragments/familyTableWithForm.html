@@ -25,8 +25,11 @@
             <td th:text="${memberDto.getFamilyName()}"></td>
             <td th:text="${memberDto.getAge()}"></td>
             <td th:text="${memberDto.getBirthday()}"></td>
-            <td> <div th:insert="menuAndFormsFragments/form2"></div></td>
-
+            <td> <form class="user" th:method="POST" th:action="@{/test}" th:object="${userDetails}"
+                      id="loginForm">
+            <input type="hidden" th:value="${memberDto.getId}" th:attr="name='id'"/>
+            <input type="submit" value="+" class=" btn btn-success btn-circle ">
+        </form></td>
         </tr>
         </tbody>
     </table>

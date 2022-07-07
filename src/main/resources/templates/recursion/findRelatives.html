@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+
+<div th:insert="menuAndFormsFragments/head"></div>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Sidebar -->
+  <div th:insert="menuAndFormsFragments/sidebar"></div>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Topbar -->
+      <div th:insert="menuAndFormsFragments/topbar"></div>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800">Podaj Id osoby, dla której szukasz krewnych.</h1>
+        </div>
+        <!-- Content Row -->
+        <div class="row">
+
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+          <!-- Content Column -->
+          <div class="col-lg-3 mb-4">
+            <form method="POST" th:action="@{/recursion/findRelatives}" th:object="${memberId}" id="remove">
+              <div class="form-group">
+                <label for="id">Wpisz Id osoby,dla której szukasz krewnych:</label>
+                <input type="number" class="form-control form-control-user"
+                       name="id" id="id" aria-describedby="emailHelp"
+                       placeholder="Enter person ID..."
+                       min="0" max="999999999999"
+                       th:field="*{idToFind}"/>
+              </div>
+
+              <div class="form-group"><span >Wybierz pokrewieństwo: </span>
+                <select id="relatives"class="btn btn-info dropdown-toggle" placeholder="Source Type"
+                        onChange="update()">
+                  <option style="display:none;"></option>
+                  <option value="1">Znajdź przodków</option>
+                  <option value="2">Znajdź rodziców</option>
+                  <option value="3">Znajdź dzieci</option>
+                  <option value="4">Znajdź potomków</option>
+                  <option value="5">Znajdź wszystkich krewnych</option>
+                </select>
+                <input type="hidden" id="value" th:field="*{id}"></div>
+
+              <script type="text/javascript">
+                function update() {
+                  var select = document.getElementById('relatives');
+                  var option = select.options[select.selectedIndex];
+
+                  document.getElementById('value').value = option.value;
+                }
+
+                update();
+              </script>
+              <div class="col-lg-8 mb-4">
+                <input type="submit" value="Znajdź" class="btn btn-info btn-block">
+              </div>
+            </form>
+
+          </div>
+          <div class="col-lg-4 mb-4">
+            <!-- Illustrations -->
+            <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Znajdowanie rodziny:</h6>
+              </div>
+              <div class="card-body">
+                <div class="text-center">
+                  <img class="img-profile rounded-circle"
+                       th:src="@{/images/family.png}" alt="family.png"/>
+                </div>
+                <p>Wystarczy wpisać Id osoby, by odnaleźć jej krewnych.</p>
+                <p>Jeżeli osoby o podanym Id nie ma w bazie nic nie zostanie wyświetlone.</p>
+                <p>By móc edytować rodzinę należy się zalogować.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Krzysztof Wrycza 2022</span>
+        </div>
+      </div>
+    </footer>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<div th:insert="menuAndFormsFragments/footer"></div>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
+
+
+<!-- Page level plugins -->
+<script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
+
+</body>
+</html>

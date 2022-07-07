@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table, td {
+            border: 1px solid black;
+        }
+    </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+        </script>
+</head>
+<body>
+<input type="text" value="Hello world" id="myInput">
+<button onclick="Hello()">Copy Text</button>
+
+<script>
+    function Hello() {
+        var copyText = document.getElementById('myInput')
+        copyText.select();
+        document.execCommand('copy')
+        console.log('Copied Text')
+    }
+</script>
+<tr
+       th:each="memberDto: ${memberDto}">
+<!--    <td th:text="${student.id}" />-->
+<!--    <td th:text="${student.name}" />-->
+</tr>
+
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTfable" width="100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Imię</th>
+            <th>id</th>
+            <th>MyId</th>
+            <th>MyId</th>
+
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th>Imię</th>
+            <th>id</th>
+            <th>MyId</th>
+            <th>MyId</th>
+
+        </tfoot>
+        <tbody>
+        <tr  th:each="memberDto: ${memberDto}">
+            <td  th:text="${memberDto.getName()}"></td>
+            <td th:text="${memberDto.getIdtest}"></td>
+           <td> <div th:insert="menuAndFormsFragments/redirectFormToAddRelatives"></div></td>
+<!--            <td><div> <p style="color:#FFFFFF;font-size:1px;" th:text="${memberDto.getIdtest()}"></p><button onclick="status(this)">Copy</button></div></td>-->
+            <script type="text/javascript">
+                function copy()
+                {
+                    //Copy the data from one div to another.  I recommend setting ID attributes and using document.getElementById(id);
+                }
+            </script>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<textarea id="w3review" name="w3review" rows="4" cols="50">
+    At w3schools.com you will learn how to make a website.
+    They offer free tutorials in all web development technologies.</textarea>
+
+
+<div class="list-group" th:each="memberDto: ${memberDto}" >
+    <p  th:text="${memberDto.getIdtest()}"></p><button onclick="status(this)">Copy</button></div>
+</div>
+<script>
+    function status(clickedBtn)
+    {
+        clickedBtn.value = "Copied to clipboard";
+        clickedBtn.disabled = true;
+        clickedBtn.style.color = 'white';
+        clickedBtn.style.background = 'gray';
+
+        //New Code
+        copyToCliboard(clickedBtn.previousSibling);
+    }
+    function copyToCliboard(el) {
+        if (document.body.createTextRange) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(el);
+            range.select();
+        } else {
+            var selection = window.getSelection();
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+    }
+</script>
+</body>
+</html>

@@ -26,36 +26,28 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
-
+                    <h1 class="h3 mb-0 text-gray-800">Wynik wyszukiwania:</h1>
                 </div>
-                <!-- Content Row -->
-                <div class="row">
-
-                </div>
-
                 <!-- Content Row -->
                 <div class="row">
 
                     <!-- Content Column -->
-                    <div class="col-lg-6 mb-4">
+                    <div class="col-lg-8 mb-4">
 
-                        <!-- DataTales Example -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
-                            </div>
-                        </div>
+
+                        <span class="text-xl-center font-weight-bold text-success text-uppercase mb-1"
+                              th:text="${userDetails.text}"></span>
+                        <br>
+                        <br>
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <span class="text-xl-center font-weight-bold text-info text-uppercase mb-1">Rodzice</span>
+                            <table class="table table-bordered" id="dataTable1" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
                                     <th>Imię</th>
                                     <th>Nazwisko</th>
                                     <th>Wiek</th>
                                     <th>Data Urodzin</th>
-                                    <th>Aktualizuj</th>
-
                                 </tr>
                                 </thead>
                                 <tfoot>
@@ -64,8 +56,6 @@
                                     <th>Nazwisko</th>
                                     <th>Wiek</th>
                                     <th>Data urodzin</th>
-                                    <th>Aktualizuj</th>
-
                                 </tfoot>
                                 <tbody>
                                 <tr th:each="memberDto: ${memberDto}">
@@ -73,37 +63,40 @@
                                     <td th:text="${memberDto.getFamilyName()}"></td>
                                     <td th:text="${memberDto.getAge()}"></td>
                                     <td th:text="${memberDto.getBirthday()}"></td>
-                                    <td ><form class="user" th:method="POST" th:action="@{/modify/removeMember}" th:object="${userDetails}"
-                                              id="loginForm">
-                                    <input type="hidden" th:value="${memberDto.getId}" th:attr="name='id'"/>
-                                    <button class="btn btn-danger btn-user btn-block">Usuń</button>
-                                </form></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive">
+                            <span class="text-xl-center font-weight-bold text-info text-uppercase mb-1">Dzieci</span>
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Imię</th>
+                                    <th>Nazwisko</th>
+                                    <th>Wiek</th>
+                                    <th>Data Urodzin</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>Imię</th>
+                                    <th>Nazwisko</th>
+                                    <th>Wiek</th>
+                                    <th>Data urodzin</th>
+                                </tfoot>
+                                <tbody>
+                                <tr th:each="memberDto: ${childrenDto}">
+                                    <td th:text="${memberDto.getName()}"></td>
+                                    <td th:text="${memberDto.getFamilyName()}"></td>
+                                    <td th:text="${memberDto.getAge()}"></td>
+                                    <td th:text="${memberDto.getBirthday()}"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
-                    <div class="col-lg-6 mb-4">
-
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img class="img-profile rounded-circle"
-                                         th:src="@{/images/family.png}" alt="family.png"/>
-                                </div>
-                                <p>Na tej stronie znajduje się lista członków rodziny, którą odnaleziono.</p>
-                                <p>Jeżeli to przez Ciebie została stworzona, możesz edytować wszystkie dane, po
-                                    logowaniu.</p>
-                                <p>Cieszymy się, że korzystasz z naszego serwisu.</p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
@@ -128,7 +121,6 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- Scroll to Top Button-->
 <div th:insert="menuAndFormsFragments/footer"></div>
 
 <!-- Bootstrap core JavaScript-->
@@ -141,7 +133,6 @@
 <!-- Custom scripts for all pages-->
 <script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
 
-
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 <script th:src="@{/bootstrap/vendor/datatables/jquery.dataTables.min.js}"></script>
@@ -149,6 +140,5 @@
 
 <!-- Page level custom scripts -->
 <script th:src="@{/bootstrap/js/demo/datatables-demo.js}"></script>
-
 </body>
 </html>

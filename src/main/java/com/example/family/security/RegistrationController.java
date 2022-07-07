@@ -1,7 +1,7 @@
 package com.example.family.security;
 
-import com.example.family.data.UserRepository;
-import com.example.family.Interfaces.Details;
+import com.example.family.Repositories.UserRepository;
+import com.example.family.MainObjectsFamilyMemberDto.Details;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;

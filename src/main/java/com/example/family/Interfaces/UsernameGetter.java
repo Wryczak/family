@@ -9,10 +9,9 @@ public interface UsernameGetter {
         String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
-            return username;
         } else {
             username = principal.toString();
-            return username;
         }
+        return username;
     }
 }
