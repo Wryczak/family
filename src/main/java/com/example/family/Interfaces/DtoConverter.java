@@ -1,7 +1,7 @@
 package com.example.family.Interfaces;
 
-import com.example.family.family.Member;
-import com.example.family.family.MemberDto;
+import com.example.family.MainObjectsFamilyMemberDto.Member;
+import com.example.family.MainObjectsFamilyMemberDto.MemberDto;
 import org.modelmapper.ModelMapper;
 
 public interface DtoConverter {

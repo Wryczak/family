@@ -42,10 +42,10 @@
                         <!-- service -->
                         <span class="text-xl-center font-weight-bold text-info text-uppercase mb-1"
                               th:text="${userDetails.text}"></span>
-                        <form class="user" th:method="POST" th:action="@{/modify/updateData}"
-                              th:object="${memberDto}" id="loginForm">
+                        <form class="user" th:method="POST" th:action="@{/modify/updateData}" onsubmit="return validateForm()"
+                              th:object="${memberDto}" id="myForm">
 
-                            <div th:insert="menuAndFormsFragments/form"></div>
+                            <div th:insert="menuAndFormsFragments/addMemberForm"></div>
 
                             <input type="submit" value="Aktualizuj dane" class="btn btn-primary btn-user btn-block">
                             <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">
@@ -113,6 +113,7 @@
 
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
+<script th:src="@{/js/validation.js}"></script>
 
 </body>
 </html>

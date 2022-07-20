@@ -26,7 +26,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Stwórz kolejnego członka rodziny.</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Stwórz członka rodziny.</h1>
                 </div>
                 <!-- Content Row -->
                 <div class="row">
@@ -40,12 +40,12 @@
                     <div class="col-lg-4 mb-4">
 
                         <!-- service -->
-                        <form class="user" th:method="POST" th:action="@{/modify/addMember}" th:object="${member}"
-                              id="loginForm">
+                        <form class="user" th:method="POST" th:action="@{/modify/addMember}" th:object="${memberDto}" onsubmit="return validateForm()"
+                              id="myForm">
 
-                            <div th:insert="menuAndFormsFragments/form"></div>
+                            <div th:insert="menuAndFormsFragments/addMemberForm"></div>
 
-                            <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
+                            <input id="btn" type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
                             <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">
                         </form>
 
@@ -108,6 +108,7 @@
 
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
+<script th:src="@{/js/validation.js}"></script>
 
 </body>
 </html>

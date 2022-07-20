@@ -1,6 +1,6 @@
 package com.example.family.security;
 
-import com.example.family.data.UserRepository;
+import com.example.family.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

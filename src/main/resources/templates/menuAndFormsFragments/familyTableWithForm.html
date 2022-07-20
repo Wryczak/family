@@ -6,26 +6,23 @@
             <th>Nazwisko</th>
             <th>Wiek</th>
             <th>Data Urodzin</th>
-            <th>Dodaj</th>
-
+            <th style="display:none;"></th>
         </tr>
         </thead>
-        <tfoot>
-        <tr>
-            <th>Imię</th>
-            <th>Nazwisko</th>
-            <th>Wiek</th>
-            <th>Data urodzin</th>
-            <th>Dodaj</th>
-
-        </tfoot>
         <tbody>
         <tr th:each="memberDto: ${memberDto}">
-            <td th:text="${memberDto.getName()}"></td>
+            <td> <form class="user" th:method="POST" th:action="@{/test/split}" th:object="${userDetails}"
+                       id="loginForm">
+                <input type="hidden" th:value="${memberDto.getId}" th:attr="name='id'"/>
+                <div th:if="${memberDto.getGender.getLabel=='female'}">
+                    <input type="submit" th:value="${memberDto.getName}" class="btn btn-outline-success"></div>
+                <div th:if="${memberDto.getGender.getLabel=='male'}">
+                    <input type="submit" th:value="${memberDto.getName}" class="btn btn-outline-dark"></div>
+            </form></td>
             <td th:text="${memberDto.getFamilyName()}"></td>
             <td th:text="${memberDto.getAge()}"></td>
             <td th:text="${memberDto.getBirthday()}"></td>
-            <td> <div th:insert="menuAndFormsFragments/form2"></div></td>
+            <td style="display:none;" th:text="${memberDto.getName()}"></td>
 
         </tr>
         </tbody>

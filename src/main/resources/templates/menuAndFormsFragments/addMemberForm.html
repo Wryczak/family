@@ -1,0 +1,32 @@
+<div>
+<div class="form-group">
+    <input type="radio" id="f" th:field="*{tempId}" th:value="${0}"/>
+    <label for="f">Kobieta</label><br>
+    <input type="radio" id="m" th:field="*{tempId}" th:value="${1}"/>
+    <label for="m">Mężczyzna</label><br>
+</div>
+<div class="form-group">
+    <input type="text" class="form-control form-control-user"
+           name="name" id="name"
+           placeholder="Enter name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}"
+           th:field="*{name}"/>
+</div>
+
+<div class="form-group">
+    <input type="text" class="form-control form-control-user"
+           name="familyName" id="familyName"
+           placeholder="Enter family name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}"
+           th:field="*{familyName}"/>
+</div>
+
+<div class="form-group">
+    <input type="date"  min="1900-01-01" id="dt" class="form-control form-control-user"
+           name="birthday"
+           th:field="*{birthday}"/>
+    <script>
+        document.getElementById('dt')
+            .max = new Date(new Date().getTime() - new Date()
+            .getTimezoneOffset() * 60000).toISOString().split("T")[0];
+    </script>
+</div>
+</div>

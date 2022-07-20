@@ -29,10 +29,6 @@
                     <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
 
                 </div>
-                <!-- Content Row -->
-                <div class="row">
-
-                </div>
 
                 <!-- Content Row -->
                 <div class="row">
@@ -46,69 +42,76 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
                             </div>
                             <div class="card-body">
-                                <div th:insert="menuAndFormsFragments/familyTable"></div>
-                                <div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Imię</th>
+                                            <th>Nazwisko</th>
+                                            <th>Wiek</th>
+                                            <th>Data Urodzin</th>
+                                            <th>Aktualizuj</th>
 
-                                    <form class="user" th:method="POST" th:action="@{/modify/memberUpdate}"
-                                          th:object="${userDetails}"
-                                          id="loginForm">
-
-
-                                        <div class="form-group">
-                                            <input type="number" class="form-control form-control-user"
-                                                   name="age" id="age" aria-describedby="emailHelp"
-                                                   placeholder="Podaj Id członka rodziny, którego dane chcesz zmienić" min="0"
-                                                   max="999999999999" th:field="*{id}"/>
-                                        </div>
-                                        <input type="submit" value="Aktualizuj" class="btn btn-info">
-
-
-                                    </form>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="memberDto: ${memberDto}">
+                                            <td th:text="${memberDto.getName()}"></td>
+                                            <td th:text="${memberDto.getFamilyName()}"></td>
+                                            <td th:text="${memberDto.getAge()}"></td>
+                                            <td th:text="${memberDto.getBirthday()}"></td>
+                                            <td><form class="user" th:method="POST" th:action="@{/modify/memberUpdate}" th:object="${userDetails}"
+                                                     id="loginForm">
+                                            <input type="hidden" th:value="${memberDto.getId}" th:attr="name='id'"/>
+                                            <button class="btn btn-info btn-user btn-block">Aktualizuj</button>
+                                        </form></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                    <div class="col-lg-6 mb-4">
+            <div class="col-lg-6 mb-4">
 
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img class="img-profile rounded-circle"
-                                         th:src="@{/images/family.png}" alt="family.png"/>
-                                </div>
-                                <p>Na tej stronie znajduje się lista członków rodziny, którą odnaleziono.</p>
-                                <p>Jeżeli to przez Ciebie została stworzona, możesz edytować wszystkie dane, po
-                                    logowaniu.</p>
-                                <p>Cieszymy się, że korzystasz z naszego serwisu.</p>
-                            </div>
+                <!-- Illustrations -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img class="img-profile rounded-circle"
+                                 th:src="@{/images/family.png}" alt="family.png"/>
                         </div>
+                        <p>Na tej stronie znajduje się lista członków rodziny, którą odnaleziono.</p>
+                        <p>Jeżeli to przez Ciebie została stworzona, możesz edytować wszystkie dane, po
+                            logowaniu.</p>
+                        <p>Cieszymy się, że korzystasz z naszego serwisu.</p>
                     </div>
-
                 </div>
-
             </div>
-            <!-- /.container-fluid -->
 
         </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Krzysztof Wrycza 2022</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Krzysztof Wrycza 2022</span>
+        </div>
+    </div>
+</footer>
+<!-- End of Footer -->
+
+</div>
+<!-- End of Content Wrapper -->
 
 </div>
 <!-- End of Page Wrapper -->
@@ -134,6 +137,7 @@
 
 <!-- Page level custom scripts -->
 <script th:src="@{/bootstrap/js/demo/datatables-demo.js}"></script>
+
 
 </body>
 </html>
