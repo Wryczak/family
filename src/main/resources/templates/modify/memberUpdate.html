@@ -29,10 +29,6 @@
                     <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
 
                 </div>
-                <!-- Content Row -->
-                <div class="row">
-
-                </div>
 
                 <!-- Content Row -->
                 <div class="row">
@@ -58,15 +54,6 @@
 
                                         </tr>
                                         </thead>
-                                        <tfoot>
-                                        <tr>
-                                            <th>Imię</th>
-                                            <th>Nazwisko</th>
-                                            <th>Wiek</th>
-                                            <th>Data urodzin</th>
-                                            <th>Aktualizuj</th>
-
-                                        </tfoot>
                                         <tbody>
                                         <tr th:each="memberDto: ${memberDto}">
                                             <td th:text="${memberDto.getName()}"></td>
@@ -150,6 +137,7 @@
 
 <!-- Page level custom scripts -->
 <script th:src="@{/bootstrap/js/demo/datatables-demo.js}"></script>
+
 
 </body>
 </html>

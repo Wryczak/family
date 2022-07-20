@@ -1,19 +1,17 @@
 package com.example.family.MainObjectsFamilyMemberDto;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
-import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Data
 public class MemberDto {
 
     private Long id;
 
-    @NotNull
-    @Size(min = 3, message = "Imię musi mieć co najmniej 3 znaki!")
     private String name;
-    @NotNull
-    @Size(min = 3, message = "Nazwisko musi mieć co najmniej 3 znaki!")
+
     private String familyName;
 
     private Integer age;
@@ -22,9 +20,18 @@ public class MemberDto {
 
     private Long matherID;
 
-    @NotNull
-    @Size(min = 3, message = "Podaj datę urodzin!")
-    private String birthday;
+    private String mather;
+
+    private String father;
+
+    private String fullName;
+
+    private Gender gender;
+
+    private Long partnerId;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
 
     private Long tempId;
 

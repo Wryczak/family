@@ -2,19 +2,15 @@ package com.example.family.services;
 
 
 import com.example.family.Interfaces.*;
+import com.example.family.MainObjectsFamilyMemberDto.Gender;
 import com.example.family.Repositories.FamilyRepository;
 import com.example.family.Repositories.MemberRepository;
-import com.example.family.Repositories.UserRepository;
-import com.example.family.MainObjectsFamilyMemberDto.Details;
 import com.example.family.MainObjectsFamilyMemberDto.Family;
 import com.example.family.MainObjectsFamilyMemberDto.Member;
 import com.example.family.MainObjectsFamilyMemberDto.MemberDto;
-import com.example.family.security.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -57,7 +53,7 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
 
     public void createMember(Member member) {
         Family family = familyService.getFamily();
-        member.setUserid(userDetailsService.getUserId());
+        member.setUserId(userDetailsService.getUserId());
         member = memberRepository.saveAndFlush(member);
         family.addFamilyMember(member);
     }
@@ -95,15 +91,18 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
                 map(familyService.getFamily().getMembers(), MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
+            parentsNameSetter(member);
         }
         return memberDtoList;
     }
+
 
     public List<MemberDto> createMembersDTOListForRelatives(List<Member> members) {
         List<MemberDto> memberDtoList = Arrays.asList(modelMapper.
                 map(members, MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
+            parentsNameSetter(member);
         }
         return memberDtoList;
     }
@@ -146,13 +145,37 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
         model.addAttribute("memberDto", createMembersDTOListForRelatives(membersList));
     }
 
-    public void createChildrenListForMemberById(Long id,Model model) {
+    public void createChildrenListForMemberById(Long id, Model model) {
         List<Long> children = new ArrayList<>(familyService.getChildrenForSinglePerson(id));
         List<Member> membersList = new ArrayList<>();
         for (Long relativesId : children) {
             membersList.add(familyService.getMemberByIdFromFamily(relativesId));
 
         }
-        model.addAttribute("childrenDto",createMembersDTOListForRelatives(membersList));
+        model.addAttribute("childrenDto", createMembersDTOListForRelatives(membersList));
     }
-}
+
+    private String setParentNameByParentId(Long id) {
+        if (familyService.getMemberByIdFromFamily(id).getName() == null && familyService.getMemberByIdFromFamily(id).getFamilyName() == null) {
+            return "Brak danych- członek rodziny usunięty.";
+        }
+        return familyService.getMemberByIdFromFamily(id).getName() + " " + familyService.getMemberByIdFromFamily(id).getFamilyName();
+
+    }
+
+    private void parentsNameSetter(MemberDto member) {
+        if (member.getFatherID() != null) {
+            member.setFather(setParentNameByParentId(member.getFatherID()));
+        } else member.setFather("----");
+        if (member.getMatherID() != null) {
+            member.setMather(setParentNameByParentId(member.getMatherID()));
+        } else member.setMather("----");
+    }
+
+    public void setGender(MemberDto member) {
+            Long temp = member.getTempId();
+            if (temp != 0) {
+                member.setGender(Gender.M);
+            } else member.setGender(Gender.F);
+        }
+    }

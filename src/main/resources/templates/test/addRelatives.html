@@ -40,8 +40,8 @@
                     <div class="col-lg-4 mb-4">
 
                         <!-- service -->
-                        <form class="user" th:method="POST" th:action="@{/test/addRelatives}" th:object="${member}"
-                              id="loginForm">
+                        <form class="user" th:method="POST" th:action="@{/test/addRelatives}" th:object="${memberDto}" onsubmit="return validateForm()"
+                              id="myForm">
 
                             <div th:insert="menuAndFormsFragments/addRelativesForm"></div>
 
@@ -108,6 +108,7 @@
 
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
+<script th:src="@{/js/validation.js}"></script>
 
 </body>
 </html>

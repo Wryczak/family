@@ -25,9 +25,11 @@ public class FamilyApplication {
                 map().setFamilyName(source.getFamilyName());
                 map().setName(source.getName());
                 map().setBirthday(source.getBirthday());
-                map().setId(source.getId());
+//                map().setId(source.getId());
                 map().setFatherID(source.getFatherId());
                 map().setMatherID(source.getMatherId());
+                map().setGender(source.getGender());
+                map().setPartnerId(source.getPartnerId());
 
             }
         });

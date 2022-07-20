@@ -29,10 +29,6 @@
                     <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
 
                 </div>
-                <!-- Content Row -->
-                <div class="row">
-
-                </div>
 
                 <!-- Content Row -->
                 <div class="row">
@@ -45,45 +41,41 @@
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
                             </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th>Imię</th>
-                                    <th>Nazwisko</th>
-                                    <th>Wiek</th>
-                                    <th>Data Urodzin</th>
-                                    <th>Aktualizuj</th>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Imię</th>
+                                            <th>Nazwisko</th>
+                                            <th>Wiek</th>
+                                            <th>Data Urodzin</th>
+                                            <th>Aktualizuj</th>
 
-                                </tr>
-                                </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>Imię</th>
-                                    <th>Nazwisko</th>
-                                    <th>Wiek</th>
-                                    <th>Data urodzin</th>
-                                    <th>Aktualizuj</th>
-
-                                </tfoot>
-                                <tbody>
-                                <tr th:each="memberDto: ${memberDto}">
-                                    <td th:text="${memberDto.getName()}"></td>
-                                    <td th:text="${memberDto.getFamilyName()}"></td>
-                                    <td th:text="${memberDto.getAge()}"></td>
-                                    <td th:text="${memberDto.getBirthday()}"></td>
-                                    <td ><form class="user" th:method="POST" th:action="@{/modify/removeMember}" th:object="${userDetails}"
-                                              id="loginForm">
-                                    <input type="hidden" th:value="${memberDto.getId}" th:attr="name='id'"/>
-                                    <button class="btn btn-danger btn-user btn-block">Usuń</button>
-                                </form></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="memberDto: ${memberDto}">
+                                            <td th:text="${memberDto.getName()}"></td>
+                                            <td th:text="${memberDto.getFamilyName()}"></td>
+                                            <td th:text="${memberDto.getAge()}"></td>
+                                            <td th:text="${memberDto.getBirthday()}"></td>
+                                            <td>
+                                                <form class="user" th:method="POST" th:action="@{/modify/removeMember}"
+                                                      th:object="${userDetails}"
+                                                      id="loginForm">
+                                                    <input type="hidden" th:value="${memberDto.getId}"
+                                                           th:attr="name='id'"/>
+                                                    <button class="btn btn-danger btn-user btn-block">Usuń</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                     <div class="col-lg-6 mb-4">
 
                         <!-- Illustrations -->

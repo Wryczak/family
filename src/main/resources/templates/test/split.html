@@ -1,46 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
-
 <div th:insert="menuAndFormsFragments/head"></div>
-
 <body id="page-top">
-
-<!-- Page Wrapper -->
 <div id="wrapper">
-    <!-- Sidebar -->
     <div th:insert="menuAndFormsFragments/sidebar"></div>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
         <div id="content">
-            <!-- Topbar -->
             <div th:insert="menuAndFormsFragments/topbar"></div>
-            <!-- End of Topbar -->
-
-            <!-- Begin Page Content -->
             <div class="container-fluid">
-
-                <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
-
                 </div>
-                <!-- Content Row -->
                 <div class="row">
-
-                </div>
-
-                <!-- Content Row -->
-                <div class="row">
-
-                    <!-- Content Column -->
-                    <div class="col-lg-7 mb-4">
-
-                        <!-- DataTales Example -->
+                    <div class="col-lg-8 mb-4">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
@@ -50,9 +23,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5 mb-4">
+                    <div class="col-lg-4 mb-4" th:if="${split.status}">
+                        <form class="user" th:method="POST" th:action="@{/test/addRelatives}"
+                              th:object="${memberToSave}" onsubmit="return validateForm()"
+                              id="myForm">
+                            <div th:insert="menuAndFormsFragments/addRelativesForm"></div>
+                            <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
+                            <br>
 
-                        <!-- Illustrations -->
+                            <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block">
+                        </form>
+                        <br>
+                        <form class="user" th:method="POST" th:action="@{/test/splitCancelForm}" id="myForm1">
+                            <input type="submit" value="Anuluj" class="btn btn-warning btn-user btn-block">
+                        </form>
+
+                    </div>
+                    <div class="col-lg-4 mb-4" th:if="${!split.status}">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
@@ -69,16 +56,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
-            <!-- /.container-fluid -->
-
         </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
@@ -115,6 +95,6 @@
 
 <!-- Page level custom scripts -->
 <script th:src="@{/bootstrap/js/demo/datatables-demo.js}"></script>
-
+<script th:src="@{/js/validation.js}"></script>
 </body>
 </html>

@@ -54,12 +54,6 @@
                                             <th>Data Urodzenia</th>
                                         </tr>
                                         </thead>
-                                        <tfoot>
-                                        <tr>
-                                            <th>Imię</th>
-                                            <th>Nazwisko</th>
-                                            <th>Data Urodzenia</th>
-                                        </tfoot>
                                         <tbody>
                                         <tr th:each="member: ${member}">
                                             <td th:text="${member.getFamilyName()}"></td>

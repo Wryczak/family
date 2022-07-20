@@ -8,13 +8,6 @@
 
         </tr>
         </thead>
-        <tfoot>
-        <tr>
-            <th>Imię</th>
-            <th>Nazwisko</th>
-            <th>Data urodzin</th>
-
-        </tfoot>
         <tbody>
         <tr th:each="member: ${member1}">
             <td th:text="${member.getName()}"></td>

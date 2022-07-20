@@ -125,37 +125,10 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
     }
 
     @PostMapping("addMember")
-    public String addMemberToFamily(Model model, @Valid MemberDto member, Errors errors) {
+    public String addMemberToFamily(Model model, MemberDto member) {
         userDetailsService.detailsSet(model);
 
-        if (errors.hasErrors()) {
-            log.info("    --- Try again");
-            return "modify/addMember";
-        }
-
-        log.info("    --- Creating new family member");
-        Member newMember = convertToEntity(member, modelMapper);
-        memberService.createMember(newMember);
-
-        return "redirect:/modify/getMyFamilyAfterLog";
-    }
-
-    @GetMapping("addMember2")
-    public String getAddMemberView2(Model model) {
-        userDetailsService.detailsSet(model);
-
-        return "modify/addMember2";
-    }
-
-    @PostMapping("addMember2")
-    public String addMemberToFamily2(Model model, @Valid MemberDto member, Errors errors) {
-        userDetailsService.detailsSet(model);
-
-        if (errors.hasErrors()) {
-            log.info("    --- Try again");
-            return "modify/addMember2";
-        }
-
+        memberService.setGender(member);
         log.info("    --- Creating new family member");
         Member newMember = convertToEntity(member, modelMapper);
         memberService.createMember(newMember);
@@ -264,19 +237,13 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
     }
 
     @PostMapping("updateData")
-    public String postUpdateForm(Model model, @Valid MemberDto memberToUpdate,
-                                 Errors errors, Details userDetails) {
+    public String postUpdateForm(Model model, MemberDto memberToUpdate) {
         userDetailsService.detailsSet(model);
 
         if (idToModify == 0L) {
             return "/modify/memberUpdate";
         }
-        if (errors.hasErrors()) {
-            userDetails.setText("");
-            model.addAttribute("userDetails", userDetails);
-            log.info("    --- Try again");
-            return "/modify/updateData";
-        }
+        memberService.setGender(memberToUpdate);
         memberService.updateMemberData(idToModify, memberToUpdate);
         idToModify = null;
         return "redirect:/modify/getMyFamilyAfterLog";

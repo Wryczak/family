@@ -1,13 +1,15 @@
 package com.example.family.MainObjectsFamilyMemberDto;
 
-import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import java.time.LocalDate;
+
+
 @Data
 @Entity
 @RequiredArgsConstructor
@@ -17,24 +19,21 @@ public class Member{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private final Long id;
-
-    @NotNull
-    @Size(min = 3, message = "Imię musi mieć co najmniej 3 znaki!")
     private String name;
-
-    @NotNull
-    @Size(min = 2, message = "Nazwisko musi mieć co najmniej 2 znaki!")
     private String familyName;
 
-    @NotNull
-    @Size(min = 2, message = "Podaj datę urodzin!")
-    private String birthday;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
 
-    private Long userid;
+    private Long userId;
 
     private Long matherId;
 
     private Long fatherId;
+
+    private Gender gender;
+
+    private Long partnerId;
 
     public Member(Long id, String name, String familyName) {
         this.id = id;
