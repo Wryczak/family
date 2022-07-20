@@ -29,6 +29,9 @@ private final ModelMapper modelMapper;
     @GetMapping
     public List<ListItemDto> ListItems(@RequestParam(value = "q", required = false) String query) {
         List<MemberDto> temp = memberService.getMembersDTOList();
+
+
+//        Lista wszystkich osób z repozytorium niezależnie od rodziny:
 //        List<Member> members1=memberRepository.findAll();
 //        List<MemberDto> temp = Arrays.asList(modelMapper.
 //                map(members1, MemberDto[].class));
