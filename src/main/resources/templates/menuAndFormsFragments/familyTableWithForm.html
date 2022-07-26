@@ -6,6 +6,7 @@
             <th>Nazwisko</th>
             <th>Wiek</th>
             <th>Data Urodzin</th>
+            <th>Data śmierci</th>
             <th style="display:none;"></th>
         </tr>
         </thead>
@@ -22,6 +23,7 @@
             <td th:text="${memberDto.getFamilyName()}"></td>
             <td th:text="${memberDto.getAge()}"></td>
             <td th:text="${memberDto.getBirthday()}"></td>
+            <td th:text="${memberDto.getDiedOn}"></td>
             <td style="display:none;" th:text="${memberDto.getName()}"></td>
 
         </tr>

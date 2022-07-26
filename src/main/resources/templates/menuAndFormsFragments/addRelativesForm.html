@@ -20,24 +20,34 @@
     }
     update();
 </script>
-<div class="form-group">
+<div class="form-group"><label for="name">Imię:</label>
     <input type="text" class="form-control form-control-user"
            name="name" id="name"
            placeholder="Enter name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}"
            th:field="*{name}"/>
 </div>
-<div class="form-group">
+<div class="form-group"><label for="name">Nazwisko:</label>
     <input type="text" class="form-control form-control-user"
            name="familyName" id="familyName"
            placeholder="Enter family name..." pattern="[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\s\-]{1,}"
            th:field="*{familyName}"/>
 </div>
-<div class="form-group">
+<div class="form-group"><label for="name">Data urodzenia:</label>
     <input type="date" min="1900-01-01" id="dt" class="form-control form-control-user"
            name="birthday"
            th:field="*{birthday}"/>
     <script>
         document.getElementById('dt')
+            .max = new Date(new Date().getTime() - new Date()
+            .getTimezoneOffset() * 60000).toISOString().split("T")[0];
+    </script>
+</div>
+<div class="form-group"><label for="name">Data śmierci:</label>
+    <input type="date" min="1900-01-01" id="dtd" class="form-control form-control-user"
+           name="birthday"
+           th:field="*{diedOn}"/>
+    <script>
+        document.getElementById('dtd')
             .max = new Date(new Date().getTime() - new Date()
             .getTimezoneOffset() * 60000).toISOString().split("T")[0];
     </script>
