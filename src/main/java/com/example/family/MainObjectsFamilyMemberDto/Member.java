@@ -25,6 +25,9 @@ public class Member{
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate diedOn;
+
     private Long userId;
 
     private Long matherId;

@@ -25,7 +25,7 @@ public class FamilyApplication {
                 map().setFamilyName(source.getFamilyName());
                 map().setName(source.getName());
                 map().setBirthday(source.getBirthday());
-//                map().setId(source.getId());
+                map().setDiedOn(source.getDiedOn());
                 map().setFatherID(source.getFatherId());
                 map().setMatherID(source.getMatherId());
                 map().setGender(source.getGender());

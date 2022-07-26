@@ -33,6 +33,9 @@ public class MemberDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate diedOn;
+
     private Long tempId;
 
 }
