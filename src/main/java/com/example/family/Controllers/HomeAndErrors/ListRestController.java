@@ -1,9 +1,9 @@
 package com.example.family.Controllers.HomeAndErrors;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.family.Interfaces.FullNameCreator;
 import com.example.family.MainObjectsFamilyMemberDto.MemberDto;
 import com.example.family.Repositories.MemberRepository;
 import com.example.family.MainObjectsFamilyMemberDto.autocompleteList.ListItemDto;
@@ -17,37 +17,39 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("list")
-public class ListRestController {
+public class ListRestController implements FullNameCreator {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
     public ListRestController(MemberService memberService, MemberRepository memberRepository, ModelMapper modelMapper) {
         this.memberService = memberService;
         this.memberRepository = memberRepository;
         this.modelMapper = modelMapper;
     }
+
     @GetMapping
     public List<ListItemDto> ListItems(@RequestParam(value = "q", required = false) String query) {
         List<MemberDto> temp = memberService.getMembersDTOList();
-
+        List<MemberDto> temporary = sortByFamilyName(temp);
 
 //        Lista wszystkich osób z repozytorium niezależnie od rodziny:
 //        List<Member> members1=memberRepository.findAll();
 //        List<MemberDto> temp = Arrays.asList(modelMapper.
 //                map(members1, MemberDto[].class));
-        MemberDto[] members = temp.toArray(MemberDto[]::new);
+        MemberDto[] members = temporary.toArray(MemberDto[]::new);
         if (StringUtils.isEmpty(query)) {
             return Arrays.stream(members)
-                    .limit(15)
+                    .limit(5)
                     .map(this::mapToListItemDto)
                     .collect(Collectors.toList());
         }
 
         return Arrays.stream(members)
-                .filter(memberDto -> memberDto.getName()
+                .filter(memberDto -> createFullName(memberDto)
                         .toLowerCase()
                         .contains(query))
-                .limit(15)
+                .limit(5)
                 .map(this::mapToListItemDto)
                 .collect(Collectors.toList());
     }
@@ -55,7 +57,12 @@ private final ModelMapper modelMapper;
     private ListItemDto mapToListItemDto(MemberDto memberDto) {
         return ListItemDto.builder()
                 .id(memberDto.getId())
-                .text((memberDto.getName())+" "+memberDto.getFamilyName())
+                .text(createFullName(memberDto))
                 .build();
+    }
+    public List<MemberDto> sortByFamilyName(List<MemberDto> members) {
+
+        members.sort(Comparator.comparing(MemberDto::getFamilyName).thenComparing(MemberDto::getName));
+        return members;
     }
 }
