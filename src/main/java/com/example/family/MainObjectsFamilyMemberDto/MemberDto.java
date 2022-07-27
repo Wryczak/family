@@ -24,6 +24,8 @@ public class MemberDto {
 
     private String father;
 
+    private String partner;
+
     private String fullName;
 
     private Gender gender;

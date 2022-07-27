@@ -158,6 +158,13 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
                 newMember.setFatherId(idToModify);
             } else newMember.setMatherId(idToModify);
         }
+        if (option == 5) {
+            if (addRelativesToThisMember.getGender().equals(Gender.M)) {
+                newMember.setGender(Gender.F);
+            } else newMember.setGender(Gender.M);
+            newMember.setPartnerId(idToModify);
+            addRelativesToThisMember.setPartnerId(newMember.getId());
+        }
 
     }
 }

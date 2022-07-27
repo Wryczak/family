@@ -91,7 +91,7 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
                 map(familyService.getFamily().getMembers(), MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
-            parentsNameSetter(member);
+            relativesNameSetter(member);
         }
         return memberDtoList;
     }
@@ -102,7 +102,7 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
                 map(members, MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
-            parentsNameSetter(member);
+            relativesNameSetter(member);
         }
         return memberDtoList;
     }
@@ -163,13 +163,19 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
 
     }
 
-    private void parentsNameSetter(MemberDto member) {
+    private void relativesNameSetter(MemberDto member) {
         if (member.getFatherID() != null) {
             member.setFather(setParentNameByParentId(member.getFatherID()));
         } else member.setFather("----");
         if (member.getMatherID() != null) {
             member.setMather(setParentNameByParentId(member.getMatherID()));
         } else member.setMather("----");
+        if (member.getMatherID() != null) {
+            member.setMather(setParentNameByParentId(member.getMatherID()));
+        } else member.setMather("----");
+        if (member.getPartnerId() != null) {
+            member.setPartner(setParentNameByParentId(member.getPartnerId()));
+        } else member.setPartner("----");
     }
 
     public void setGender(MemberDto member) {
