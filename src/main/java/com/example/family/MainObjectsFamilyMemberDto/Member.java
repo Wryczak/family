@@ -30,6 +30,9 @@ public class Member{
 
     private Long userId;
 
+    @ManyToOne(targetEntity = Member.class)
+    private Member myfather;
+
     private Long matherId;
 
     private Long fatherId;

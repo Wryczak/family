@@ -30,6 +30,8 @@ public class FamilyApplication {
                 map().setMatherID(source.getMatherId());
                 map().setGender(source.getGender());
                 map().setPartnerId(source.getPartnerId());
+                map().setFather(source.getMyfather().getName());
+                map().setMather(source.getMyfather().getFamilyName());
 
             }
         });

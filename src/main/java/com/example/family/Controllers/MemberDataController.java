@@ -225,8 +225,8 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
         }
         Details userDetails = new Details();
         Member memberToUpdate = memberService.getMember(idToModify);
-        String memberData = memberToUpdate.getName() + "   " +
-                memberToUpdate.getFamilyName() + " ID: " + idToModify;
+        String memberData = memberToUpdate.getName() + " " +
+                memberToUpdate.getFamilyName();
 
         userDetails.setText(memberData);
         model.addAttribute("userDetails", userDetails);
@@ -260,9 +260,9 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
     public String viewFamilyByUser2(Model model) {
         userDetailsService.detailsSet(model);
 
-        if (!familyService.isDoIHaveFamily()) {
-            return "modify/wellLog";
-        }
+//        if (!familyService.isDoIHaveFamily()) {
+//            return "modify/wellLog";
+//        }
         memberService.getFamilyMembersDtoListAndAddToModel(model);
         return "modify/getMyFamilyAfterLog";
     }

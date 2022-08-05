@@ -6,4 +6,5 @@ public interface FullNameCreator {
     default String createFullName(MemberDto memberDto) {
         return  memberDto.getFamilyName()+" "+memberDto.getName();
     }
+
 }

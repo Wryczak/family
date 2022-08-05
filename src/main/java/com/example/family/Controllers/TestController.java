@@ -112,6 +112,8 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
 
         log.info("    --- Creating new family member");
         createRelatives(member);
+
+        System.out.println("chuj chuj chuj chuj chuj chuj");
         idToModify = null;
         return "redirect:/modify/getMyFamilyAfterLog";
     }

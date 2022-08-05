@@ -43,7 +43,7 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 </div>
                 <!-- Content Row -->
-                <div class="row">
+<!--                <div class="row">-->
 
                     <div class="col-lg-6 mb-4">
 
@@ -54,13 +54,11 @@
                                     <div class="form-group">
                                         <label for="birthplace">Wybierz osobę</label>
                                         <select id="birthplace" class="form-control select2-single"
-                                                th:field="*{memberDto.id}">
+                                                th:field="*{memberDto.id}" onchange="this.form.submit()">
                                             <option value="">Znajdź...</option>
                                         </select>
                                     </div>
-                                    <button class="btn btn-primary" type="submit">Wybierz</button>
                                 </form>
-                                <br>
                                 <form class="user" th:method="POST" th:action="@{/cancelForm}" id="myForm1">
                                     <input type="submit" value="Anuluj" class="btn btn-warning">
                                 </form>
@@ -104,7 +102,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+<!--            </div>-->
             <!-- /.container-fluid -->
         </div>
         <!-- End of Main Content -->

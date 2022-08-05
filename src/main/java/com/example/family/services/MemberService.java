@@ -2,12 +2,9 @@ package com.example.family.services;
 
 
 import com.example.family.Interfaces.*;
-import com.example.family.MainObjectsFamilyMemberDto.Gender;
+import com.example.family.MainObjectsFamilyMemberDto.*;
 import com.example.family.Repositories.FamilyRepository;
 import com.example.family.Repositories.MemberRepository;
-import com.example.family.MainObjectsFamilyMemberDto.Family;
-import com.example.family.MainObjectsFamilyMemberDto.Member;
-import com.example.family.MainObjectsFamilyMemberDto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -25,7 +22,6 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
     private final MemberRepository memberRepository;
     private final FamilyRepository familyRepository;
     private final FamilyService familyService;
-
     private final UserDetailsService userDetailsService;
     private final ModelMapper modelMapper;
 
@@ -91,7 +87,7 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
                 map(familyService.getFamily().getMembers(), MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
-            relativesNameSetter(member);
+//            relativesNameSetter(member);
         }
         return memberDtoList;
     }
@@ -102,7 +98,7 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
                 map(members, MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
-            relativesNameSetter(member);
+//            relativesNameSetter(member);
         }
         return memberDtoList;
     }
@@ -170,18 +166,15 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
         if (member.getMatherID() != null) {
             member.setMather(setParentNameByParentId(member.getMatherID()));
         } else member.setMather("----");
-        if (member.getMatherID() != null) {
-            member.setMather(setParentNameByParentId(member.getMatherID()));
-        } else member.setMather("----");
         if (member.getPartnerId() != null) {
             member.setPartner(setParentNameByParentId(member.getPartnerId()));
         } else member.setPartner("----");
     }
 
     public void setGender(MemberDto member) {
-            Long temp = member.getTempId();
-            if (temp != 0) {
-                member.setGender(Gender.M);
-            } else member.setGender(Gender.F);
-        }
+        Long temp = member.getTempId();
+        if (temp != 0) {
+            member.setGender(Gender.M);
+        } else member.setGender(Gender.F);
     }
+}

@@ -5,7 +5,15 @@
 <div th:insert="menuAndFormsFragments/head"></div>
 
 <body id="page-top">
+<style>
+    #max-height {
+        display: none;
+    }
 
+    .newclass {
+        padding-left: 50px;
+    }
+</style>
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- Sidebar -->
@@ -38,11 +46,10 @@
 
                     <!-- Content Column -->
                     <div class="col-lg-4 mb-4">
-
                         <!-- service -->
-                        <form class="user" th:method="POST" th:action="@{/modify/addMember}" th:object="${memberDto}" onsubmit="return validateForm()"
-                              id="myForm">
-
+                        <form class="user needs-validation" th:method="POST" th:action="@{/modify/addMember}"
+                              th:object="${memberDto}" id="myForm" novalidate>
+                            <!-- onsubmit="return validateForm()"-->
                             <div th:insert="menuAndFormsFragments/addMemberForm"></div>
 
                             <input id="btn" type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block">
@@ -73,7 +80,6 @@
 
             </div>
             <!-- /.container-fluid -->
-
         </div>
         <!-- End of Main Content -->
 
@@ -106,9 +112,11 @@
 <!-- Custom scripts for all pages-->
 <script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
 
+
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 <script th:src="@{/js/validation.js}"></script>
+<script th:src="@{/js/formValidator.js}"></script>
 
 </body>
 </html>

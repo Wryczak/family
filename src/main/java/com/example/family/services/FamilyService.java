@@ -1,6 +1,5 @@
 package com.example.family.services;
 
-import com.example.family.MainObjectsFamilyMemberDto.Details;
 import com.example.family.Interfaces.UsernameGetter;
 import com.example.family.Repositories.FamilyRepository;
 import com.example.family.Repositories.UserRepository;
@@ -8,7 +7,6 @@ import com.example.family.MainObjectsFamilyMemberDto.Family;
 import com.example.family.MainObjectsFamilyMemberDto.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,7 +38,6 @@ public class FamilyService implements UsernameGetter {
 
     public Family createFamily(Family family) {
         return familyRepository.save(family);
-
     }
 
     public void setFamilyDetails(Family family) {
@@ -199,7 +196,7 @@ public class FamilyService implements UsernameGetter {
     }
 
     private Long findRelativesByAncestorId(){
-        System.out.println(parentsIdListFatherLine.stream().skip(parentsIdListFatherLine.size() - 1).findFirst().get());
+//        System.out.println(parentsIdListFatherLine.stream().skip(parentsIdListFatherLine.size() - 1).findFirst().get());
         return parentsIdListFatherLine.stream().skip(parentsIdListFatherLine.size() - 1).findFirst().get();
 
     }
@@ -209,6 +206,8 @@ public class FamilyService implements UsernameGetter {
         ancestors.addAll( getParentTreeForMather(id));
         return ancestors;
     }
+
+
     public void clear(){
         parentsIdListFatherLine.clear();
         allChildrenList.clear();

@@ -18,8 +18,6 @@ import java.util.Objects;
 public class UserDetailsService implements UsernameGetter {
 
     private final UserRepository userRepository;
-
-
     public UserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -59,5 +57,4 @@ public class UserDetailsService implements UsernameGetter {
             model.addAttribute("status", details);
         }
     }
-
 }

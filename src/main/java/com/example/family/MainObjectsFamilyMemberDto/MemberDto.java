@@ -16,6 +16,8 @@ public class MemberDto {
 
     private Integer age;
 
+//    private Member myfather;
+
     private Long fatherID;
 
     private Long matherID;

@@ -5,7 +5,15 @@
 <div th:insert="menuAndFormsFragments/head"></div>
 
 <body id="page-top">
+<style>
+    #max-height {
+        display: none;
+    }
 
+    .newclass {
+        padding-left: 50px;
+    }
+</style>
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- Sidebar -->
@@ -42,8 +50,8 @@
                         <!-- service -->
                         <span class="text-xl-center font-weight-bold text-info text-uppercase mb-1"
                               th:text="${userDetails.text}"></span>
-                        <form class="user" th:method="POST" th:action="@{/modify/updateData}" onsubmit="return validateForm()"
-                              th:object="${memberDto}" id="myForm">
+                        <form class="user needs-validation" th:method="POST" th:action="@{/modify/updateData}"
+                              th:object="${memberDto}" id="myForm" novalidate>
 
                             <div th:insert="menuAndFormsFragments/addMemberForm"></div>
 
@@ -114,6 +122,7 @@
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 <script th:src="@{/js/validation.js}"></script>
+<script th:src="@{/js/formValidator.js}"></script>
 
 </body>
 </html>
