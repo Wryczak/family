@@ -108,7 +108,6 @@ public class FamilyService implements UsernameGetter {
         return getParentTreeForMather(member.getMatherId());
     }
 
-
     public List<Long> getParentsForSinglePerson(Long id) {
         List<Long> parents = new ArrayList<>();
         Member member = getMemberByIdFromFamily(id);
@@ -138,7 +137,6 @@ public class FamilyService implements UsernameGetter {
             createAllChildrenIdList(childrenId);
         }
     }
-
 
     public List<Long> getChildrenForSinglePerson(Long id) {
         List<Member> list = getFamily().getMembers();
@@ -206,7 +204,6 @@ public class FamilyService implements UsernameGetter {
         ancestors.addAll( getParentTreeForMather(id));
         return ancestors;
     }
-
 
     public void clear(){
         parentsIdListFatherLine.clear();

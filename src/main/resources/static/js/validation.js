@@ -14,17 +14,11 @@ function validateForm() {
         alert("Podaj datę śmierci!");
         return false;
     }
-    const x = document.forms["myForm"]["dead2.0"].value;
-    if (x === "" || x == null) {
-        alert("Podaj datę śmierci! 2.0");
-        return false;
-    }
 }
 
-
 function update() {
-    var select = document.getElementById('relatives');
-    var option = select.options[select.selectedIndex];
+    const select = document.getElementById('relatives');
+    const option = select.options[select.selectedIndex];
     document.getElementById('value').value = option.value;
 }
 update();
@@ -47,8 +41,8 @@ function adjustableHeightCheck() {
     }
 }
 
-var start = document.getElementById('dt');
-var end = document.getElementById('text');
+const start = document.getElementById('dt');
+const end = document.getElementById('text');
 
 start.addEventListener('change', function() {
     if (start.value)

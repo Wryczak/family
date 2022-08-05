@@ -105,7 +105,6 @@ public class SearchingController {
             option = memberId.getId();
 
             if (option == null) {
-                System.out.println(option+ "dupa");
                 return "redirect:findRelatives";
             }
             if (option > 0 && option < 6) {
