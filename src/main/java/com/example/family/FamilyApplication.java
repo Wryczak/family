@@ -16,23 +16,20 @@ public class FamilyApplication {
     }
 
     @Bean
-    public ModelMapper getModelMapper(){
-        ModelMapper modelMapper =new ModelMapper();
+    public ModelMapper getModelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
         modelMapper.addMappings(new PropertyMap<Member, MemberDto>() {
             @Override
-            public void configure(){
+            public void configure() {
                 map();
                 map().setFamilyName(source.getFamilyName());
                 map().setName(source.getName());
                 map().setBirthday(source.getBirthday());
                 map().setDiedOn(source.getDiedOn());
-                map().setFatherID(source.getFatherId());
-                map().setMatherID(source.getMatherId());
+                map().setFather(source.getFather().getName());
+                map().setMother(source.getMother().getName());
                 map().setGender(source.getGender());
-                map().setPartnerId(source.getPartnerId());
-                map().setFather(source.getMyfather().getName());
-                map().setMather(source.getMyfather().getFamilyName());
-
+                map().setPartner(source.getPartner().getName());
             }
         });
         return modelMapper;

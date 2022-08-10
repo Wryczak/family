@@ -1,6 +1,5 @@
 package com.example.family.services;
 
-
 import com.example.family.Interfaces.*;
 import com.example.family.MainObjectsFamilyMemberDto.*;
 import com.example.family.Repositories.FamilyRepository;
@@ -22,8 +21,9 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
     private final MemberRepository memberRepository;
     private final FamilyRepository familyRepository;
     private final FamilyService familyService;
-    private final UserDetailsService userDetailsService;
     private final ModelMapper modelMapper;
+
+    private final UserDetailsService userDetailsService;
 
     public Member getMember(Long id) {
         return memberRepository.findById(id).orElseThrow();
@@ -87,7 +87,6 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
                 map(familyService.getFamily().getMembers(), MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
-//            relativesNameSetter(member);
         }
         return memberDtoList;
     }
@@ -98,7 +97,6 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
                 map(members, MemberDto[].class));
         for (MemberDto member : memberDtoList) {
             member.setAge(calculateAge(member.getBirthday()));
-//            relativesNameSetter(member);
         }
         return memberDtoList;
     }
@@ -107,6 +105,10 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
     public void getRelativesListAndAddToModel(Model model, Long option, Long id) {
 
         List<Member> membersList = new ArrayList<>();
+        if (option==null){
+            return;
+        }
+
         if (option == 1) {
             List<Long> ancestors = new ArrayList<>(familyService.getAncestors(id));
             createRelativesListDependsOnTheOption(model, membersList, ancestors);
@@ -131,12 +133,11 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
             List<Long> allRelatives = new ArrayList<>(familyService.getAllRelatives(id));
             createRelativesListDependsOnTheOption(model, membersList, allRelatives);
         }
-
     }
 
     private void createRelativesListDependsOnTheOption(Model model, List<Member> membersList, List<Long> relatives) {
         for (Long relativesId : relatives) {
-            membersList.add(familyService.getMemberByIdFromFamily(relativesId));
+            membersList.add(memberRepository.getById(relativesId));
         }
         model.addAttribute("memberDto", createMembersDTOListForRelatives(membersList));
     }
@@ -145,30 +146,10 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
         List<Long> children = new ArrayList<>(familyService.getChildrenForSinglePerson(id));
         List<Member> membersList = new ArrayList<>();
         for (Long relativesId : children) {
-            membersList.add(familyService.getMemberByIdFromFamily(relativesId));
+            membersList.add(memberRepository.getById(relativesId));
 
         }
         model.addAttribute("childrenDto", createMembersDTOListForRelatives(membersList));
-    }
-
-    private String setParentNameByParentId(Long id) {
-        if (familyService.getMemberByIdFromFamily(id).getName() == null && familyService.getMemberByIdFromFamily(id).getFamilyName() == null) {
-            return "Brak danych- członek rodziny usunięty.";
-        }
-        return familyService.getMemberByIdFromFamily(id).getName() + " " + familyService.getMemberByIdFromFamily(id).getFamilyName();
-
-    }
-
-    private void relativesNameSetter(MemberDto member) {
-        if (member.getFatherID() != null) {
-            member.setFather(setParentNameByParentId(member.getFatherID()));
-        } else member.setFather("----");
-        if (member.getMatherID() != null) {
-            member.setMather(setParentNameByParentId(member.getMatherID()));
-        } else member.setMather("----");
-        if (member.getPartnerId() != null) {
-            member.setPartner(setParentNameByParentId(member.getPartnerId()));
-        } else member.setPartner("----");
     }
 
     public void setGender(MemberDto member) {

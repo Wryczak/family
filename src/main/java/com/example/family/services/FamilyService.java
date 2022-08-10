@@ -2,6 +2,7 @@ package com.example.family.services;
 
 import com.example.family.Interfaces.UsernameGetter;
 import com.example.family.Repositories.FamilyRepository;
+import com.example.family.Repositories.MemberRepository;
 import com.example.family.Repositories.UserRepository;
 import com.example.family.MainObjectsFamilyMemberDto.Family;
 import com.example.family.MainObjectsFamilyMemberDto.Member;
@@ -9,15 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.function.Function.*;
 
 @Service
 @RequiredArgsConstructor
 public class FamilyService implements UsernameGetter {
 
     private final FamilyRepository familyRepository;
+
+    private  final MemberRepository memberRepository;
     private final UserRepository userRepository;
     private final LinkedHashSet<Long> parentsIdListFatherLine = new LinkedHashSet<>();
 
@@ -28,12 +28,16 @@ public class FamilyService implements UsernameGetter {
         return familyRepository.getById(userRepository.findByUsername(getUsername()).getMyFamilyNr());
     }
 
+    public Family getFamilyByUserId(Long id) {
+        return familyRepository.getById(userRepository.getById(memberRepository.getById(id).getUserId()).getMyFamilyNr());
+    }
+
     public Long getFamilyNumber() {
         return userRepository.findByUsername(getUsername()).getMyFamilyNr();
     }
 
     public Family getFamilyByGivenId(Long id) {
-        return familyRepository.findById(id).orElseThrow();
+        return familyRepository.getById(id);
     }
 
     public Family createFamily(Family family) {
@@ -67,68 +71,61 @@ public class FamilyService implements UsernameGetter {
                         .findByUsername(getUsername()).getMyFamilyNr()).isEmpty();
     }
 
-    public Member getMemberByIdFromFamily(Long id) {
-        List<Member> list = getFamily().getMembers();
-        Map<Long, Member> collect = list.stream()
-                .collect(Collectors.toMap(Member::getId, identity()));
-        return collect.get(id);
-    }
-
     public LinkedHashSet<Long> getParentTreeForFather(Long id) {
 
-        Member member = getMemberByIdFromFamily(id);
-        if (member.getFatherId() != null) {
-            parentsIdListFatherLine.add(member.getFatherId());
+        Member member = memberRepository.getById(id);
+        if (member.getFather() != null) {
+            parentsIdListFatherLine.add(member.getFather().getId());
         }
-        if (member.getMatherId() != null) {
-            parentsIdListFatherLine.add(member.getMatherId());
+        if (member.getMother() != null) {
+            parentsIdListFatherLine.add(member.getMother().getId());
         }
 
-        if (member.getFatherId() == null) {
+        if (member.getFather() == null) {
 
             return parentsIdListFatherLine;
         }
-        return getParentTreeForFather(member.getFatherId());
+        return getParentTreeForFather(member.getFather().getId());
     }
 
-    public LinkedHashSet<Long> getParentTreeForMather(Long id) {
+    public LinkedHashSet<Long> getParentTreeForMother(Long id) {
 
-        Member member = getMemberByIdFromFamily(id);
-        if (member.getMatherId() != null) {
-            parentsIdListMatherLine.add(member.getMatherId());
+        Member member = memberRepository.getById(id);
+        if (member.getMother() != null) {
+            parentsIdListMatherLine.add(member.getMother().getId());
         }
-        if (member.getFatherId() != null) {
-            parentsIdListMatherLine.add(member.getFatherId());
+        if (member.getFather() != null) {
+            parentsIdListMatherLine.add(member.getFather().getId());
         }
 
-        if (member.getMatherId() == null) {
+        if (member.getMother() == null) {
 
             return parentsIdListMatherLine;
         }
-        return getParentTreeForMather(member.getMatherId());
+        return getParentTreeForMother(member.getMother().getId());
     }
 
     public List<Long> getParentsForSinglePerson(Long id) {
         List<Long> parents = new ArrayList<>();
-        Member member = getMemberByIdFromFamily(id);
-        if (member.getFatherId() != null) {
-            parents.add(member.getFatherId());
+        Member member = memberRepository.getById(id);
+        if (member.getFather() != null) {
+            parents.add(member.getFather().getId());
         }
-            if (member.getMatherId() != null) {
-                parents.add(member.getMatherId());
+            if (member.getMother() != null) {
+                parents.add(member.getMother().getId());
             }
         return parents;
     }
 
     public void createAllChildrenIdList(Long id) {
-        List<Member> familyMembersList = getFamily().getMembers();
+        List<Member> familyMembersList = getFamilyByUserId(id).getMembers();
         List<Long> tempList = new ArrayList<>();
         for (Member member : familyMembersList) {
-            if (member.getFatherId() != null && member.getFatherId().equals(id)) {
+            if (member.getFather() != null && member.getFather().getId().equals(id)) {
                 allChildrenList.add(member.getId());
                 tempList.add(member.getId());
             }
-            if (member.getMatherId() != null && member.getMatherId().equals(id)) {
+            if (member.getMother() != null && member.getMother().getId().equals(id)) {
                 allChildrenList.add(member.getId());
                 tempList.add(member.getId());
             }
@@ -139,16 +136,16 @@ public class FamilyService implements UsernameGetter {
     }
 
     public List<Long> getChildrenForSinglePerson(Long id) {
-        List<Member> list = getFamily().getMembers();
+        List<Member> list = getFamilyByUserId(id).getMembers();
         List<Long>children=new ArrayList<>();
         for (Member member:list) {
-            if (member.getFatherId()!=null){
-            if (member.getFatherId().equals(id)){
+            if (member.getFather()!=null){
+            if (member.getFather().getId().equals(id)){
                     children.add(member.getId());
                 }
             }
-            if (member.getMatherId()!=null) {
-                if (member.getMatherId().equals(id)) {
+            if (member.getMother()!=null) {
+                if (member.getMother().getId().equals(id)) {
                     children.add(member.getId());
                 }
             }
@@ -180,7 +177,7 @@ public class FamilyService implements UsernameGetter {
 
     private void findAllRelatives(Long id) {
         getParentTreeForFather(id);
-        getParentTreeForMather(id);
+        getParentTreeForMother(id);
         if (parentsIdListFatherLine.isEmpty()){
             System.out.println("Brak przodków");
 
@@ -201,7 +198,7 @@ public class FamilyService implements UsernameGetter {
     public LinkedHashSet<Long> getAncestors(Long id){
 
         LinkedHashSet<Long> ancestors = new LinkedHashSet<>(getParentTreeForFather(id));
-        ancestors.addAll( getParentTreeForMather(id));
+        ancestors.addAll( getParentTreeForMother(id));
         return ancestors;
     }
 

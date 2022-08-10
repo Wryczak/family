@@ -160,7 +160,7 @@ public class SearchingController {
             Member member = memberService.getMember(idToFind);
             userDetails.setText(member.getName() + " " + member.getFamilyName());
             model.addAttribute("userDetails", userDetails);
-            if (member.getFatherId() != null || member.getMatherId()!=null) {
+            if (member.getFather().getId() != null || member.getMother().getId()!=null) {
                 memberService.getRelativesListAndAddToModel(model, 2L, idToFind);
             }
             memberService.createChildrenListForMemberById(idToFind, model);

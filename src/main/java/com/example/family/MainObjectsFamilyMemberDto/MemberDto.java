@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Data
-public class MemberDto {
+public class MemberDto{
 
     private Long id;
 
@@ -16,23 +16,13 @@ public class MemberDto {
 
     private Integer age;
 
-//    private Member myfather;
-
-    private Long fatherID;
-
-    private Long matherID;
-
-    private String mather;
+    private String mother;
 
     private String father;
 
     private String partner;
 
-    private String fullName;
-
     private Gender gender;
-
-    private Long partnerId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
@@ -41,5 +31,4 @@ public class MemberDto {
     private LocalDate diedOn;
 
     private Long tempId;
-
 }

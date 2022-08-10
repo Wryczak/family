@@ -121,9 +121,7 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
     public String addNewMemberToFamilyFrame() {
         idToModify = null;
         return "redirect:/test/split";
-
     }
-
 
     private void createRelatives(MemberDto member) {
 
@@ -137,35 +135,34 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
         if (option == null) {
             return;
         }
-        if (option == 1 && newMember.getFatherId() == null) {
+        if (option == 1 && newMember.getFather() == null) {
             newMember.setGender(Gender.M);
-            addRelativesToThisMember.setFatherId(newMember.getId());
+            addRelativesToThisMember.setFather(newMember);
 
         }
-        if (option == 2 && newMember.getMatherId() == null) {
+        if (option == 2 && newMember.getMother() == null) {
             newMember.setGender(Gender.F);
-            addRelativesToThisMember.setMatherId(newMember.getId());
+            addRelativesToThisMember.setMother(newMember);
 
         }
         if (option == 3) {
             newMember.setGender(Gender.M);
             if (addRelativesToThisMember.getGender().equals(Gender.M)) {
-                newMember.setFatherId(idToModify);
-            } else newMember.setMatherId(idToModify);
+                newMember.setFather(addRelativesToThisMember);
+            } else newMember.setMother(addRelativesToThisMember);
         }
         if (option == 4) {
             newMember.setGender(Gender.F);
             if (addRelativesToThisMember.getGender().equals(Gender.M)) {
-                newMember.setFatherId(idToModify);
-            } else newMember.setMatherId(idToModify);
+                newMember.setFather(addRelativesToThisMember);
+            } else newMember.setMother(addRelativesToThisMember);
         }
         if (option == 5) {
             if (addRelativesToThisMember.getGender().equals(Gender.M)) {
                 newMember.setGender(Gender.F);
             } else newMember.setGender(Gender.M);
-            newMember.setPartnerId(idToModify);
-            addRelativesToThisMember.setPartnerId(newMember.getId());
+            newMember.setPartner(addRelativesToThisMember);
+            addRelativesToThisMember.setPartner(newMember);
         }
-
     }
 }

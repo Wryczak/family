@@ -9,7 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-
 @Data
 @Entity
 @RequiredArgsConstructor
@@ -31,15 +30,15 @@ public class Member{
     private Long userId;
 
     @ManyToOne(targetEntity = Member.class)
-    private Member myfather;
+    private Member father;
 
-    private Long matherId;
+    @ManyToOne(targetEntity = Member.class)
+    private Member mother;
 
-    private Long fatherId;
+    @ManyToOne(targetEntity = Member.class)
+    private Member partner;
 
     private Gender gender;
-
-    private Long partnerId;
 
     public Member(Long id, String name, String familyName) {
         this.id = id;

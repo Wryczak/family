@@ -260,9 +260,9 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
     public String viewFamilyByUser2(Model model) {
         userDetailsService.detailsSet(model);
 
-//        if (!familyService.isDoIHaveFamily()) {
-//            return "modify/wellLog";
-//        }
+        if (!familyService.isDoIHaveFamily()) {
+            return "modify/wellLog";
+        }
         memberService.getFamilyMembersDtoListAndAddToModel(model);
         return "modify/getMyFamilyAfterLog";
     }
