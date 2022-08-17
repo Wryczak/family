@@ -30,6 +30,7 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
 
     private final ModelMapper modelMapper;
     private Long idToModify;
+    private Long idToModify2;
 
     public TestController(MemberService memberService,
                           FamilyService familyService, UserDetailsService userDetailsService, ModelMapper modelMapper) {
@@ -109,12 +110,14 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
     @PostMapping("addRelatives")
     public String addNewMemberToFamily(Model model, MemberDto member) {
         userDetailsService.detailsSet(model);
-
+        System.out.println(memberService.getIdToFind());
+        idToModify2=memberService.getIdToFind();
+        System.out.println(member);
         log.info("    --- Creating new family member");
         createRelatives(member);
 
         idToModify = null;
-        return "redirect:/modify/getMyFamilyAfterLog";
+        return "redirect:/index";
     }
 
     @PostMapping("splitCancelForm")
@@ -124,8 +127,10 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
     }
 
     private void createRelatives(MemberDto member) {
-
-        Member addRelativesToThisMember = memberService.getMember(idToModify);
+        Member memberToUpdate;
+        if (idToModify!=null) {
+            memberToUpdate = memberService.getMember(idToModify);
+        }else  memberToUpdate=memberService.getMember(idToModify2);
         Long option = (member.getId());
 
         log.info("    --- Creating new family member");
@@ -137,32 +142,32 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
         }
         if (option == 1 && newMember.getFather() == null) {
             newMember.setGender(Gender.M);
-            addRelativesToThisMember.setFather(newMember);
+            memberToUpdate.setFather(newMember);
 
         }
         if (option == 2 && newMember.getMother() == null) {
             newMember.setGender(Gender.F);
-            addRelativesToThisMember.setMother(newMember);
+            memberToUpdate.setMother(newMember);
 
         }
         if (option == 3) {
             newMember.setGender(Gender.M);
-            if (addRelativesToThisMember.getGender().equals(Gender.M)) {
-                newMember.setFather(addRelativesToThisMember);
-            } else newMember.setMother(addRelativesToThisMember);
+            if (memberToUpdate.getGender().equals(Gender.M)) {
+                newMember.setFather(memberToUpdate);
+            } else newMember.setMother(memberToUpdate);
         }
         if (option == 4) {
             newMember.setGender(Gender.F);
-            if (addRelativesToThisMember.getGender().equals(Gender.M)) {
-                newMember.setFather(addRelativesToThisMember);
-            } else newMember.setMother(addRelativesToThisMember);
+            if (memberToUpdate.getGender().equals(Gender.M)) {
+                newMember.setFather(memberToUpdate);
+            } else newMember.setMother(memberToUpdate);
         }
         if (option == 5) {
-            if (addRelativesToThisMember.getGender().equals(Gender.M)) {
+            if (memberToUpdate.getGender().equals(Gender.M)) {
                 newMember.setGender(Gender.F);
             } else newMember.setGender(Gender.M);
-            newMember.setPartner(addRelativesToThisMember);
-            addRelativesToThisMember.setPartner(newMember);
+            newMember.setPartner(memberToUpdate);
+            memberToUpdate.setPartner(newMember);
         }
     }
 }

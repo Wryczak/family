@@ -98,7 +98,7 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
     public String MemberDataUpdate(Details userDetails, Model model) {
         userDetailsService.detailsSet(model);
 
-        idToModify = userDetails.getId();
+        idToModify = memberService.getIdToFind();
 
         if (idToModify == null) {
             log.info("    ---Id is null");
@@ -128,7 +128,6 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
     public String addMemberToFamily(Model model, MemberDto member) {
         userDetailsService.detailsSet(model);
 
-        memberService.setGender(member);
         log.info("    --- Creating new family member");
         Member newMember = convertToEntity(member, modelMapper);
         memberService.createMember(newMember);
@@ -202,13 +201,12 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
     }
 
     @GetMapping("redirectControlPass")
-    public String RedirectDataChecker(Model model) {
-        userDetailsService.detailsSet(model);
+    public String RedirectDataChecker() {
 
         if (memberService.getMembers().isEmpty()) {
             familyService.repositoryDeleteSetter();
 
-            log.info("    --- Verify yours data");
+            log.info("    --- You deleted last person in your family. Verify yours data");
             return "redirect:/index";
         }
         log.info("    --- Verify yours data");
@@ -293,11 +291,13 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
         if (idToFind == null) {
             return "modify/find";
         }
+
         log.info("   --- Family found!");
         if (familyService.isFamilyExists(idToFind)) {
             return "redirect:/modify/myFamily";
         }
         return "modify/find";
     }
+
 }
 

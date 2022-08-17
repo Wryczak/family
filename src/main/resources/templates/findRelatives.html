@@ -18,6 +18,9 @@
             rel="stylesheet">
 
     <link th:href="@{/bootstrap/css/sb-admin-2.min.css}" rel="stylesheet"/>
+    <link th:href="@{/bootstrap/css/card.css}" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          type="text/css">
 
 </head>
 
@@ -42,67 +45,272 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 </div>
-                <!-- Content Row -->
-<!--                <div class="row">-->
+                <!--                 Content Row-->
+                <div class="row">
 
                     <div class="col-lg-6 mb-4">
+                        <div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-4" th:if="${!split.status}">
-                                <form method="post" th:action="@{/findRelatives}" th:object="${list}">
+                            <div class="row">
+                                <div class="col-md-6 mb-4" th:if="${!split.status}">
+                                    <form method="post" th:action="@{/findRelatives}" th:object="${list}">
 
-                                    <div class="form-group">
-                                        <label for="birthplace">Wybierz osobę</label>
-                                        <select id="birthplace" class="form-control select2-single"
-                                                th:field="*{memberDto.id}" onchange="this.form.submit()">
-                                            <option value="">Znajdź...</option>
-                                        </select>
+                                        <div class="form-group">
+                                            <label for="birthplace">Wybierz osobę</label>
+                                            <select id="birthplace" class="form-control select2-single"
+                                                    th:field="*{memberDto.id}" onchange="this.form.submit()">
+                                                <option value="">Znajdź...</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                    <form class="user" th:method="POST" th:action="@{/cancelForm}" id="myForm1">
+                                        <input type="submit" value="Anuluj" class="btn btn-warning">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Content Column -->
+                        <div class="col-lg-12 mb-4" th:if="${split.status}">
+                            <div class="h6 font-weight-bold text-info">Wybrano osobę:</div>
+                            <div class="h4 font-weight-bold text-primary" th:text="${split.text}"></div>
+                            <div class="h6 font-weight-bold text-info">Znajdź krewnych wybranej osoby:</div>
+                            <form method="POST" th:action="@{/find}" th:object="${memberId}" id="remove">
+                                <span>Wybierz pokrewieństwo: </span>
+                                <div class="form-group">
+                                    <select id="relatives" class="btn btn-info dropdown-toggle btn-block col-lg-4 mb-2"
+                                            placeholder="Source Type"
+                                            onChange="update()">
+                                        <option style="display:none;"></option>
+                                        <option value="1">Znajdź przodków</option>
+                                        <option value="2">Znajdź rodziców</option>
+                                        <option value="3">Znajdź dzieci</option>
+                                        <option value="4">Znajdź potomków</option>
+                                        <option value="5">Znajdź wszystkich krewnych</option>
+                                    </select>
+                                    <input type="hidden" id="value" th:field="*{id}"></div>
+
+
+                                <script type="text/javascript">
+                                    function update() {
+                                        var select = document.getElementById('relatives');
+                                        var option = select.options[select.selectedIndex];
+
+                                        document.getElementById('value').value = option.value;
+                                    }
+
+                                    update();
+                                </script>
+                                <input type="submit" value="Znajdź" class="btn btn-info btn-block col-lg-4 mb-2">
+                            </form>
+                            <form class="user" th:method="POST" th:action="@{/cancelForm}" id="myForms">
+                                <input type="submit" value="Anuluj" class="btn btn-warning btn-block col-lg-4 mb-2">
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-6 mb-4" th:if="${split.status}">
+                        <div class="card p-4">
+                            <div class=" image d-flex flex-column justify-content-center align-items-center">
+                                <div th:if="${memberDetails.getGender().getLabel() == 'female'}">
+                                    <button class="btn btn-secondary but2">
+                                        <img th:src="@{/images/woman.png}" height="100" width="100"/>
+                                    </button>
+                                </div>
+                                <div th:if="${memberDetails.getGender().getLabel() == 'male'}">
+                                    <button class="btn btn-secondary but2">
+                                        <img th:src="@{/images/man.png}" height="100" width="100"/>
+                                    </button>
+                                </div>
+                                <div class="flex-wrap">
+                                    <span class="name mt-3" th:text="${memberDetails.getName()}"></span>
+                                    <span class="name mt-3" th:text="${memberDetails.getFamilyName()}"></span>
+                                </div>
+                                <p></p>
+                                <div class="flex-wrap">
+                                    <span th:if="${memberDetails.getGender().getLabel() == 'female'}">
+                                        <span>urodzona:</span>
+                                    </span>
+                                    <span th:if="${memberDetails.getGender().getLabel() == 'male'}">
+                                        <span>urodzony:</span>
+                                    </span>
+                                    <span class="m-0 font-weight-bold text-primary"
+                                          th:text="${memberDetails.getBirthday()}"></span>
+                                    <span>wiek:</span>
+                                    <span class="m-0 font-weight-bold text-primary"
+                                          th:text="${memberDetails.getAge()}"></span>
+                                    <div th:if="${memberDetails.getDiedOn() != null}">
+                                        <span>data śmierci:</span>
+                                        <span class="m-0 font-weight-bold text-primary"
+                                              th:text="${memberDetails.getDiedOn()}"></span>
                                     </div>
-                                </form>
-                                <form class="user" th:method="POST" th:action="@{/cancelForm}" id="myForm1">
-                                    <input type="submit" value="Anuluj" class="btn btn-warning">
-                                </form>
+
+                                </div>
+                                <p></p>
+                                <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+                                    <div th:if="${memberDetails.getGender().getLabel() == 'female'}">
+                                        <span class="idd">Kobieta</span>
+                                        <span><i class="fas fa-venus"></i></span>
+                                    </div>
+                                    <div th:if="${memberDetails.getGender().getLabel() == 'male'}">
+                                        <span class="idd">Mężczyzna</span>
+                                        <span><i class="fas fa-mars"></i></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row justify-content-center align-items-center mt-3">
+                                    <div th:if="${memberDetails.getGender().getLabel() == 'female'}">
+                                        <span class="idd">mąż:</span>
+                                        <span th:if="${memberDetails.getPartner() != null}">
+                                        <span class="m-0 font-weight-bold text-primary"
+                                              th:text="${memberDetails.getPartner()}"></span>
+                                        </span>
+                                        <span th:if="${memberDetails.getPartner() == null}">
+                                      <span th:if="${split.secondStatus}">
+                                                <button id="myStatus2" type="button" onclick="show_3()" class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                                        <p></p>
+                                        <div id="myDIV2" style="display:none">
+                                            <form class="user needs-validation" th:method="POST"
+                                                  th:action="@{/test/addRelatives}"
+                                                  th:object="${memberToSave}" id="myForm1dA" novalidate>
+                                                <div th:insert="menuAndFormsFragments/addRelativesForMemberForm"></div>
+                                               <input type="hidden" th:field="*{id}" id="husband">
+                                                <input type="submit" value="Dodaj"
+                                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                                       style="float: left;">
+                                              <div>  <input type="reset" value="Reset"
+                                                            class="btn btn-info btn-user btn-block col-lg-4"
+                                                            style="float: left;">
+                                              </div>
+                                            </form>
+                                            <form class="user" th:method="POST" th:action="@{/test/splitCancelForm}"
+                                                  id="myForm2fz">
+                                                <input type="submit" value="Anuluj"
+                                                       class="btn btn-danger btn-user btn-block col-lg-4">
+                                            </form>
+                                        </div>
+                                        </span>
+                                    </div>
+                                    <div th:if="${memberDetails.getGender().getLabel() == 'male'}">
+                                        <span class="idd">żona:</span>
+                                        <span th:if="${memberDetails.getPartner() != null}">
+                                        <span class="m-0 font-weight-bold text-primary"
+                                              th:text="${memberDetails.getPartner()}"></span>
+                                        </span>
+                                        <span th:if="${memberDetails.getPartner() == null}">
+                                      <span th:if="${split.secondStatus}">
+                                                <button id="myStatus3" type="button"   onclick="show_4()" class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                                        <p></p>
+                                        <div id="myDIV3" style="display:none">
+                                            <form class="user needs-validation" th:method="POST"
+                                                  th:action="@{/test/addRelatives}"
+                                                  th:object="${memberToSave}" id="myForm1dAs" novalidate>
+                                                <div th:insert="menuAndFormsFragments/addRelativesForMemberForm"></div>
+                                                <input type="hidden" th:field="*{id}" id="wife">
+                                                <input type="submit" value="Dodaj"
+                                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                                       style="float: left;">
+                                              <div>  <input type="reset" value="Reset"
+                                                            class="btn btn-info btn-user btn-block col-lg-4"
+                                                            style="float: left;">
+                                              </div>
+                                            </form>
+                                            <form class="user" th:method="POST" th:action="@{/test/splitCancelForm}"
+                                                  id="myForm2fzz">
+                                                <input type="submit" value="Anuluj"
+                                                       class="btn btn-danger btn-user btn-block col-lg-4">
+                                            </form>
+                                        </div>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="h6">
+                                    <div class="flex-wrap">
+                                        <div>
+                                            <span class="idd">ojciec:</span>
+                                            <span th:text="${memberDetails.getFather()}"></span>
+                                            <span th:if="${memberDetails.getFather() == null}">
+                                            <span th:if="${split.secondStatus}">
+                                                <button id="myStatus" type="button" onclick="show_1()" class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                                        <p></p>
+                                        <div id="myDIV" style="display:none">
+                                            <form class="user needs-validation" th:method="POST"
+                                                  th:action="@{/test/addRelatives}"
+                                                  th:object="${memberToSave}" id="myForm1a" novalidate>
+                                                <div th:insert="menuAndFormsFragments/addRelativesForMemberForm"></div>
+                                                 <input type="hidden" th:field="*{id}" id="father">
+                                                <input type="submit" value="Dodaj"
+                                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                                       style="float: left;">
+                                              <div>  <input type="reset" value="Reset"
+                                                            class="btn btn-info btn-user btn-block col-lg-4"
+                                                            style="float: left;">
+                                              </div>
+                                            </form>
+                                            <form class="user" th:method="POST" th:action="@{/test/splitCancelForm}"
+                                                  id="myForm3">
+                                                <input type="submit" value="Anuluj"
+                                                       class="btn btn-danger btn-user btn-block col-lg-4">
+                                            </form>
+                                        </div>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <div class="flex-wrap">
+                                        <span class="idd">matka:</span>
+                                        <span th:text="${memberDetails.getMother()}"></span>
+                                        <span th:if="${memberDetails.getMother() == null}">
+                                      <span th:if="${split.secondStatus}">
+                                                <button id="myStatus1" type="button"  onclick="show_2()" class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                                        <p></p>
+                                        <div id="myDIV1" style="display:none">
+                                            <form class="user needs-validation" th:method="POST"
+                                                  th:action="@{/test/addRelatives}"
+                                                  th:object="${memberToSave}" id="myForm1d" novalidate>
+                                                <div th:insert="menuAndFormsFragments/addRelativesForMemberForm">
+                                                </div>
+                                                <input type="hidden" th:field="*{id}" id="mother">
+                                                <input type="submit" value="Dodaj"
+                                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                                       style="float: left;">
+                                              <div>  <input type="reset" value="Reset"
+                                                            class="btn btn-info btn-user btn-block col-lg-4"
+                                                            style="float: left;">
+                                              </div>
+                                            </form>
+                                            <form class="user" th:method="POST" th:action="@{/test/splitCancelForm}"
+                                                  id="myForm2f">
+                                                <input type="submit" value="Anuluj"
+                                                       class="btn btn-danger btn-user btn-block col-lg-4">
+                                            </form>
+                                        </div>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div th:if="${split.secondStatus}">
+                                    <form class="user" th:method="POST" th:action="@{/modify/memberUpdate}"
+                                          th:object="${userDetails}"
+                                          id="loginForm">
+                                        <input type="hidden" th:value="${memberDetails.getId}" th:attr="name='id'"/>
+                                        <button class="btn btn-dark btn-block">Edytuj dane</button>
+                                    </form>
+                                </div>
+                                <div class=" px-2 rounded mt-4 date "><span class="join">Joined May,2021</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Content Column -->
-                    <div class="col-lg-6 mb-4" th:if="${split.status}">
-                        <div class="h6 font-weight-bold text-info">Wybrano osobę: </div>
-                        <div class="h4 font-weight-bold text-primary" th:text="${split.text}"></div>
-                        <div class="h6 font-weight-bold text-info">Znajdź krewnych wybranej osoby:</div>
-                        <form method="POST" th:action="@{/find}" th:object="${memberId}" id="remove">
-                            <span>Wybierz pokrewieństwo: </span>
-                            <div class="form-group">
-                                <select id="relatives" class="btn btn-info dropdown-toggle btn-block col-lg-4 mb-2" placeholder="Source Type"
-                                        onChange="update()">
-                                    <option style="display:none;"></option>
-                                    <option value="1">Znajdź przodków</option>
-                                    <option value="2">Znajdź rodziców</option>
-                                    <option value="3">Znajdź dzieci</option>
-                                    <option value="4">Znajdź potomków</option>
-                                    <option value="5">Znajdź wszystkich krewnych</option>
-                                </select>
-                                <input type="hidden" id="value" th:field="*{id}"></div>
-
-
-                            <script type="text/javascript">
-                                function update() {
-                                    var select = document.getElementById('relatives');
-                                    var option = select.options[select.selectedIndex];
-
-                                    document.getElementById('value').value = option.value;
-                                }
-
-                                update();
-                            </script>
-                            <input type="submit" value="Znajdź" class="btn btn-info btn-block col-lg-4 mb-2">
-                        </form>
-                        <form class="user" th:method="POST" th:action="@{/cancelForm}" id="myForms">
-                            <input type="submit" value="Anuluj" class="btn btn-warning btn-block col-lg-4 mb-2" >
-                        </form>
-                    </div>
                 </div>
-<!--            </div>-->
+            </div>
             <!-- /.container-fluid -->
         </div>
         <!-- End of Main Content -->
@@ -115,10 +323,8 @@
             </div>
         </footer>
         <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
-
 </div>
 <!-- End of Page Wrapper -->
 
@@ -132,27 +338,15 @@
 <script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
 <!-- Custom scripts for all pages-->
-<!--<script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>-->
-<!-- Page level plugins -->
+<script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
+Page level plugins
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{assets/select2-develop/dist/js/select2.full.js}"></script>
-<script>
-    $("#birthplace").select2({
-        theme: "bootstrap4",
-        ajax: {
-            url: '/list',
-            dataType: 'json',
-            delay: 250,
-            processResults: function (response) {
-                return {
-                    results: response
-                };
-            },
-            cache: true
-        }
-    });
-</script>
+<script th:src="@{/js/list.js}"></script>
+<script th:src="@{/js/validation.js}"></script>
+<script th:src="@{/js/formValidator.js}"></script>
+<script th:src="@{/js/statusChanger.js}"></script>
 </body>
 </html>

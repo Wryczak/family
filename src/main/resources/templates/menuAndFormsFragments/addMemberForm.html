@@ -1,12 +1,11 @@
-
 <div>
     <select id="relatives" class="btn btn-info dropdown-toggle" placeholder="Source Type"
             onChange="update()" required>
         <option value="" selected disabled hidden>Wybierz płeć</option>
-        <option value="0">Kobieta</option>
-        <option value="1">Mężczyzna</option>
+        <option value="F">Kobieta</option>
+        <option value="M">Mężczyzna</option>
     </select>
-    <input type="hidden" id="value" th:field="*{tempId}">
+    <input type="hidden" id="value" th:field="*{gender}">
     <div class="invalid-feedback">
         Wybierz płeć
     </div>
@@ -32,7 +31,7 @@
 </div>
 <br>
 <div class="input-group has-validation">
-    <input min="1900-01-01" id="dt" class="form-control" placeholder="Data urodzenia" type="text"
+    <input min="1894-01-01" id="dt" class="form-control" placeholder="Data urodzenia" type="text"
            onfocus="(this.type='date')"
            name="birthday" required th:field="*{birthday}"/>
     <div class="invalid-feedback">
@@ -55,7 +54,7 @@
 </div>
 <div id="max-height">
     <div class="input-group has-validation">
-        <input min="1900-01-01" id="text" class="form-control" placeholder="Data śmierci" type="text"
+        <input min="1894-01-01" id="text" class="form-control" placeholder="Data śmierci" type="text"
                onfocus="(this.type='date')"
                name="birthday" required th:field="*{diedOn}" disabled/>
         <div class="invalid-feedback">

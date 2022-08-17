@@ -1,5 +1,7 @@
 package com.example.family.Controllers;
 
+import com.example.family.Interfaces.AgeCalculator;
+import com.example.family.Interfaces.DtoConverter;
 import com.example.family.MainObjectsFamilyMemberDto.autocompleteList.ListWithDtoObject;
 import com.example.family.MainObjectsFamilyMemberDto.Details;
 import com.example.family.MainObjectsFamilyMemberDto.Member;
@@ -8,14 +10,17 @@ import com.example.family.services.FamilyService;
 import com.example.family.services.MemberService;
 import com.example.family.services.UserDetailsService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequestMapping({"/", "/findRelatives"})
-public class SearchingController {
+public class SearchingController implements DtoConverter, AgeCalculator {
 
     private final MemberService memberService;
     private final UserDetailsService userDetailsService;
@@ -24,10 +29,13 @@ public class SearchingController {
     private Long option;
     private boolean status;
 
-    public SearchingController(MemberService memberService, UserDetailsService userDetailsService, FamilyService familyService) {
+    private final ModelMapper modelMapper;
+
+    public SearchingController(MemberService memberService, UserDetailsService userDetailsService, FamilyService familyService, ModelMapper modelMapper) {
         this.memberService = memberService;
         this.userDetailsService = userDetailsService;
         this.familyService = familyService;
+        this.modelMapper = modelMapper;
     }
 
     @ModelAttribute(name = "memberDto")
@@ -42,8 +50,9 @@ public class SearchingController {
 
 
     @GetMapping
-    public String main(Model model, Details memberId, Details split) {
+    public String main(Model model, Details memberId, Details split,MemberDto memberToSave) {
         userDetailsService.detailsSet(model);
+        model.addAttribute("memberToSave", memberToSave);
         model.addAttribute("list", new ListWithDtoObject());
         model.addAttribute("memberId", memberId);
         model.addAttribute("split", split);
@@ -51,8 +60,17 @@ public class SearchingController {
 
         Long id = idToFind;
         if (id != null) {
-            split.setStatus(true);
+            memberService.setIdToFind(idToFind);
             Member memberToUpdate = memberService.getMember(idToFind);
+            MemberDto member=convertToDto(memberToUpdate,modelMapper);
+           member.setAge(calculateAge(member.getBirthday()));
+            model.addAttribute("memberDetails",member);
+            split.setStatus(true);
+           List<Member>members= familyService.getFamily().getMembers();
+           if (members.contains(memberToUpdate)){
+               split.setSecondStatus(true);
+               model.addAttribute("split",split);
+           }
             String memberData = memberToUpdate.getName() + "   " +
                     memberToUpdate.getFamilyName();
             split.setText(memberData);
@@ -66,8 +84,7 @@ public class SearchingController {
     @PostMapping
     public String getTestForm(Model model, ListWithDtoObject list) {
         userDetailsService.detailsSet(model);
-        Long id = list.getMemberDto().getId();
-        idToFind = id;
+        idToFind = list.getMemberDto().getId();
         return "redirect:/findRelatives";
     }
 

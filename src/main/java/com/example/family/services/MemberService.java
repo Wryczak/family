@@ -22,11 +22,11 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
     private final FamilyRepository familyRepository;
     private final FamilyService familyService;
     private final ModelMapper modelMapper;
-
+    private Long idToPass;
     private final UserDetailsService userDetailsService;
 
     public Member getMember(Long id) {
-        return memberRepository.findById(id).orElseThrow();
+        return memberRepository.getById(id);
     }
 
     public boolean isMemberExist(Long id) {
@@ -72,6 +72,7 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
         member.setName(memberToUpdate.getName());
         member.setFamilyName(memberToUpdate.getFamilyName());
         member.setBirthday(memberToUpdate.getBirthday());
+        member.setDiedOn(memberToUpdate.getDiedOn());
         memberRepository.save(member);
 
         log.info("   --- Member updated!");
@@ -157,5 +158,12 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
         if (temp != 0) {
             member.setGender(Gender.M);
         } else member.setGender(Gender.F);
+    }
+
+    public void setIdToFind(Long id){
+        idToPass=id;
+    }
+    public Long getIdToFind(){
+        return idToPass;
     }
 }

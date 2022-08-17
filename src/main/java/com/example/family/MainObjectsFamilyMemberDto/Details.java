@@ -12,4 +12,5 @@ public class Details {
     private String thirdText;
     private boolean status;
     private boolean secondStatus;
+    private boolean thirdStatus;
 }

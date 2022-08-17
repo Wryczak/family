@@ -1,0 +1,77 @@
+<div class="input-group has-validation">
+  <input type="text" class="form-control" id="validationCustom01" placeholder="Imię min 3 znaki"
+         pattern="^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+( [a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+)*$"
+         minlength="3" aria-describedby="inputGroupPrepend" required th:field="*{name}"/>
+  <div class="invalid-feedback">
+    Podaj poprawne imię.
+  </div>
+</div>
+<br>
+<div class="input-group has-validation">
+  <input type="text" class="form-control" id="validationCustom02" placeholder="Nazwisko min 3 znaki"
+         pattern="^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+( [a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+)*$"
+         minlength="3" aria-describedby="inputGroupPrepend" required th:field="*{familyName}"/>
+  <div class="invalid-feedback">
+    Podaj poprawne nazwisko.
+  </div>
+</div>
+<br>
+<div class="input-group has-validation">
+  <input min="1900-01-01" id="dt" class="form-control" placeholder="Data urodzenia" type="text"
+         onfocus="(this.type='date')"
+         name="birthday" required th:field="*{birthday}"/>
+  <div class="invalid-feedback">
+    Podaj datę urodzenia.
+  </div>
+</div>
+<br>
+<span>Osoba żyjąca?</span>
+<div id="wrapper">
+  <input type='checkbox' id='check2' value="" onclick="document.getElementById('check').checked = false"
+         onchange='checkIt(this)' checked/>Tak
+
+  <div class="input-group has-validation newclass">
+    <input type='checkbox' id='check' onclick="document.getElementById('check2').checked = false"
+           onchange='checkIt(this)'/>Nie
+    <div class="invalid-feedback">
+      Podaj datę śmierci.
+    </div>
+  </div>
+</div>
+<div id="max-height">
+  <div class="input-group has-validation">
+    <input min="1900-01-01" id="text" class="form-control" placeholder="Data śmierci" type="text"
+           onfocus="(this.type='date')"
+           name="birthday" required th:field="*{diedOn}" disabled/>
+    <div class="invalid-feedback">
+      Podaj datę śmierci.
+    </div>
+  </div>
+</div>
+<br>
+<script>
+  window.addEventListener("load", function () {
+    document.getElementById("check").addEventListener("change", function () {
+      document.getElementById("text").disabled = !this.checked;
+      // document.getElementById("check2").disabled = this.checked;
+    });
+  });
+</script>
+<script>
+  window.addEventListener("load", function () {
+    document.getElementById("check2").addEventListener("change", function () {
+      document.getElementById("text").disabled = this.checked;
+      document.getElementById('text').value = '';
+    });
+  });
+</script>
+<script>
+  document.getElementById('text')
+          .max = new Date(new Date().getTime() - new Date()
+          .getTimezoneOffset() * 60000).toISOString().split("T")[0];
+</script>
+<script>
+  document.getElementById('dt')
+          .max = new Date(new Date().getTime() - new Date()
+          .getTimezoneOffset() * 60000).toISOString().split("T")[0];
+</script>
