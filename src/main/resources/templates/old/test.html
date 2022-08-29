@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+
+<div th:insert="menuAndFormsFragments/head"></div>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:insert="menuAndFormsFragments/sidebar"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <div th:insert="menuAndFormsFragments/topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Welcome in Family Creator</h1>
+                </div>
+                <!-- Content Row -->
+                <div class="row">
+
+                    <!-- Earnings (Monthly) Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Znajdowawnie rodziny
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Logowanie nie potrzebne
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Earnings (Monthly) Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Serwis jest darmowy
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Co tu dodawać?</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Earnings (Monthly) Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tworzenie
+                                            rodziny
+                                        </div>
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col-auto">
+                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">Musisz się
+                                                    zalogować
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Requests Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Udostępnij znajomym
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Niech też spróbują!</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Row -->
+                <div class="row">
+
+                    <!-- Content Column -->
+                    <div class="col-lg-12 mb-4">
+
+                        <!-- service -->
+                        <div class="card shadow mb-1">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Korzystanie z serwisu</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                </div>
+
+                                <p>Serwis jest darmowy. Każdy, kto chce poświęcić trochę czasu,
+                                    aby stworzyć swoją rodzinę i mieć dostęp do informacji
+                                    o jej członkach, może z niego korzystać. Do odnajdywania rodzin
+                                    wystarczy nr ID, wyświetlany po jej utworzeniu. Jeżeli jesteś zalogowany,
+                                    informacje o Twojej rodzinie pojawią się automatycznie.
+                                    Logowanie ma na celu uniknięcie ingerencji osób trzecich.</p>
+                                <div th:if="${!details.status}">
+                                    <a th:href="@{/login}">Zaloguj się, by stworzyć swoją rodzinę.</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Approach -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Przed stworzeniem rodziny:</h6>
+                            </div>
+                            <div class="card-body">
+
+
+                                <div class="container">
+
+                                    <form class="row g-3 needs-validation" novalidate>
+                                        <div class="col-md-4">
+                                            <label for="validationCustom01" class="form-label">First name</label>
+                                            <input type="text" class="form-control" id="validationCustom01" value="Mark"
+                                                   required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="validationCustom02" class="form-label">Last name</label>
+                                            <input type="text" class="form-control" id="validationCustom02" value="Otto"
+                                                   required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group has-validation">
+                                                <input type="text" class="form-control" id="validationCustomUsername"
+                                                       placeholder="Imię min 3 znaki"
+                                                       pattern="^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+( [a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+)*$"
+                                                       minlength="3" aria-describedby="inputGroupPrepend" required>
+                                                <div class="invalid-feedback">
+                                                    Podaj poprawne imię.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="validationCustom03" class="form-label">City</label>
+                                            <input type="text" class="form-control" id="validationCustom03" required>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid city.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="validationCustom04" class="form-label">State</label>
+                                            <select class="form-select" id="validationCustom04" required>
+                                                <option selected disabled value="">Choose...</option>
+                                                <option>...</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select a valid state.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="validationCustom05" class="form-label">Zip</label>
+                                            <input type="text" class="form-control" id="validationCustom05" required>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid zip.
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="invalidCheck" required>
+                                                <label class="form-check-label" for="invalidCheck">
+                                                    Agree to terms and conditions
+                                                </label>
+                                                <div class="invalid-feedback">
+                                                    You must agree before submitting.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button class="btn btn-primary" type="submit">Submit form</button>
+                                        </div>
+                                    </form>
+
+
+                                    <input type="range" class="form-range" value="0" min="1" max="1000000" step="919"
+                                           oninput="this.nextElementSibling.value = this.value">
+                                    <output>0</output>
+
+
+                                    <div>
+<!--                                        <input  type="radio" data-toggle="collapse"-->
+<!--                                                data-target="#collapseExample" aria-expanded="false"  name="died"-->
+<!--                                                aria-controls="collapseExample">Tak</input>-->
+<!--                                        <input  type="radio" data-toggle="collapse" href="#collapseExample"-->
+<!--                                                data-target="#collapseExample" aria-expanded="false"  name="died"-->
+<!--                                                aria-controls="collapseExample">Nie</input>-->
+                                                <input type="radio"  data-toggle="collapse"
+                                                       data-target="#collapseExample" aria-expanded="false"  name="died"
+                                                       aria-controls="collapseExample" value="value" id="value_radio" onclick="document.getElementById('value_input').focus()" required>
+                                                <label for="value_input">Nie</label>
+                                        <div class="collapse" id="collapseExample">
+                                                <input type="text" name="price_value" id="value_input" pattern="\d+(,\d{1,2})?" onclick="document.getElementById('value_radio').checked=true">
+                                            </div>
+                                                <input type="radio" ata-toggle="collapse" href="#collapseExample"
+                                                       data-target="#collapseExample" aria-expanded="false"  name="died"
+                                                       aria-controls="collapseExample" id="free" value="free">
+                                                <label for="free">Tak</label>
+                                        </div>
+
+
+                                        <!--                <form class="row g-3 needs-validation" novalidate>-->
+                                        <!--                  <div class="col-md-4">-->
+                                        <!--                    <label for="validationCustom01" class="form-label">First name</label>-->
+                                        <!--                    <input type="text" class="form-control" id="validationCustom01" value="Mark" required>-->
+                                        <!--                    <div class="valid-feedback">-->
+                                        <!--                      Looks good!-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <!--                  <div class="col-md-4">-->
+                                        <!--                    <label for="validationCustom02" class="form-label">Last name</label>-->
+                                        <!--                    <input type="text" class="form-control" id="validationCustom02" value="Otto" required>-->
+                                        <!--                    <div class="valid-feedback">-->
+                                        <!--                      Looks good!-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <!--                  <div class="col-md-4">-->
+                                        <!--                    <label for="validationCustomUsername" class="form-label">Username</label>-->
+                                        <!--                    <div class="input-group has-validation">-->
+                                        <!--                      <span class="input-group-text" id="inputGroupPrepend">@</span>-->
+                                        <!--                      <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>-->
+                                        <!--                      <div class="invalid-feedback">-->
+                                        <!--                        Please choose a username.-->
+                                        <!--                      </div>-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <!--                  <div class="col-md-6">-->
+                                        <!--                    <label for="validationCustom03" class="form-label">City</label>-->
+                                        <!--                    <input type="text" class="form-control" id="validationCustom03" required>-->
+                                        <!--                    <div class="invalid-feedback">-->
+                                        <!--                      Please provide a valid city.-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <!--                  <div class="col-md-3">-->
+                                        <!--                    <label for="validationCustom04" class="form-label">State</label>-->
+                                        <!--                    <select class="form-select" id="validationCustom04" required>-->
+                                        <!--                      <option selected disabled value="">Choose...</option>-->
+                                        <!--                      <option>...</option>-->
+                                        <!--                    </select>-->
+                                        <!--                    <div class="invalid-feedback">-->
+                                        <!--                      Please select a valid state.-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <!--                  <div class="col-md-3">-->
+                                        <!--                    <label for="validationCustom05" class="form-label">Zip</label>-->
+                                        <!--                    <input type="text" class="form-control" id="validationCustom05" required>-->
+                                        <!--                    <div class="invalid-feedback">-->
+                                        <!--                      Please provide a valid zip.-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <!--                  <div class="col-12">-->
+                                        <!--                    <div class="form-check">-->
+                                        <!--                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>-->
+                                        <!--                      <label class="form-check-label" for="invalidCheck">-->
+                                        <!--                        Agree to terms and conditions-->
+                                        <!--                      </label>-->
+                                        <!--                      <div class="invalid-feedback">-->
+                                        <!--                        You must agree before submitting.-->
+                                        <!--                      </div>-->
+                                        <!--                    </div>-->
+                                        <!--                  </div>-->
+                                        <!--                  <div class="col-12">-->
+                                        <!--                    <button class="btn btn-primary" type="submit">Submit form</button>-->
+                                        <!--                  </div>-->
+                                        <!--                </form>-->
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.container-fluid -->
+<script>
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+                </div>
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Krzysztof Wrycza 2022</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
+
+            </div>
+            <!-- End of Content Wrapper -->
+
+        </div>
+        <!-- End of Page Wrapper -->
+
+        <div th:insert="menuAndFormsFragments/footer"></div>
+
+        <!-- Bootstrap core JavaScript-->
+        <script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>
+        <script th:src="@{/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script th:src="@{/bootstrap/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
+
+        <!-- Page level plugins -->
+        <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
+        <script th:src="@{/js/validation.js}"></script>
+
+</body>
+</html>

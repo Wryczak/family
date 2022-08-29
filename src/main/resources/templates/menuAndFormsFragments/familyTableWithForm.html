@@ -1,0 +1,29 @@
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Wiek</th>
+            <th>Data Urodzin</th>
+            <th>Data śmierci</th>
+            <th style="display:none;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="memberDto: ${memberDto}">
+            <td> <form class="user" th:method="POST" th:action="@{/test/split}" th:object="${userDetails}"
+                       id="loginForm">
+                <input type="hidden" th:value="${memberDto.getId}" th:attr="name='id'"/>
+                <div><input type="submit" th:value="${memberDto.getName}" class="btn btn-outline-dark"></div>
+            </form></td>
+            <td th:text="${memberDto.getFamilyName()}"></td>
+            <td th:text="${memberDto.getAge()}"></td>
+            <td th:text="${memberDto.getBirthday()}"></td>
+            <td th:text="${memberDto.getDiedOn}"></td>
+            <td style="display:none;" th:text="${memberDto.getName()}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,217 @@
+<div class="card p-4">
+    <div class=" image d-flex flex-column justify-content-center align-items-center">
+        <div th:if="${memberDetails.getGender().getLabel() == 'female'}">
+            <button class="btn btn-secondary but2">
+                <img th:src="@{/images/woman.png}" height="100" width="100"/>
+            </button>
+        </div>
+        <div th:if="${memberDetails.getGender().getLabel() == 'male'}">
+            <button class="btn btn-secondary but2">
+                <img th:src="@{/images/man.png}" height="100" width="100"/>
+            </button>
+        </div>
+        <div class="flex-wrap">
+            <span class="name mt-3" th:text="${memberDetails.getName()}"></span>
+            <span class="name mt-3" th:text="${memberDetails.getFamilyName()}"></span>
+        </div>
+        <p></p>
+        <div class="flex-wrap">
+                                    <span th:if="${memberDetails.getGender().getLabel() == 'female'}">
+                                        <span>urodzona:</span>
+                                    </span>
+            <span th:if="${memberDetails.getGender().getLabel() == 'male'}">
+                                        <span>urodzony:</span>
+                                    </span>
+            <span class="m-0 font-weight-bold text-primary"
+                  th:text="${memberDetails.getBirthday()}"></span>
+            <span>wiek:</span>
+            <span class="m-0 font-weight-bold text-primary"
+                  th:text="${memberDetails.getAge()}"></span>
+            <div th:if="${memberDetails.getDiedOn() != null}">
+                <span>data śmierci:</span>
+                <span class="m-0 font-weight-bold text-primary"
+                      th:text="${memberDetails.getDiedOn()}"></span>
+            </div>
+
+        </div>
+        <p></p>
+        <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+            <div th:if="${memberDetails.getGender().getLabel() == 'female'}">
+                <span class="idd">Kobieta</span>
+                <span><i class="fas fa-venus"></i></span>
+            </div>
+            <div th:if="${memberDetails.getGender().getLabel() == 'male'}">
+                <span class="idd">Mężczyzna</span>
+                <span><i class="fas fa-mars"></i></span>
+            </div>
+        </div>
+        <div id="buttonRes">
+            <div class="d-flex flex-row justify-content-center align-items-center mt-3">
+                <div th:if="${memberDetails.getGender().getLabel() == 'female'}">
+                    <span class="idd2a">mąż:</span>
+                    <span th:if="${memberDetails.getPartner() != null}">
+                                        <span class="m-0 font-weight-bold text-primary"
+                                              th:text="${memberDetails.getPartner()}"></span>
+                                        </span>
+                    <span th:if="${memberDetails.getPartner() == null}">
+                                      <span th:if="${split.secondStatus}">
+                                                <button id="myStatus2" type="button"
+                                                        onclick="show(this.id,'myDIV2','husband',5,'buttonRes1','buttonRes2','buttonRes3');setTime('dt3','text3')"
+                                                        class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                                        <p></p>
+                                        <div id="myDIV2" style="display:none">
+                                            <form class="user needs-validation" th:method="POST"
+                                                  th:action="@{/test/addRelatives}"
+                                                  th:object="${memberToSave}" id="myForm1dA" novalidate>
+                                                <div th:insert="menuAndFormsFragments/formsFragments/partnerM"></div>
+                                               <input type="hidden" th:field="*{id}" id="husband">
+                                                <input type="submit" value="Dodaj"
+                                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                                       style="float: left;">
+                                              <div>  <input type="reset" value="Reset"
+                                                            class="btn btn-info btn-user btn-block col-lg-4"
+                                                            style="float: left;">
+                                              </div>
+                                            </form>
+                                        </div>
+                                        </span>
+                </div>
+                <div th:if="${memberDetails.getGender().getLabel() == 'male'}">
+                    <span class="idd">żona:</span>
+                    <span th:if="${memberDetails.getPartner() != null}">
+                                        <span class="m-0 font-weight-bold text-primary"
+                                              th:text="${memberDetails.getPartner()}"></span>
+                                        </span>
+                    <span th:if="${memberDetails.getPartner() == null}">
+                                      <span th:if="${split.secondStatus}">
+                                                <button id="myStatus3" type="button"
+                                                        onclick="show(this.id,'myDIVf','wife',5,'buttonRes1','buttonRes2','buttonRes3');setTime('dt4','text4')"
+                                                        class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                                        <p></p>
+                                        <div id="myDIVf" style="display:none">
+                                            <form class="user needs-validation" th:method="POST"
+                                                  th:action="@{/test/addRelatives}"
+                                                  th:object="${memberToSave}" id="myForm1dAs" novalidate>
+                                                <div th:insert="menuAndFormsFragments/formsFragments/partnerF"></div>
+                                                <input type="hidden" th:field="*{id}" id="wife">
+                                                <input type="submit" value="Dodaj"
+                                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                                       style="float: left;">
+                                              <div>  <input type="reset" value="Reset"
+                                                            class="btn btn-info btn-user btn-block col-lg-4"
+                                                            style="float: left;">
+                                              </div>
+                                            </form>
+                                        </div>
+                                        </span>
+                </div>
+            </div>
+        </div>
+        <div id="buttonRes1">
+            <div class="flex-wrap">
+                <div>
+                    <span class="idd"> ojciec:</span>
+                    <span th:text="${memberDetails.getFather()}"></span>
+                    <span th:if="${memberDetails.getFather() == null}">
+                        <span th:if="${split.secondStatus}">
+                            <button id="myStatus" type="button"
+                                    onclick="show(this.id,'myDIV8','father',1,'buttonRes','buttonRes2','buttonRes3');setTime('dt1','text1')"
+                                    class="btn btn-secondary btn-sm">
+                                <i class="fas fa-plus-circle "></i>dodaj</button>
+                        </span>
+                        <p></p>
+                        <div id="myDIV8" style="display:none">
+                            <form class="user needs-validation" th:method="POST"
+                                  th:action="@{/test/addRelatives}"
+                                  th:object="${memberToSave}" id="myForm1a" novalidate>
+                                <div th:insert="menuAndFormsFragments/formsFragments/father"></div>
+                                <input type="hidden" th:field="*{id}" id="father">
+                                <input type="submit" value="Dodaj"
+                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                       style="float: left;">
+                                <div>  <input type="reset" value="Reset"
+                                              class="btn btn-info btn-user btn-block col-lg-4"
+                                              style="float: left;">
+                                </div>
+                            </form>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div id="buttonRes2">
+            <div class="flex-wrap">
+                <span class="idd">matka:</span>
+                <span th:text="${memberDetails.getMother()}"></span>
+                <span th:if="${memberDetails.getMother() == null}">
+                                      <span th:if="${split.secondStatus}">
+                                                <button id="myStatus1" type="button"
+                                                        onclick="show(this.id,'myDIV1','mother',2,'buttonRes1','buttonRes','buttonRes3');setTime('dt2','text2')"
+                                                        class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                                        <p></p>
+                                        <div id="myDIV1" style="display:none">
+                                            <form class="user needs-validation" th:method="POST"
+                                                  th:action="@{/test/addRelatives}"
+                                                  th:object="${memberToSave}" id="myForm1d" novalidate>
+                                                <div th:insert="menuAndFormsFragments/formsFragments/mother">
+                                                </div>
+                                                <input type="hidden" th:field="*{id}" id="mother">
+                                                <input type="submit" value="Dodaj"
+                                                       class="btn btn-success btn-user btn-block col-lg-4"
+                                                       style="float: left;">
+                                                    <div>  <input type="reset" value="Reset"
+                                                                  class="btn btn-info btn-user btn-block col-lg-4"
+                                                                  style="float: left;">
+                                                     </div>
+                                            </form>
+                                        </div>
+                                        </span>
+            </div>
+        </div>
+        <div id="buttonRes3">
+            <div class="flex-wrap">
+                <div>
+                    <span class="idd">dzieci:</span>
+                    <span th:if="${split.secondStatus}">
+                                                <button id="myStatus5" type="button"
+                                                        onclick="show(this.id,'myDIV5','child',6,'buttonRes1','buttonRes2','buttonRes');setTime('dt5','text5')"
+                                                        class="btn btn-secondary btn-sm">
+                                                    <i class="fas fa-plus-circle "></i>dodaj</button>
+                                            </span>
+                    <p></p>
+                    <div id="myDIV5" style="display:none">
+                        <form class="user needs-validation" th:method="POST"
+                              th:action="@{/test/addRelatives}"
+                              th:object="${memberToSave}" id="myForm1ad" novalidate>
+                            <div th:insert="menuAndFormsFragments/formsFragments/child"></div>
+                            <input type="hidden" th:field="*{id}" id="child">
+                            <input type="submit" value="Dodaj"
+                                   class="btn btn-success btn-user btn-block col-lg-4"
+                                   style="float: left;">
+                            <div><input type="reset" value="Reset"
+                                        class="btn btn-info btn-user btn-block col-lg-4"
+                                        style="float: left;">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div th:if="${split.secondStatus}">
+                <form class="user" th:method="POST" th:action="@{/modify/memberUpdate}"
+                      th:object="${userDetails}"
+                      id="loginForm">
+                    <input type="hidden" th:value="${memberDetails.getId}" th:attr="name='id'"/>
+                    <button class="btn btn-dark btn-block">Edytuj dane</button>
+                </form>
+            </div>
+            <div class=" px-2 rounded mt-4 date "><span class="join">2022</span>
+            </div>
+        </div>
+    </div>

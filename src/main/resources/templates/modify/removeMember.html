@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 
-<div th:insert="head"></div>
+<div th:insert="menuAndFormsFragments/head"></div>
 
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
     <!-- Sidebar -->
-    <div th:insert="sidebar"></div>
+    <div th:insert="menuAndFormsFragments/sidebar"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -18,7 +18,7 @@
         <!-- Main Content -->
         <div id="content">
             <!-- Topbar -->
-            <div th:insert="topbar"></div>
+            <div th:insert="menuAndFormsFragments/topbar"></div>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -27,10 +27,6 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Członkowie Twojej rodziny</h1>
-
-                </div>
-                <!-- Content Row -->
-                <div class="row">
 
                 </div>
 
@@ -46,50 +42,39 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Oto lista członków Twojej rodziny:</h6>
                             </div>
                             <div class="card-body">
-                                <div th:insert="familyDetails"></div>
-                                <div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <th>Imię</th>
+                                            <th>Nazwisko</th>
+                                            <th>Wiek</th>
+                                            <th>Data Urodzin</th>
+                                            <th>Aktualizuj</th>
 
-                                    <form class="user" th:method="POST" th:action="@{/modify/removeMember}"
-                                          th:object="${userDetails}"
-                                          id="loginForm">
-
-
-                                        <div class="form-group">
-                                            <input type="number" class="form-control form-control-user"
-                                                   name="age" id="age" aria-describedby="emailHelp"
-                                                   placeholder="Podaj Id członka rodziny do usunięcia..." min="0"
-                                                   max="999999999999" th:field="*{id}"/>
-
-                                        </div>
-                                        <input value="Usuń" class="btn btn-danger btn-user btn-block" href="#" data-toggle="modal" data-target="#deleteModal">
-                                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                                             aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleLabel">
-                                                            Potwierdź usunięcie członka rodziny.</h5>
-                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">Wybranie "Usuń" poniżej, usunie tę osobę z Twojej rodziny.</div>
-                                                    <div class="modal-footer">
-                                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Anuluj</button>
-                                                        <a type="submit">
-                                                            <input type="submit" value="Usuń" class="btn btn-danger">
-
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </form>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="memberDto: ${memberDto}">
+                                            <td th:text="${memberDto.getName()}"></td>
+                                            <td th:text="${memberDto.getFamilyName()}"></td>
+                                            <td th:text="${memberDto.getAge()}"></td>
+                                            <td th:text="${memberDto.getBirthday()}"></td>
+                                            <td>
+                                                <form class="user" th:method="POST" th:action="@{/modify/removeMember}"
+                                                      th:object="${userDetails}"
+                                                      id="loginForm">
+                                                    <input type="hidden" th:value="${memberDto.getId}"
+                                                           th:attr="name='id'"/>
+                                                    <button class="btn btn-danger btn-user btn-block">Usuń</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="col-lg-6 mb-4">
 
@@ -136,7 +121,7 @@
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
-<div th:insert="footer"></div>
+<div th:insert="menuAndFormsFragments/footer"></div>
 
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/bootstrap/vendor/jquery/jquery.min.js}"></script>

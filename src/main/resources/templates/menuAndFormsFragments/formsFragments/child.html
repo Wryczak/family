@@ -1,0 +1,90 @@
+<div class="form-check">
+    <span th:if="${memberDetails.getGender().getLabel() == 'female'}">
+         <span>Ojcem jest obecny partner?</span>
+    </span>
+    <span th:if="${memberDetails.getGender().getLabel() == 'male'}">
+         <span>Matką jest obecna partnerka?</span>
+        </span>
+    <br>
+    <input type="radio" id="mother1" class="form-check-input" name="mother" value="0"  th:field="*{tempId2}" required>
+    <label class="form-check-label" for="mother1">Tak</label>
+    <br>
+    <input type="radio" id="mother2"  class="form-check-input" name="mother" value="1" th:field="*{tempId2}" required>
+    <label class="form-check-label" for="mother2">Nie</label><br>
+    <div class="invalid-feedback">Wybierz odpowiedź.</div>
+</div>
+<div class="form-check"><span>Podaj płeć dziecka.</span>
+    <br>
+    <input type="radio" class="form-check-input" id="validationFormCheck2" name="radio-stacked" value="1"
+           th:field="*{tempId}" required>
+    <label class="form-check-label" for="validationFormCheck2">Syn</label>
+</div>
+<div class="form-check mb-3">
+    <input type="radio" class="form-check-input" id="validationFormCheck3" name="radio-stacked" value="2"
+           th:field="*{tempId}" required>
+    <label class="form-check-label" for="validationFormCheck3">Córka</label>
+    <div class="invalid-feedback">Wybierz płeć dziecka.</div>
+</div>
+
+<div class="input-group has-validation">
+    <input type="text" class="form-control" id="validationCustom01" placeholder="Imię min 3 znaki"
+           pattern="^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+( [a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+)*$"
+           minlength="3" aria-describedby="inputGroupPrepend" required th:field="*{name}"/>
+    <div class="invalid-feedback">
+        Podaj poprawne imię.
+    </div>
+</div>
+<br>
+<div class="input-group has-validation">
+    <input type="text" class="form-control" id="validationCustom02" placeholder="Nazwisko min 3 znaki"
+           pattern="^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+( [a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŻŹ\-]+)*$"
+           minlength="3" aria-describedby="inputGroupPrepend" required th:field="*{familyName}"/>
+    <div class="invalid-feedback">
+        Podaj poprawne nazwisko.
+    </div>
+</div>
+<br>
+<div class="input-group has-validation">
+    <input min="1900-01-01" id="dt5" class="form-control" placeholder="Data urodzenia" type="text" value=""
+           onfocus="(this.type='date')"
+           name="birthday" required th:field="*{birthday}"/>
+    <div class="invalid-feedback">
+        Podaj datę urodzenia.
+    </div>
+</div>
+<br>
+<span>Osoba żyjąca?</span>
+<div id="wrapper">
+    <input type='checkbox' id='Alive5' name="Alive5" onclick="selectOnlyThis(this,this.name);disable('text5','hig5')"
+           checked/>Tak
+
+    <div class="input-group has-validation newclass">
+        <input type='checkbox' id='Dead5' name="Alive5" onclick="selectOnlyThis(this,this.name);enable('text5','hig5')"
+        />Nie
+        <div class="invalid-feedback">
+            Podaj datę śmierci.
+        </div>
+    </div>
+</div>
+<div id="hig5">
+    <div class="input-group has-validation">
+        <input min="1900-01-01" id="text5" class="form-control" placeholder="Data śmierci" type="text"
+               onfocus="(this.type='date')"
+               name="birthday" required th:field="*{diedOn}" disabled/>
+        <div class="invalid-feedback">
+            Podaj datę śmierci.
+        </div>
+    </div>
+</div>
+<br>
+<!--dates setter-->
+<script>
+    document.getElementById('text5')
+        .max = new Date(new Date().getTime() - new Date()
+        .getTimezoneOffset() * 60000).toISOString().split("T")[0];
+</script>
+<script>
+    document.getElementById('dt5')
+        .max = new Date(new Date().getTime() - new Date()
+        .getTimezoneOffset() * 60000).toISOString().split("T")[0];
+</script>

@@ -31,15 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/create",  "/modify","/family", "/create/addYourself","/modify/removeFamily"
-                        , "/family/current","family/familyEditor","/family/submit")
+                .antMatchers("/create", "/modify/addFamily", "/family", "/create/addYourself", "/modify/removeFamily", "/test"
+                        , "/family/current", "family/familyEditor", "/family/submit")
                 .access("hasRole('ROLE_USER')")
                 .antMatchers("/", "/**").access("permitAll")
 
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/index",true)
+                .defaultSuccessUrl("/index", true)
 
                 .and()
                 .logout()
