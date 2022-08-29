@@ -15,19 +15,6 @@ INSERT INTO member values(8,'Michał','Wrycza','1988-06-26',null, 2, 3,11,1,1);
 INSERT INTO member values(9,'Wiesław','Wrycza','1988-06-26',null, 2, 3,11,1,1);
 INSERT INTO member values(10,'Bartosz','Wrycza','1988-06-26',null, 2, 3,11,1,1);
 
-
-
-
-INSERT INTO member values(,'Wrycza','1959-06-26', 4, null,1);
-INSERT INTO member values(3,'Elżbieta','Wrycza','1963-06-26', 2, null,1);
-INSERT INTO member values(4,'Jan','Wrycza','1922-06-26', null, null,1);
-INSERT INTO member values(5,'Magdalena','Wrycza','1984-06-26', 2, 3,1);
-INSERT INTO member values(6,'Agata','Wrycza','1986-06-26', 2, 3,1);
-INSERT INTO member values(7,'Małgorzata','Wrycza','1987-06-26', 2, 3,1);
-INSERT INTO member values(8,'Michał','Wrycza','1991-06-26', 2, 3,1);
-INSERT INTO member values(9,'Wiesław','Wrycza','1993-06-26', 2, 3,1);
-INSERT INTO member values(10,'Bartosz','Wrycza','2004-06-26', 2, 3,1);
-
 INSERT INTO member values(11,'Dobrosława','Paluszewska','1992-06-26',16 ,13 ,2);
 INSERT INTO member values(12,'Bogusława','Paluszewska','2004-06-26', 16, 13,2);
 INSERT INTO member values(13,'Katarzyna','Paluszewska','1969-06-26',null , null,2);

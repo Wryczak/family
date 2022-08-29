@@ -31,4 +31,6 @@ public class MemberDto{
     private LocalDate diedOn;
 
     private Long tempId;
+
+    private Long tempId2;
 }

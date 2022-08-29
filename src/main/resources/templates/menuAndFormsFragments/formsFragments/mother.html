@@ -17,7 +17,7 @@
 </div>
 <br>
 <div class="input-group has-validation">
-  <input min="1900-01-01" id="dt" class="form-control" placeholder="Data urodzenia" type="text"
+  <input min="1900-01-01" id="dt2" class="form-control" placeholder="Data urodzenia" type="text"
          onfocus="(this.type='date')"
          name="birthday" required th:field="*{birthday}"/>
   <div class="invalid-feedback">
@@ -27,20 +27,20 @@
 <br>
 <span>Osoba żyjąca?</span>
 <div id="wrapper">
-  <input type='checkbox' id='check2'  name="isAlive"  onclick="onlyOne(this)"
-        checked/>Tak
+  <input type='checkbox' id='Alive2'  name="Alive2"  onclick="selectOnlyThis(this,this.name);disable('text2','hig2')"
+         checked/>Tak
 
   <div class="input-group has-validation newclass">
-    <input type='checkbox' id='check'  name="isDead"  onclick="onlyOne(this)"
+    <input type='checkbox' id='Dead2' name="Alive2"  onclick="selectOnlyThis(this,this.name);enable('text2','hig2')"
     />Nie
     <div class="invalid-feedback">
       Podaj datę śmierci.
     </div>
   </div>
 </div>
-<div id="max-height">
-  <div class="input-group has-validation">
-    <input min="1900-01-01" id="text"   class="form-control" placeholder="Data śmierci" type="text"
+<div id="hig2">
+  <div class="input-group has-validation" >
+    <input min="1900-01-01" id="text2"   class="form-control" placeholder="Data śmierci" type="text"
            onfocus="(this.type='date')"
            name="birthday" required th:field="*{diedOn}" disabled/>
     <div class="invalid-feedback">
@@ -48,15 +48,14 @@
     </div>
   </div>
 </div>
-<br>
 <!--dates setter-->
 <script>
-  document.getElementById('text')
+  document.getElementById('text2')
           .max = new Date(new Date().getTime() - new Date()
           .getTimezoneOffset() * 60000).toISOString().split("T")[0];
 </script>
 <script>
-  document.getElementById('dt')
+  document.getElementById('dt2')
           .max = new Date(new Date().getTime() - new Date()
           .getTimezoneOffset() * 60000).toISOString().split("T")[0];
 </script>

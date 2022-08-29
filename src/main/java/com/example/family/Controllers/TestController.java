@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 @Controller
@@ -27,10 +28,10 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
     private final MemberService memberService;
     private final FamilyService familyService;
     private final UserDetailsService userDetailsService;
-
     private final ModelMapper modelMapper;
     private Long idToModify;
     private Long idToModify2;
+    private Long idToFind;
 
     public TestController(MemberService memberService,
                           FamilyService familyService, UserDetailsService userDetailsService, ModelMapper modelMapper) {
@@ -60,30 +61,84 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
         return new ListWithDtoObject();
     }
 
-    @GetMapping("split")
-    public String getSplitView(Model model, Details split, MemberDto memberToSave) {
-        model.addAttribute("memberToSave", memberToSave);
+    @GetMapping
+    public String main(Model model, Details memberId, Details split, MemberDto memberToSave) {
         userDetailsService.detailsSet(model);
-        if (!familyService.isDoIHaveFamily()) {
-            return "wellLog";
-        }
-        Details userDetails = new Details();
-        model.addAttribute("userDetails", userDetails);
-        memberService.getFamilyMembersDtoListAndAddToModel(model);
+        model.addAttribute("memberToSave", memberToSave);
+        model.addAttribute("list", new ListWithDtoObject());
+        model.addAttribute("memberId", memberId);
         model.addAttribute("split", split);
+        log.info("   --- Finding Relatives");
 
-        Long id = idToModify;
+        Long id = idToFind;
         if (id != null) {
+            memberService.setIdToFind(idToFind);
+            Member memberToUpdate = memberService.getMember(idToFind);
+            MemberDto member = convertToDto(memberToUpdate, modelMapper);
+            member.setAge(calculateAge(member.getBirthday()));
+            model.addAttribute("memberDetails", member);
             split.setStatus(true);
-        }
-
-        if (idToModify != null) {
-            Member memberToUpdate = memberService.getMember(idToModify);
+            List<Member> members = familyService.getFamily().getMembers();
+            if (members.contains(memberToUpdate)) {
+                split.setSecondStatus(true);
+                model.addAttribute("split", split);
+            }
             String memberData = memberToUpdate.getName() + "   " +
                     memberToUpdate.getFamilyName();
             split.setText(memberData);
             model.addAttribute("split", split);
         }
+        familyService.clear();
+
+        return "findRelatives";
+    }
+
+    @PostMapping
+    public String getTestForm(Model model, ListWithDtoObject list) {
+        userDetailsService.detailsSet(model);
+        idToFind = list.getMemberDto().getId();
+        return "redirect:/findRelatives";
+    }
+
+
+    @GetMapping("split")
+    public String getSplitView(Model model, Details split, MemberDto memberToSave) {
+        userDetailsService.detailsSet(model);
+        Details userDetails = new Details();
+        model.addAttribute("userDetails", userDetails);
+        model.addAttribute("memberToSave", memberToSave);
+        model.addAttribute("list", new ListWithDtoObject());
+        memberService.getFamilyMembersDtoListAndAddToModel(model);
+        model.addAttribute("split", split);
+        log.info("   --- Finding Relatives");
+
+        if (!familyService.isDoIHaveFamily()) {
+            return "wellLog";
+        }
+        idToFind = idToModify;
+        Long id = idToFind;
+        if (id != null) {
+            split.setStatus(true);
+        }
+
+        if (id != null) {
+            memberService.setIdToFind(idToFind);
+            Member memberToUpdate = memberService.getMember(idToFind);
+            MemberDto member = convertToDto(memberToUpdate, modelMapper);
+            member.setAge(calculateAge(member.getBirthday()));
+            model.addAttribute("memberDetails", member);
+            split.setStatus(true);
+            List<Member> members = familyService.getFamily().getMembers();
+            if (members.contains(memberToUpdate)) {
+                split.setSecondStatus(true);
+                model.addAttribute("split", split);
+            }
+            String memberData = memberToUpdate.getName() + "   " +
+                    memberToUpdate.getFamilyName();
+            split.setText(memberData);
+            model.addAttribute("split", split);
+        }
+        familyService.clear();
 
         return "test/split";
     }
@@ -94,7 +149,6 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
         memberService.getFamilyMembersDtoListAndAddToModel(model);
 
         idToModify = userDetails.getId();
-
         return "redirect:/test/split";
     }
 
@@ -111,13 +165,13 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
     public String addNewMemberToFamily(Model model, MemberDto member) {
         userDetailsService.detailsSet(model);
         System.out.println(memberService.getIdToFind());
-        idToModify2=memberService.getIdToFind();
+        idToModify2 = memberService.getIdToFind();
         System.out.println(member);
         log.info("    --- Creating new family member");
         createRelatives(member);
 
         idToModify = null;
-        return "redirect:/index";
+        return "redirect:/findRelatives";
     }
 
     @PostMapping("splitCancelForm")
@@ -128,10 +182,14 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
 
     private void createRelatives(MemberDto member) {
         Member memberToUpdate;
-        if (idToModify!=null) {
-            memberToUpdate = memberService.getMember(idToModify);
-        }else  memberToUpdate=memberService.getMember(idToModify2);
+//        if (idToModify!=null) {
+//            memberToUpdate = memberService.getMember(idToModify);
+//        }else
+        memberToUpdate = memberService.getMember(idToModify2);
         Long option = (member.getId());
+
+        Long setGenderOption = member.getTempId();
+        Long setSecondParent = member.getTempId2();
 
         log.info("    --- Creating new family member");
         Member newMember = convertToEntity(member, modelMapper);
@@ -168,6 +226,23 @@ public class TestController implements UsernameGetter, AgeCalculator, DtoConvert
             } else newMember.setGender(Gender.M);
             newMember.setPartner(memberToUpdate);
             memberToUpdate.setPartner(newMember);
+        }
+        if (option == 6) {
+            if (setGenderOption == 1) {
+                newMember.setGender(Gender.M);
+            } else newMember.setGender(Gender.F);
+            if (memberToUpdate.getGender().equals(Gender.F)) {
+                newMember.setMother(memberToUpdate);
+                if (memberToUpdate.getPartner() != null && setSecondParent == 0) {
+                    newMember.setFather(memberToUpdate.getPartner());
+                }
+            }
+            if (memberToUpdate.getGender().equals(Gender.M)) {
+                newMember.setFather(memberToUpdate);
+                if (memberToUpdate.getPartner() != null && setSecondParent == 0) {
+                    newMember.setMother(memberToUpdate.getPartner());
+                }
+            }
         }
     }
 }

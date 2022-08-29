@@ -41,20 +41,6 @@ function adjustableHeightCheck() {
     }
 }
 
-const start = document.getElementById('dt');
-const end = document.getElementById('text');
-
-start.addEventListener('change', function() {
-    if (start.value)
-        end.min = start.value;
-}, false);
-end.addEventLiseter('change', function() {
-    if (end.value)
-        start.max = end.value;
-}, false);
-
-
-
 function myFunction() {
     var x = document.getElementById("myDIV");
     if (x.style.display === "none") {
@@ -62,15 +48,6 @@ function myFunction() {
     } else {
         x.style.display = "none";
     }
-
-    // function setGender(){
-    //     let selectRelatives = document.getElementById("selectRelatives");
-    //
-    //    selectRelatives.onChange = function () {
-    //        let val;
-    //        val= document.getElementById(selectRelatives).value;
-    //        document.getElementById('mother').value = val;
-    //     }
-    // }
 }
+
 

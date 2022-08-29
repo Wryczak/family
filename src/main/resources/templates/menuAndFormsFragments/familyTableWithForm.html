@@ -15,10 +15,7 @@
             <td> <form class="user" th:method="POST" th:action="@{/test/split}" th:object="${userDetails}"
                        id="loginForm">
                 <input type="hidden" th:value="${memberDto.getId}" th:attr="name='id'"/>
-                <div th:if="${memberDto.getGender.getLabel=='female'}">
-                    <input type="submit" th:value="${memberDto.getName}" class="btn btn-outline-success"></div>
-                <div th:if="${memberDto.getGender.getLabel=='male'}">
-                    <input type="submit" th:value="${memberDto.getName}" class="btn btn-outline-dark"></div>
+                <div><input type="submit" th:value="${memberDto.getName}" class="btn btn-outline-dark"></div>
             </form></td>
             <td th:text="${memberDto.getFamilyName()}"></td>
             <td th:text="${memberDto.getAge()}"></td>

@@ -13,9 +13,9 @@ $("#birthplace").select2({
     }
 });
 
-window.addEventListener("load", function () {
-    document.getElementById("check").addEventListener("change", function () {
-        document.getElementById("text").disabled = !this.checked;
-        // document.getElementById("check2").disabled = this.checked;
+    window.addEventListener("load", function () {
+        document.getElementById("check").addEventListener("change", function () {
+            document.getElementById("text").disabled = !this.checked;
+            // document.getElementById("check2").disabled = !this.checked;
+        });
     });
-});

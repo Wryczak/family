@@ -7,7 +7,7 @@ CREATE TABLE member(
                        birthday date,
                        died_on date,
                        father_id bigint,
-                       mather_id bigint,
+                       mother_id bigint,
                        partner_id bigint,
                        user_id bigint,
                        gender int

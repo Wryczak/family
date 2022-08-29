@@ -4,7 +4,6 @@
 }
 
 .card {
-    width: 350px;
     background-color: #efefef;
     border: none;
     cursor: pointer;
@@ -32,11 +31,30 @@
 
 .idd {
     font-size: 14px;
-    font-weight: 600
+    font-weight: 600;
+    margin: 3px;
+}
+#buttonRes {
+   margin-bottom: 10px;
+}
+#buttonRes1 {
+    margin-bottom: 10px;
+}
+#buttonRes2 {
+    margin-bottom: 10px;
+}
+#buttonRes3 {
+    margin-bottom: 10px;
 }
 
 .idd1 {
     font-size: 12px
+}
+.idd2a {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px;
+
 }
 
 .number {
@@ -89,4 +107,20 @@ hr .new1 {
 
 .newclass {
     padding-left: 50px;
+}
+
+#hig1 {
+    display: none;
+}
+#hig2 {
+    display: none;
+}
+#hig3 {
+    display: none;
+}
+#hig4 {
+    display: none;
+}
+#hig5 {
+    display: none;
 }

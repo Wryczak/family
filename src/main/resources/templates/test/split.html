@@ -3,15 +3,6 @@
       xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <div th:insert="menuAndFormsFragments/head"></div>
 <body id="page-top">
-<style>
-    #max-height {
-        display: none;
-    }
-
-    .newclass {
-        padding-left: 50px;
-    }
-</style>
 <div id="wrapper">
     <div th:insert="menuAndFormsFragments/sidebar"></div>
     <div id="content-wrapper" class="d-flex flex-column">
@@ -32,52 +23,38 @@
                             </div>
                         </div>
                     </div>
-                    <div  class="col-lg-4 mb-4" th:if="${split.status}">
-                        <form class="user needs-validation" th:method="POST" th:action="@{/test/addRelatives}"
-                              th:object="${memberToSave}"
-                              id="myForm" novalidate>
-                            <div th:insert="menuAndFormsFragments/addRelativesForm" ></div>
-                            <input type="submit" value="Dodaj" class="btn btn-primary btn-user btn-block col-lg-4">
-                            <br>
-                            <input type="reset" value="Reset" class="btn btn-dark btn-user btn-block col-lg-4">
-                        </form>
-                        <br>
-                        <form class="user" th:method="POST" th:action="@{/test/splitCancelForm}" id="myForm1">
-                            <input type="submit" value="Anuluj" class="btn btn-warning btn-user btn-block col-lg-4">
-                        </form>
-                    </div>
-                    <div class="col-lg-4 mb-4" th:if="${!split.status}">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Twoja rodzina</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img class="img-profile rounded-circle"
-                                         th:src="@{/images/family.png}" alt="family.png"/>
-                                </div>
-                                <p>Na tej stronie znajduje się lista członków rodziny, którą odnaleziono.</p>
-                                <p>Jeżeli to przez Ciebie została stworzona, możesz edytować wszystkie dane, po
-                                    logowaniu.</p>
-                                <p>Cieszymy się, że korzystasz z naszego serwisu.</p>
+                <div class="col-lg-4 mb-4" th:if="${split.status}">
+                    <div th:insert="menuAndFormsFragments/memberPreview"></div>
 
-                            </div>
+
+                    <!--                        <form class="user" th:method="POST" th:action="@{/test/splitCancelForm}" id="myForm1">-->
+                    <!--                            <input type="submit" value="Anuluj" class="btn btn-warning btn-user btn-block col-lg-4">-->
+                    <!--                        </form>-->
+                </div>
+                <div class="col-lg-4 mb-4" th:if="${!split.status}">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Tu wklejamy</h6>
+                        </div>
+                        <div class="card-body">
+                            hsedrhsdrehs
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Krzysztof Wrycza 2022</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
-
     </div>
-    <!-- End of Content Wrapper -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Krzysztof Wrycza 2022</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+</div>
+<!-- End of Content Wrapper -->
 
 </div>
 <!-- End of Page Wrapper -->
@@ -95,7 +72,6 @@
 <!-- Custom scripts for all pages-->
 <script th:src="@{/bootstrap/js/sb-admin-2.min.js}"></script>
 
-
 <!-- Page level plugins -->
 <script th:src="@{/bootstrap/vendor/chart.js/Chart.min.js}"></script>
 <script th:src="@{/bootstrap/vendor/datatables/jquery.dataTables.min.js}"></script>
@@ -105,5 +81,7 @@
 <script th:src="@{/bootstrap/js/demo/datatables-demo.js}"></script>
 <script th:src="@{/js/validation.js}"></script>
 <script th:src="@{/js/formValidator.js}"></script>
+<script th:src="@{/js/statusChanger.js}"></script>
+<script th:src="@{/js/list.js}"></script>
 </body>
 </html>

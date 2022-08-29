@@ -241,7 +241,6 @@ public class MemberDataController implements UsernameGetter, DtoConverter {
         if (idToModify == 0L) {
             return "/modify/memberUpdate";
         }
-        memberService.setGender(memberToUpdate);
         memberService.updateMemberData(idToModify, memberToUpdate);
         idToModify = null;
         return "redirect:/modify/getMyFamilyAfterLog";

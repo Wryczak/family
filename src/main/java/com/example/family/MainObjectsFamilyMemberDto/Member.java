@@ -39,10 +39,4 @@ public class Member{
     private Member partner;
 
     private Gender gender;
-
-    public Member(Long id, String name, String familyName) {
-        this.id = id;
-        this.name=name;
-        this.familyName=familyName;
-    }
 }

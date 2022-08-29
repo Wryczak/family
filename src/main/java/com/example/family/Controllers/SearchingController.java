@@ -50,11 +50,10 @@ public class SearchingController implements DtoConverter, AgeCalculator {
 
 
     @GetMapping
-    public String main(Model model, Details memberId, Details split,MemberDto memberToSave) {
+    public String main(Model model, Details split,MemberDto memberToSave) {
         userDetailsService.detailsSet(model);
         model.addAttribute("memberToSave", memberToSave);
         model.addAttribute("list", new ListWithDtoObject());
-        model.addAttribute("memberId", memberId);
         model.addAttribute("split", split);
         log.info("   --- Finding Relatives");
 
@@ -121,10 +120,10 @@ public class SearchingController implements DtoConverter, AgeCalculator {
 
             option = memberId.getId();
 
-            if (option == null) {
+            if (option == null || option==0) {
                 return "redirect:findRelatives";
             }
-            if (option > 0 && option < 6) {
+            if (option >0 && option < 6) {
                 return "redirect:/relativesTable";
             }
         }

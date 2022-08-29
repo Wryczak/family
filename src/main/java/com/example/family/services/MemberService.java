@@ -73,6 +73,7 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
         member.setFamilyName(memberToUpdate.getFamilyName());
         member.setBirthday(memberToUpdate.getBirthday());
         member.setDiedOn(memberToUpdate.getDiedOn());
+        member.setGender(memberToUpdate.getGender());
         memberRepository.save(member);
 
         log.info("   --- Member updated!");
@@ -151,13 +152,6 @@ public class MemberService implements DtoConverter, AgeCalculator, UsernameGette
 
         }
         model.addAttribute("childrenDto", createMembersDTOListForRelatives(membersList));
-    }
-
-    public void setGender(MemberDto member) {
-        Long temp = member.getTempId();
-        if (temp != 0) {
-            member.setGender(Gender.M);
-        } else member.setGender(Gender.F);
     }
 
     public void setIdToFind(Long id){
